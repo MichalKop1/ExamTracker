@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -33,7 +34,7 @@ namespace ExamTracker.UI.MainAppControls
                 studentAgeTextBox.PlaceholderText = "(opcjonalne)";
                 cancelButton.Text = "Anuluj";
                 submitButton.Text = "Zatwierdź";
-                submitButton.Size = new System.Drawing.Size(151,54);
+                submitButton.Size = new System.Drawing.Size(155,54);
             }
         }
         private void ClearFields()
@@ -58,13 +59,14 @@ namespace ExamTracker.UI.MainAppControls
                 counter++;
                 isValid = false;
             }
-            if (false) // implement regex later for email
-            {
-                sb.Append($"{counter}. Add both name and surname of your student.\n");
+            var pattern = @"/[a-zA-Z0-9]+\.?[a-zA-Z0-9]*\@[a-z]+\.[a-z]{2,3}/g";
+            if (!string.IsNullOrWhiteSpace(studentEmailTextBox.Text) && !(Regex.Match(studentEmailTextBox.Text, pattern).Success)) // implement regex later for email
+            { 
+                sb.Append($"{counter}. Provide a valid email.\n");
                 counter++;
                 isValid = false;
             }
-            if (!(int.TryParse(studentAgeTextBox.Text, out _)))
+            if (!(int.TryParse(studentAgeTextBox.Text, out _)) && !string.IsNullOrWhiteSpace(studentAgeTextBox.Text))
             {
                 sb.Append($"{counter}. Provide a corrent age.\n");
                 counter++;

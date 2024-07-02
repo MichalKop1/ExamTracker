@@ -44,7 +44,7 @@
             // 
             dataPanel.Location = new Point(263, 6);
             dataPanel.Name = "dataPanel";
-            dataPanel.Size = new Size(685, 870);
+            dataPanel.Size = new Size(965, 870);
             dataPanel.TabIndex = 1;
             // 
             // miscPanel
@@ -156,7 +156,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(960, 888);
+            ClientSize = new Size(1240, 898);
             Controls.Add(profileButton);
             Controls.Add(businessButton);
             Controls.Add(billingButton);

@@ -28,7 +28,7 @@ namespace ExamTracker.UI
             _grade8ExamRepository = grade8ExamRepository;
             _accountRepository = accountRepository;
             _sessionService = sesionService;
-            ChangeLanguage();
+            
             _studentRepository.OnError += AnErrorHasOccured;
         }
 
@@ -42,6 +42,7 @@ namespace ExamTracker.UI
                 billingButton.Text = "Opłaty";
                 businessButton.Text = "Biznes";
                 profileButton.Text = "Profil";
+                this.Text = "Exam Tracker   -  Obecnie zalogowany/a: " + _sessionService.CurrentAccount.ContactName;
             }
         }
 
@@ -80,6 +81,7 @@ namespace ExamTracker.UI
             Account currentAccount = _sessionService.CurrentAccount;
             this.Text = "Exam Tracker   -   Currently logged: " + currentAccount.ContactName;
             setProfileControl();
+            ChangeLanguage();
         }
 
         private void button6_Click(object sender, EventArgs e)

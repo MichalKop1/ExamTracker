@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -59,9 +60,16 @@ namespace ExamTracker.UI
                 counter++;
                 isValid = false;
             }
-            if (string.IsNullOrEmpty(emailBox.Text))
+            var pattern = @"^[a-zA-Z0-9]+\.?[a-zA-Z0-9]*@[a-z]+\.[a-z]{2,3}$";
+            if (string.IsNullOrWhiteSpace(emailBox.Text))
             {
-                sb.Append($"{counter}. Provide email\n");
+                sb.Append($"{counter}. Provide an email\n");
+                counter++;
+                isValid = false;
+            }
+            else if (!(Regex.Match(emailBox.Text, pattern).Success)) // implement regex later for email
+            {
+                sb.Append($"{counter}. Provide a valid email.\n");
                 counter++;
                 isValid = false;
             }

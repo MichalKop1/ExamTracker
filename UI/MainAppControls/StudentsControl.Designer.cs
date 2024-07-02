@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            studentName = new Label();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            StudentName = new Label();
             studentsComboBox = new ComboBox();
             ExamsGrid = new DataGridView();
-            label1 = new Label();
+            StudentLabel = new Label();
             ex1 = new TextBox();
             ex2 = new TextBox();
             ex3 = new TextBox();
@@ -46,19 +48,25 @@
             ex12 = new TextBox();
             ex13 = new TextBox();
             ex14 = new TextBox();
-            submitButton = new Button();
+            SubmitButton = new Button();
+            EditStudentNameBox = new TextBox();
+            EditStudentSurnameBox = new TextBox();
+            EditStudentEmailBox = new TextBox();
+            EditStudentAgeBox = new TextBox();
+            EditButton = new Button();
+            ConfirmButton = new Button();
             ((System.ComponentModel.ISupportInitialize)ExamsGrid).BeginInit();
             SuspendLayout();
             // 
-            // studentName
+            // StudentName
             // 
-            studentName.AutoSize = true;
-            studentName.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
-            studentName.Location = new Point(4, 4);
-            studentName.Name = "studentName";
-            studentName.Size = new Size(251, 50);
-            studentName.TabIndex = 0;
-            studentName.Text = "Exam Results";
+            StudentName.AutoSize = true;
+            StudentName.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
+            StudentName.Location = new Point(4, 4);
+            StudentName.Name = "StudentName";
+            StudentName.Size = new Size(251, 50);
+            StudentName.TabIndex = 0;
+            StudentName.Text = "Exam Results";
             // 
             // studentsComboBox
             // 
@@ -77,23 +85,40 @@
             ExamsGrid.BackgroundColor = Color.White;
             ExamsGrid.BorderStyle = BorderStyle.Fixed3D;
             ExamsGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            ExamsGrid.GridColor = Color.White;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Window;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            ExamsGrid.DefaultCellStyle = dataGridViewCellStyle3;
+            ExamsGrid.GridColor = Color.ForestGreen;
             ExamsGrid.Location = new Point(19, 196);
             ExamsGrid.Name = "ExamsGrid";
             ExamsGrid.ReadOnly = true;
-            ExamsGrid.Size = new Size(650, 305);
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Control;
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            dataGridViewCellStyle4.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            ExamsGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            ExamsGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            ExamsGrid.Size = new Size(923, 305);
             ExamsGrid.TabIndex = 3;
             ExamsGrid.CellClick += ExamsGrid_CellClick;
             // 
-            // label1
+            // StudentLabel
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
-            label1.Location = new Point(19, 74);
-            label1.Name = "label1";
-            label1.Size = new Size(89, 30);
-            label1.TabIndex = 4;
-            label1.Text = "Student";
+            StudentLabel.AutoSize = true;
+            StudentLabel.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
+            StudentLabel.Location = new Point(19, 74);
+            StudentLabel.Name = "StudentLabel";
+            StudentLabel.Size = new Size(89, 30);
+            StudentLabel.TabIndex = 4;
+            StudentLabel.Text = "Student";
             // 
             // ex1
             // 
@@ -221,27 +246,115 @@
             ex14.TabIndex = 19;
             ex14.Visible = false;
             // 
-            // submitButton
+            // SubmitButton
             // 
-            submitButton.BackColor = Color.DodgerBlue;
-            submitButton.FlatAppearance.BorderSize = 0;
-            submitButton.FlatStyle = FlatStyle.Flat;
-            submitButton.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            submitButton.Location = new Point(548, 800);
-            submitButton.Name = "submitButton";
-            submitButton.Size = new Size(121, 54);
-            submitButton.TabIndex = 20;
-            submitButton.Text = "Submit";
-            submitButton.UseVisualStyleBackColor = false;
-            submitButton.Visible = false;
-            submitButton.Click += submitButton_Click;
+            SubmitButton.BackColor = Color.DodgerBlue;
+            SubmitButton.FlatAppearance.BorderSize = 0;
+            SubmitButton.FlatStyle = FlatStyle.Flat;
+            SubmitButton.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SubmitButton.Location = new Point(793, 797);
+            SubmitButton.Name = "SubmitButton";
+            SubmitButton.Size = new Size(155, 54);
+            SubmitButton.TabIndex = 20;
+            SubmitButton.Text = "Submit";
+            SubmitButton.UseVisualStyleBackColor = false;
+            SubmitButton.Visible = false;
+            SubmitButton.Click += submitButton_Click;
+            // 
+            // EditStudentNameBox
+            // 
+            EditStudentNameBox.BackColor = Color.Gray;
+            EditStudentNameBox.BorderStyle = BorderStyle.None;
+            EditStudentNameBox.Font = new Font("Segoe UI", 15.75F);
+            EditStudentNameBox.ForeColor = Color.White;
+            EditStudentNameBox.Location = new Point(428, 86);
+            EditStudentNameBox.Name = "EditStudentNameBox";
+            EditStudentNameBox.PlaceholderText = "Name";
+            EditStudentNameBox.Size = new Size(241, 28);
+            EditStudentNameBox.TabIndex = 21;
+            EditStudentNameBox.Visible = false;
+            // 
+            // EditStudentSurnameBox
+            // 
+            EditStudentSurnameBox.BackColor = Color.Gray;
+            EditStudentSurnameBox.BorderStyle = BorderStyle.None;
+            EditStudentSurnameBox.Font = new Font("Segoe UI", 15.75F);
+            EditStudentSurnameBox.ForeColor = Color.White;
+            EditStudentSurnameBox.Location = new Point(428, 136);
+            EditStudentSurnameBox.Name = "EditStudentSurnameBox";
+            EditStudentSurnameBox.PlaceholderText = "Surname";
+            EditStudentSurnameBox.Size = new Size(241, 28);
+            EditStudentSurnameBox.TabIndex = 22;
+            EditStudentSurnameBox.Visible = false;
+            // 
+            // EditStudentEmailBox
+            // 
+            EditStudentEmailBox.BackColor = Color.Gray;
+            EditStudentEmailBox.BorderStyle = BorderStyle.None;
+            EditStudentEmailBox.Font = new Font("Segoe UI", 15.75F);
+            EditStudentEmailBox.ForeColor = Color.White;
+            EditStudentEmailBox.Location = new Point(692, 136);
+            EditStudentEmailBox.Name = "EditStudentEmailBox";
+            EditStudentEmailBox.PlaceholderText = "Email";
+            EditStudentEmailBox.Size = new Size(241, 28);
+            EditStudentEmailBox.TabIndex = 23;
+            EditStudentEmailBox.Visible = false;
+            // 
+            // EditStudentAgeBox
+            // 
+            EditStudentAgeBox.BackColor = Color.Gray;
+            EditStudentAgeBox.BorderStyle = BorderStyle.None;
+            EditStudentAgeBox.Font = new Font("Segoe UI", 15.75F);
+            EditStudentAgeBox.ForeColor = Color.White;
+            EditStudentAgeBox.Location = new Point(692, 86);
+            EditStudentAgeBox.Name = "EditStudentAgeBox";
+            EditStudentAgeBox.PlaceholderText = "Age";
+            EditStudentAgeBox.Size = new Size(241, 28);
+            EditStudentAgeBox.TabIndex = 24;
+            EditStudentAgeBox.Visible = false;
+            // 
+            // EditButton
+            // 
+            EditButton.BackColor = Color.Gray;
+            EditButton.FlatAppearance.BorderSize = 0;
+            EditButton.FlatStyle = FlatStyle.Flat;
+            EditButton.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            EditButton.Location = new Point(618, 797);
+            EditButton.Name = "EditButton";
+            EditButton.Size = new Size(155, 54);
+            EditButton.TabIndex = 25;
+            EditButton.Text = "Edit";
+            EditButton.UseVisualStyleBackColor = false;
+            EditButton.Visible = false;
+            EditButton.Click += button1_Click;
+            // 
+            // ConfirmButton
+            // 
+            ConfirmButton.BackColor = Color.Gray;
+            ConfirmButton.FlatAppearance.BorderSize = 0;
+            ConfirmButton.FlatStyle = FlatStyle.Flat;
+            ConfirmButton.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ConfirmButton.Location = new Point(618, 797);
+            ConfirmButton.Name = "ConfirmButton";
+            ConfirmButton.Size = new Size(155, 54);
+            ConfirmButton.TabIndex = 26;
+            ConfirmButton.Text = "Confirm";
+            ConfirmButton.UseVisualStyleBackColor = false;
+            ConfirmButton.Visible = false;
+            ConfirmButton.Click += ConfirmButton_Click;
             // 
             // StudentsControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            Controls.Add(submitButton);
+            Controls.Add(ConfirmButton);
+            Controls.Add(EditButton);
+            Controls.Add(EditStudentAgeBox);
+            Controls.Add(EditStudentEmailBox);
+            Controls.Add(EditStudentSurnameBox);
+            Controls.Add(EditStudentNameBox);
+            Controls.Add(SubmitButton);
             Controls.Add(ex14);
             Controls.Add(ex13);
             Controls.Add(ex12);
@@ -256,13 +369,13 @@
             Controls.Add(ex3);
             Controls.Add(ex2);
             Controls.Add(ex1);
-            Controls.Add(label1);
+            Controls.Add(StudentLabel);
             Controls.Add(ExamsGrid);
             Controls.Add(studentsComboBox);
-            Controls.Add(studentName);
+            Controls.Add(StudentName);
             Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
             Name = "StudentsControl";
-            Size = new Size(685, 870);
+            Size = new Size(965, 870);
             Load += StudentsControl_Load;
             ((System.ComponentModel.ISupportInitialize)ExamsGrid).EndInit();
             ResumeLayout(false);
@@ -270,10 +383,10 @@
         }
         #endregion
 
-        private Label studentName;
+        private Label StudentName;
         private ComboBox studentsComboBox;
         private DataGridView ExamsGrid;
-        private Label label1;
+        private Label StudentLabel;
         private TextBox ex1;
         private TextBox ex2;
         private TextBox ex3;
@@ -288,6 +401,12 @@
         private TextBox ex12;
         private TextBox ex13;
         private TextBox ex14;
-        private Button submitButton;
+        private Button SubmitButton;
+        private TextBox EditStudentNameBox;
+        private TextBox EditStudentSurnameBox;
+        private TextBox EditStudentEmailBox;
+        private TextBox EditStudentAgeBox;
+        private Button EditButton;
+        private Button ConfirmButton;
     }
 }
