@@ -107,6 +107,7 @@
             scheduleButton.TabIndex = 6;
             scheduleButton.Text = "Schedule";
             scheduleButton.UseVisualStyleBackColor = true;
+            scheduleButton.Click += scheduleButton_Click;
             // 
             // billingButton
             // 

@@ -19,10 +19,11 @@ namespace ExamTracker.UI.MainAppControls
         IStudentRepository _studentRepository;
         IMaturaExamRepository _maturaExamRepository;
         IGrade8ExamRepository _grade8ExamRepository;
+        ISessionService _sessionService;
         private List<Student> _students;
         private int _student_id;
         private Student _selectedStudent;
-        public StudentsControl(IStudentRepository studentRepository, IMaturaExamRepository maturaExamRepository, IGrade8ExamRepository grade8ExamRepository)
+        public StudentsControl(IStudentRepository studentRepository, IMaturaExamRepository maturaExamRepository, IGrade8ExamRepository grade8ExamRepository, ISessionService sessionService)
         {
             InitializeComponent();
             ChangeLanguage(LanguageHelper.Lang);
@@ -31,6 +32,7 @@ namespace ExamTracker.UI.MainAppControls
             _studentRepository = studentRepository;
             _maturaExamRepository = maturaExamRepository;
             _grade8ExamRepository = grade8ExamRepository;
+            _sessionService = sessionService;
             _maturaExamRepository.OnError += OnErrorOccured;
             _grade8ExamRepository.OnError += OnErrorOccured;
         }
@@ -139,10 +141,10 @@ namespace ExamTracker.UI.MainAppControls
             EditStudentAgeBox.Visible = false;
             EditStudentAgeBox.Text= string.Empty;
         }
-
+        
         private async void LoadAllStudentToList()
         {
-            _students = await _studentRepository.GetAllStudents();
+            _students = await _studentRepository.GetAllStudents(_sessionService.CurrentAccount.Id);
             foreach (Student student in _students)
             {
                 studentsComboBox.Items.Add(student.Name + " " + student.Surname);

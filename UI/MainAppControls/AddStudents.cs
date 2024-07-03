@@ -16,11 +16,13 @@ namespace ExamTracker.UI.MainAppControls
     public partial class AddStudents : UserControl
     {
         IStudentRepository _studentRepository;
-        public AddStudents(IStudentRepository studentRepository)
+        ISessionService _sessionService;
+        public AddStudents(IStudentRepository studentRepository, ISessionService sessionService)
         {
             InitializeComponent();
             ChangeLanguage();
             _studentRepository = studentRepository;
+            _sessionService = sessionService;
         }
         private void ChangeLanguage()
         {
@@ -59,8 +61,8 @@ namespace ExamTracker.UI.MainAppControls
                 counter++;
                 isValid = false;
             }
-            var pattern = @"/[a-zA-Z0-9]+\.?[a-zA-Z0-9]*\@[a-z]+\.[a-z]{2,3}/g";
-            if (!string.IsNullOrWhiteSpace(studentEmailTextBox.Text) && !(Regex.Match(studentEmailTextBox.Text, pattern).Success)) // implement regex later for email
+            var pattern = @"^[a-zA-Z0-9]+\.?[a-zA-Z0-9]*@[a-z]+\.[a-z]{2,3}$";
+            if (!string.IsNullOrWhiteSpace(studentEmailTextBox.Text) && !(Regex.Match(studentEmailTextBox.Text, pattern).Success))
             { 
                 sb.Append($"{counter}. Provide a valid email.\n");
                 counter++;
@@ -124,10 +126,10 @@ namespace ExamTracker.UI.MainAppControls
             string? email = studentEmailTextBox.Text;
             int age;
             int.TryParse(studentAgeTextBox.Text, out age);
-            
+            int teacherId = _sessionService.CurrentAccount.Id;
             
 
-            Student student = new Student(name, surname, age,email, examType);
+            Student student = new Student(name, surname, age,email, examType, teacherId);
 
             _studentRepository.AddStudentToDB(student);
             ClearFields();

@@ -28,7 +28,7 @@ namespace ExamTracker.UI
             _grade8ExamRepository = grade8ExamRepository;
             _accountRepository = accountRepository;
             _sessionService = sesionService;
-            
+
             _studentRepository.OnError += AnErrorHasOccured;
         }
 
@@ -54,13 +54,13 @@ namespace ExamTracker.UI
         private void setDashboardControl()
         {
             dataPanel.Controls.Clear();
-            AddStudents dashboardControl = new AddStudents(_studentRepository);
+            AddStudents dashboardControl = new AddStudents(_studentRepository, _sessionService);
             dataPanel.Controls.Add(dashboardControl);
         }
         private void setStudentsControl()
         {
             dataPanel.Controls.Clear();
-            StudentsControl studentsControl = new StudentsControl(_studentRepository, _maturaExamRepository, _grade8ExamRepository);
+            StudentsControl studentsControl = new StudentsControl(_studentRepository, _maturaExamRepository, _grade8ExamRepository, _sessionService);
             dataPanel.Controls.Add(studentsControl);
         }
         private void setProfileControl()
@@ -70,7 +70,12 @@ namespace ExamTracker.UI
             dataPanel.Controls.Add(profileControl);
         }
 
-
+        private void setScheduleControl()
+        {
+            dataPanel.Controls.Clear();
+            ScheduleControl scheduleControl = new ScheduleControl();
+            dataPanel.Controls.Add(scheduleControl);
+        }
         private void MainAppView_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
@@ -97,6 +102,11 @@ namespace ExamTracker.UI
         private void dashboardButton_Click(object sender, EventArgs e)
         {
             setDashboardControl();
+        }
+
+        private void scheduleButton_Click(object sender, EventArgs e)
+        {
+            setScheduleControl();
         }
     }
 }
