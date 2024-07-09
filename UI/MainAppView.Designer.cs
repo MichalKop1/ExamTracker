@@ -122,6 +122,7 @@
             billingButton.TabIndex = 7;
             billingButton.Text = "Billing";
             billingButton.UseVisualStyleBackColor = true;
+            billingButton.Click += billingButton_Click;
             // 
             // businessButton
             // 

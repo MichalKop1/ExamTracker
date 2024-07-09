@@ -1,5 +1,6 @@
 ﻿using DataAcessLayer.Contracts;
 using DomainModel.Models;
+using ExamTracker.Helpers;
 using ExamTracker.UI.MainAppControls;
 using System;
 using System.Collections.Generic;
@@ -19,8 +20,12 @@ namespace ExamTracker.UI
         IMaturaExamRepository _maturaExamRepository;
         IGrade8ExamRepository _grade8ExamRepository;
         IAccountRepository _accountRepository;
+        IEventRepository _eventRepository;
+        IInvoiceRepository _invoiceRepository;
+        IProductServiceRepository _productServiceRepository;
         ISessionService _sessionService;
-        public MainAppView(IStudentRepository studentRepository, IMaturaExamRepository maturaExamRepository, IGrade8ExamRepository grade8ExamRepository, IAccountRepository accountRepository, ISessionService sesionService)
+        public MainAppView(IStudentRepository studentRepository, IMaturaExamRepository maturaExamRepository, IGrade8ExamRepository grade8ExamRepository, IAccountRepository accountRepository, ISessionService sesionService, IEventRepository eventRepository,
+            IInvoiceRepository invoiceRepository, IProductServiceRepository productServiceRepository)
         {
             InitializeComponent();
             _studentRepository = studentRepository;
@@ -28,8 +33,10 @@ namespace ExamTracker.UI
             _grade8ExamRepository = grade8ExamRepository;
             _accountRepository = accountRepository;
             _sessionService = sesionService;
-
+            _eventRepository = eventRepository;
             _studentRepository.OnError += AnErrorHasOccured;
+            _invoiceRepository = invoiceRepository;
+            _productServiceRepository = productServiceRepository;
         }
 
         private void ChangeLanguage()
@@ -51,30 +58,37 @@ namespace ExamTracker.UI
             MessageBox.Show(errMsg, "An error occured");
         }
 
-        private void setDashboardControl()
+        private void SetDashboardControl()
         {
             dataPanel.Controls.Clear();
             AddStudents dashboardControl = new AddStudents(_studentRepository, _sessionService);
             dataPanel.Controls.Add(dashboardControl);
         }
-        private void setStudentsControl()
+        private void SetStudentsControl()
         {
             dataPanel.Controls.Clear();
             StudentsControl studentsControl = new StudentsControl(_studentRepository, _maturaExamRepository, _grade8ExamRepository, _sessionService);
             dataPanel.Controls.Add(studentsControl);
         }
-        private void setProfileControl()
+        private void SetProfileControl()
         {
             dataPanel.Controls.Clear();
             ProfileControl profileControl = new ProfileControl(_accountRepository, _sessionService);
             dataPanel.Controls.Add(profileControl);
         }
 
-        private void setScheduleControl()
+        private void SetScheduleControl()
         {
             dataPanel.Controls.Clear();
-            ScheduleControl scheduleControl = new ScheduleControl();
+            ScheduleControl scheduleControl = new ScheduleControl(_eventRepository, _sessionService);
             dataPanel.Controls.Add(scheduleControl);
+        }
+
+        private void SetBillingControl()
+        {
+            dataPanel.Controls.Clear();
+            BillingControl billingControl = new BillingControl(_invoiceRepository, _productServiceRepository);
+            dataPanel.Controls.Add(billingControl);
         }
         private void MainAppView_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -85,28 +99,33 @@ namespace ExamTracker.UI
         {
             Account currentAccount = _sessionService.CurrentAccount;
             this.Text = "Exam Tracker   -   Currently logged: " + currentAccount.ContactName;
-            setProfileControl();
+            SetProfileControl();
             ChangeLanguage();
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            setProfileControl();
+            SetProfileControl();
         }
 
         private void studentsButton_Click(object sender, EventArgs e)
         {
-            setStudentsControl();
+            SetStudentsControl();
         }
 
         private void dashboardButton_Click(object sender, EventArgs e)
         {
-            setDashboardControl();
+            SetDashboardControl();
         }
 
         private void scheduleButton_Click(object sender, EventArgs e)
         {
-            setScheduleControl();
+            SetScheduleControl();
+        }
+
+        private void billingButton_Click(object sender, EventArgs e)
+        {
+            SetBillingControl();
         }
     }
 }

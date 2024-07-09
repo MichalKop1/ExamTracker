@@ -2,6 +2,7 @@ using DataAcessLayer.Contracts;
 using ExamTracker.UI;
 using DataAcessLayer;
 using System.Windows.Forms;
+using ExamTracker.Helpers;
 
 namespace ExamTracker
 {
@@ -19,7 +20,7 @@ namespace ExamTracker
             _accountRepository = accountRepository;
             _sessionService = sessionService;
             ChangeLanguage(LanguageHelper.Lang);
-            _accountRepository.OnError += OnErrorOccured;
+            _accountRepository.OnError += OnErrorOccured;   
         }
 
         private void ChangeLanguage(string language)

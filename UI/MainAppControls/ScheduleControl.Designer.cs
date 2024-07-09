@@ -34,6 +34,7 @@
             ShortDescTextBox = new TextBox();
             ExamRadioButton = new RadioButton();
             MeetingRadioButton = new RadioButton();
+            LongDescTextBox = new RichTextBox();
             SuspendLayout();
             // 
             // Calendar
@@ -56,7 +57,7 @@
             // AddEventButton
             // 
             AddEventButton.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            AddEventButton.Location = new Point(570, 395);
+            AddEventButton.Location = new Point(583, 600);
             AddEventButton.Name = "AddEventButton";
             AddEventButton.Size = new Size(178, 38);
             AddEventButton.TabIndex = 2;
@@ -76,7 +77,7 @@
             // 
             ExamRadioButton.AutoSize = true;
             ExamRadioButton.Font = new Font("Segoe UI", 14.25F);
-            ExamRadioButton.Location = new Point(841, 330);
+            ExamRadioButton.Location = new Point(843, 362);
             ExamRadioButton.Name = "ExamRadioButton";
             ExamRadioButton.Size = new Size(75, 29);
             ExamRadioButton.TabIndex = 4;
@@ -89,7 +90,7 @@
             // 
             MeetingRadioButton.AutoSize = true;
             MeetingRadioButton.Font = new Font("Segoe UI", 14.25F);
-            MeetingRadioButton.Location = new Point(841, 365);
+            MeetingRadioButton.Location = new Point(843, 397);
             MeetingRadioButton.Name = "MeetingRadioButton";
             MeetingRadioButton.Size = new Size(100, 29);
             MeetingRadioButton.TabIndex = 5;
@@ -98,11 +99,20 @@
             MeetingRadioButton.UseVisualStyleBackColor = true;
             MeetingRadioButton.CheckedChanged += MeetingRadioButton_CheckedChanged;
             // 
+            // LongDescTextBox
+            // 
+            LongDescTextBox.Location = new Point(507, 394);
+            LongDescTextBox.Name = "LongDescTextBox";
+            LongDescTextBox.Size = new Size(315, 168);
+            LongDescTextBox.TabIndex = 6;
+            LongDescTextBox.Text = "";
+            // 
             // ScheduleControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
+            Controls.Add(LongDescTextBox);
             Controls.Add(MeetingRadioButton);
             Controls.Add(ExamRadioButton);
             Controls.Add(ShortDescTextBox);
@@ -111,6 +121,7 @@
             Controls.Add(Calendar);
             Name = "ScheduleControl";
             Size = new Size(965, 870);
+            Load += ScheduleControl_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -123,5 +134,6 @@
         private TextBox ShortDescTextBox;
         private RadioButton ExamRadioButton;
         private RadioButton MeetingRadioButton;
+        private RichTextBox LongDescTextBox;
     }
 }

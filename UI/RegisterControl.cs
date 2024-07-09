@@ -1,5 +1,6 @@
 ﻿using DataAcessLayer.Contracts;
 using DomainModel.Models;
+using ExamTracker.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -60,6 +61,13 @@ namespace ExamTracker.UI
                 counter++;
                 isValid = false;
             }
+            else if (_accountRepository.CheckForLoginDuplicates(loginBox.Text) >0)
+            {
+                sb.Append($"{counter}. Login already exists. Use a different one.\n");
+                counter++;
+                isValid = false;
+            }
+
             var pattern = @"^[a-zA-Z0-9]+\.?[a-zA-Z0-9]*@[a-z]+\.[a-z]{2,3}$";
             if (string.IsNullOrWhiteSpace(emailBox.Text))
             {
@@ -121,7 +129,7 @@ namespace ExamTracker.UI
 
             if (password == passwordConfirmation)
             {
-                Account account = new Account(userName, password, email, contactName);
+                Account account = new Account(userName, password,contactName, email);
                 _accountRepository.registerAnAccount(account);
                 ClearForm();
                 MessageBox.Show("You have created an account!", "Registered successfully!");

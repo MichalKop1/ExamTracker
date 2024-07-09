@@ -1,5 +1,6 @@
 ﻿using DataAcessLayer.Contracts;
 using DomainModel.Models;
+using ExamTracker.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -49,6 +51,38 @@ namespace ExamTracker.UI
                 saveChangesButton.Text = "Zapisz";
             }
         }
+
+        private bool ValidateForm()
+        {
+            StringBuilder stringBuilder = new StringBuilder("There was an error in your form. Try:\n");
+            int counter = 1;
+            bool isValid = true;
+            string PhonePattern = "^[0-9]{3,5}-[0-9]{3}-[0-9]{3}$";
+            if (!string.IsNullOrEmpty(PhoneTextBox.Text) && !Regex.Match(PhoneTextBox.Text, PhonePattern).Success)
+            {
+                stringBuilder.Append($"{counter}. Invalid phone number pattern. Use: 111-222-333.\n");
+                counter++;
+                isValid = false;
+            }
+            string ZipCodePattern = "^[0-9]{1,3}(\\-[0-9]{1,3})?$";
+            if (!string.IsNullOrEmpty(ZipCodeTextBox.Text) && !Regex.Match(ZipCodeTextBox.Text, ZipCodePattern).Success)
+            {
+                stringBuilder.Append($"{counter}. Invalid zip code patern.\n");
+                counter++;
+                isValid = false;
+            }
+            string EmailPattern = "^[a-zA-Z0-9]+\\.?[a-zA-Z0-9]*@[a-z]+\\.[a-z]{2,3}$";
+            if(!string.IsNullOrEmpty(EmailTextBox.Text) && !Regex.Match(EmailTextBox.Text, EmailPattern).Success)
+            {
+                stringBuilder.Append($"{counter}. Provide a valid email address.\n");
+            }
+
+            if(!isValid)
+            {
+                MessageBox.Show(stringBuilder.ToString(), "Invalid form!");
+            }
+            return isValid;
+        }
         private void ClearAllFields()
         {
             BusinessNameBox.Clear();
@@ -62,7 +96,8 @@ namespace ExamTracker.UI
         }
         private void LoadCurrentUser()
         {
-            string businesName = BusinessNameBox.Text;
+            if (!ValidateForm()) return;
+            string businesName = (BusinessNameBox.Text);
             string streetAddress = StreetAddressRichTextBox.Text;
             string city = CityTextBox.Text;
             string state = StateTextBox.Text;
@@ -85,6 +120,7 @@ namespace ExamTracker.UI
 
         private void saveChangesButton_Click(object sender, EventArgs e)
         {
+            
             LoadCurrentUser();
         }
     }

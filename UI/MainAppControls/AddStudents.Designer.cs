@@ -30,8 +30,6 @@
         {
             addStudentLabel = new Label();
             studentNameLabel = new Label();
-            is8ClassCheckBox = new CheckBox();
-            isMaturaCheckBox = new CheckBox();
             studentNameTextBox = new TextBox();
             submitButton = new Button();
             cancelButton = new Button();
@@ -39,6 +37,8 @@
             studentEmailLabel = new Label();
             studentAgeTextBox = new TextBox();
             studentAgeLabel = new Label();
+            Grade8RadioButton = new RadioButton();
+            MaturaRadioButton = new RadioButton();
             SuspendLayout();
             // 
             // addStudentLabel
@@ -60,33 +60,6 @@
             studentNameLabel.Size = new Size(140, 25);
             studentNameLabel.TabIndex = 1;
             studentNameLabel.Text = "Student Name";
-            // 
-            // is8ClassCheckBox
-            // 
-            is8ClassCheckBox.AutoSize = true;
-            is8ClassCheckBox.CheckAlign = ContentAlignment.MiddleRight;
-            is8ClassCheckBox.FlatAppearance.BorderSize = 0;
-            is8ClassCheckBox.FlatStyle = FlatStyle.Flat;
-            is8ClassCheckBox.Location = new Point(36, 449);
-            is8ClassCheckBox.Name = "is8ClassCheckBox";
-            is8ClassCheckBox.Size = new Size(152, 41);
-            is8ClassCheckBox.TabIndex = 2;
-            is8ClassCheckBox.Text = "8 klasisty";
-            is8ClassCheckBox.TextAlign = ContentAlignment.TopCenter;
-            is8ClassCheckBox.UseVisualStyleBackColor = true;
-            is8ClassCheckBox.CheckedChanged += is8ClassCheckBox_CheckedChanged;
-            // 
-            // isMaturaCheckBox
-            // 
-            isMaturaCheckBox.AutoSize = true;
-            isMaturaCheckBox.CheckAlign = ContentAlignment.MiddleRight;
-            isMaturaCheckBox.Location = new Point(221, 449);
-            isMaturaCheckBox.Name = "isMaturaCheckBox";
-            isMaturaCheckBox.Size = new Size(129, 41);
-            isMaturaCheckBox.TabIndex = 3;
-            isMaturaCheckBox.Text = "matura";
-            isMaturaCheckBox.UseVisualStyleBackColor = true;
-            isMaturaCheckBox.CheckedChanged += isMaturaCheckBox_CheckedChanged;
             // 
             // studentNameTextBox
             // 
@@ -167,12 +140,36 @@
             studentAgeLabel.TabIndex = 9;
             studentAgeLabel.Text = "Student Age";
             // 
+            // Grade8RadioButton
+            // 
+            Grade8RadioButton.AutoSize = true;
+            Grade8RadioButton.Location = new Point(36, 449);
+            Grade8RadioButton.Name = "Grade8RadioButton";
+            Grade8RadioButton.Size = new Size(154, 41);
+            Grade8RadioButton.TabIndex = 12;
+            Grade8RadioButton.TabStop = true;
+            Grade8RadioButton.Text = "8 klasisty";
+            Grade8RadioButton.UseVisualStyleBackColor = true;
+            // 
+            // MaturaRadioButton
+            // 
+            MaturaRadioButton.AutoSize = true;
+            MaturaRadioButton.Location = new Point(232, 449);
+            MaturaRadioButton.Name = "MaturaRadioButton";
+            MaturaRadioButton.Size = new Size(129, 41);
+            MaturaRadioButton.TabIndex = 13;
+            MaturaRadioButton.TabStop = true;
+            MaturaRadioButton.Text = "Matura";
+            MaturaRadioButton.UseVisualStyleBackColor = true;
+            // 
             // AddStudents
             // 
             AutoScaleDimensions = new SizeF(16F, 37F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoValidate = AutoValidate.EnableAllowFocusChange;
             BackColor = Color.White;
+            Controls.Add(MaturaRadioButton);
+            Controls.Add(Grade8RadioButton);
             Controls.Add(studentAgeTextBox);
             Controls.Add(studentAgeLabel);
             Controls.Add(studentEmailTextBox);
@@ -180,8 +177,6 @@
             Controls.Add(cancelButton);
             Controls.Add(submitButton);
             Controls.Add(studentNameTextBox);
-            Controls.Add(isMaturaCheckBox);
-            Controls.Add(is8ClassCheckBox);
             Controls.Add(studentNameLabel);
             Controls.Add(addStudentLabel);
             Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 238);
@@ -197,8 +192,6 @@
 
         private Label addStudentLabel;
         private Label studentNameLabel;
-        private CheckBox is8ClassCheckBox;
-        private CheckBox isMaturaCheckBox;
         private TextBox studentNameTextBox;
         private Button submitButton;
         private Button cancelButton;
@@ -206,5 +199,7 @@
         private Label studentEmailLabel;
         private TextBox studentAgeTextBox;
         private Label studentAgeLabel;
+        private RadioButton Grade8RadioButton;
+        private RadioButton MaturaRadioButton;
     }
 }

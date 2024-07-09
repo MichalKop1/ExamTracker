@@ -1,5 +1,6 @@
 ﻿using DataAcessLayer.Contracts;
 using DomainModel.Models;
+using ExamTracker.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -44,25 +45,31 @@ namespace ExamTracker.UI.MainAppControls
             studentNameTextBox.Clear();
             studentEmailTextBox.Clear();
             studentAgeTextBox.Clear();
-            is8ClassCheckBox.Checked = false;
-            isMaturaCheckBox.Checked = false;
+            Grade8RadioButton.Checked = false;
+            MaturaRadioButton.Checked = false;
         }
 
         private bool ValidateForm()
         {
-            int counter = 1;
             StringBuilder sb = new StringBuilder("There were some problems with your form. Try:\n\n");
+            int counter = 1;
             bool isValid = true;
-            string[] fullName = (studentNameTextBox.Text).Split();
-
-            if (fullName.Length < 2)
+            string fullNamePattern = "^[a-zA-Z]+ [a-zA-Z]+$";
+            string areNumbersInString = "^[0-9]+( [0-9]+)?$";
+            if (Regex.Match(studentNameTextBox.Text, areNumbersInString).Success)
+            {
+                sb.Append($"{counter}. Student name can't be numbers.\n");
+                counter++;
+                isValid = false;
+            }
+            if (!Regex.Match(studentNameTextBox.Text, fullNamePattern).Success)
             {
                 sb.Append($"{counter}. Add both name and surname of your student.\n");
                 counter++;
                 isValid = false;
             }
-            var pattern = @"^[a-zA-Z0-9]+\.?[a-zA-Z0-9]*@[a-z]+\.[a-z]{2,3}$";
-            if (!string.IsNullOrWhiteSpace(studentEmailTextBox.Text) && !(Regex.Match(studentEmailTextBox.Text, pattern).Success))
+            var emailPattern = @"^[a-zA-Z0-9]+\.?[a-zA-Z0-9]*@[a-z]+\.[a-z]{2,3}$";
+            if (!string.IsNullOrWhiteSpace(studentEmailTextBox.Text) && !(Regex.Match(studentEmailTextBox.Text, emailPattern).Success))
             { 
                 sb.Append($"{counter}. Provide a valid email.\n");
                 counter++;
@@ -74,7 +81,7 @@ namespace ExamTracker.UI.MainAppControls
                 counter++;
                 isValid = false;
             }
-            if (!isMaturaCheckBox.Checked && !is8ClassCheckBox.Checked)
+            if (!MaturaRadioButton.Checked && !Grade8RadioButton.Checked)
             {
                 sb.Append($"{counter}. Check the box with an appriopriate exam type.\n");
                 counter++;
@@ -93,12 +100,12 @@ namespace ExamTracker.UI.MainAppControls
 
         private void is8ClassCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            isMaturaCheckBox.Enabled = !(isMaturaCheckBox.Enabled);
+            
         }
 
         private void isMaturaCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            is8ClassCheckBox.Enabled = !(is8ClassCheckBox.Enabled);
+            
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
@@ -111,11 +118,11 @@ namespace ExamTracker.UI.MainAppControls
             if (!ValidateForm()) return;
 
             string examType = "";
-            if (is8ClassCheckBox.Checked)
+            if (Grade8RadioButton.Checked)
             {
                 examType = "Grade8Exams";
             }
-            else if (isMaturaCheckBox.Checked)
+            else if (MaturaRadioButton.Checked)
             {
                 examType = "MaturaExams";
             }

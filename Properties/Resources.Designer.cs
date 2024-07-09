@@ -63,9 +63,9 @@ namespace ExamTracker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap exam {
+        internal static System.Drawing.Bitmap check_mark {
             get {
-                object obj = ResourceManager.GetObject("exam", resourceCulture);
+                object obj = ResourceManager.GetObject("check-mark", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -86,6 +86,16 @@ namespace ExamTracker.Properties {
         internal static System.Drawing.Bitmap meeting {
             get {
                 object obj = ResourceManager.GetObject("meeting", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap x_mark {
+            get {
+                object obj = ResourceManager.GetObject("x-mark", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExamTracker
+namespace ExamTracker.Helpers
 {
     internal class LanguageHelper
     {
@@ -14,8 +14,8 @@ namespace ExamTracker
             get
             {
                 string? lang = ConfigurationManager.AppSettings["Lang"];
-                
-                if (lang!= null)
+
+                if (lang != null)
                 {
                     return lang;
                 }

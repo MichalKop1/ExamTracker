@@ -1,5 +1,6 @@
 ﻿using DataAcessLayer.Contracts;
 using DomainModel.Models;
+using ExamTracker.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -104,7 +105,53 @@ namespace ExamTracker.UI.MainAppControls
             }
             return isValid;
         }
-    private List<TextBox> getMaturaTextBoxes()
+        private bool ValidateExamPointsBoxes(string? examType)
+        {
+            StringBuilder errorMessage = new StringBuilder("Invalid input. Try:\n");
+            int counter = 1;
+            if (examType == "Grade8Exams")
+            {
+                foreach(TextBox points in get8ClassTextBoxes())
+                {
+                    if (string.IsNullOrWhiteSpace(points.Text))
+                    {
+                        errorMessage.Append($"{counter}. Fill the empty boxes.\n");
+                        MessageBox.Show(errorMessage.ToString(), "Invalid input");
+                        return false;
+                    }
+                    else if (!int.TryParse(points.Text, out _))
+                    {
+                        errorMessage.Append($"{counter}. Use numbers.\n");
+                        MessageBox.Show(errorMessage.ToString(), "Invalid input");
+                        return false;
+                    }
+                }
+            }
+            else if (examType == "MaturaExams")
+            {
+                foreach (TextBox points in getMaturaTextBoxes())
+                {
+                    if (string.IsNullOrWhiteSpace(points.Text))
+                    {
+                        errorMessage.Append($"{counter}. Fill the empty boxes.\n");
+                        MessageBox.Show(errorMessage.ToString(), "Invalid input");
+                        return false;
+                    }
+                    else if (!int.TryParse(points.Text, out _))
+                    {
+                        errorMessage.Append($"{counter}. Use numbers.\n");
+                        MessageBox.Show(errorMessage.ToString(), "Invalid input");
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                return false;
+            }
+            return true;
+        }
+        private List<TextBox> getMaturaTextBoxes()
         {
             List<TextBox> exercises = new List<TextBox> { ex1, ex2, ex3, ex4, ex5, ex6, ex7, ex8, ex9, ex10 };
             return exercises;
@@ -265,6 +312,7 @@ namespace ExamTracker.UI.MainAppControls
 
         private async void submitButton_Click(object sender, EventArgs e)
         {
+            if (!ValidateExamPointsBoxes(_selectedStudent.ExamType)) return;
             if (_selectedStudent.ExamType == "MaturaExams")
             {
                 int sum = Convert.ToInt32(ex1.Text) + Convert.ToInt32(ex2.Text) + Convert.ToInt32(ex3.Text) + Convert.ToInt32(ex4.Text) + Convert.ToInt32(ex5.Text) + Convert.ToInt32(ex6.Text) + Convert.ToInt32(ex7.Text) + Convert.ToInt32(ex8.Text) + Convert.ToInt32(ex9.Text) + Convert.ToInt32(ex10.Text);

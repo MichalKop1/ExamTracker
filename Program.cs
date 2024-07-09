@@ -7,6 +7,7 @@ using System.ServiceProcess;
 using System;
 using System.Data.SqlClient;
 using System.Data;
+using DataAcessLayer;
 namespace ExamTracker
 {
     internal static class Program
@@ -25,34 +26,43 @@ namespace ExamTracker
             //Form1
             var startForm = serviceProvider.GetRequiredService<MainForm>();
             Application.Run(startForm);
+            
         }
 
         static ServiceCollection ConfigureServices()
         {
             ServiceCollection services = new ServiceCollection();
 
-            //if (ConfigurationManager.AppSettings["repositoryType"] == "ddd")
-            //{
-            //    services.AddTransient<IAccountRepository>(_ => new AccountRepository());
-            //}
-            //else
-            //{
-            //    services.AddTransient<IAccountRepository>(_ => new AccountRepository());
-            //}
+            if (ConfigurationManager.AppSettings["repositoryType"] == "sql")
+            {
+                //services.AddTransient<IAccountRepository>(_ => new AccountRepository());
+                services.AddTransient<IAccountRepository, AccountRepository>();
+                services.AddTransient<IGrade8ExamRepository, Grade8ExamRepository>();
+                services.AddTransient<IMaturaExamRepository, MaturaExamRepository>();
+                services.AddTransient<IStudentRepository, StudentRepository>();
+                services.AddTransient<IEventRepository, EventRepository>();
+
+            }
+            else if (ConfigurationManager.AppSettings["repositoryType"] == "sqlite")
+            {
+                SQLiteDatabaseManager dm = new SQLiteDatabaseManager();
+                //services.AddTransient<IAccountRepository>(_ => new AccountRepository());
+                services.AddTransient<IAccountRepository, SQLiteAccountRepository>();
+                services.AddTransient<IGrade8ExamRepository, SQLiteGrade8ExamRepository>();
+                services.AddTransient<IMaturaExamRepository, SQLiteMaturaExamRepository>();
+                services.AddTransient<IStudentRepository, SQLiteStudentRepository>();
+                services.AddTransient<IEventRepository, SQLiteEventRepository>();
+                services.AddTransient<IInvoiceRepository, SQLiteInvoiceRepository>();
+                services.AddTransient<IProductServiceRepository, SQLiteProductServiceRepository>();
+            }
+
             services.AddMemoryCache();
             services.AddSingleton<ICacheService, CacheService>();
             services.AddTransient<IDbConnection>(_ => new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString));
-            //services.AddTransient<IAccountRepository>(_ => new AccountRepository());
-            //services.AddTransient<IGrade8ExamRepository>(_ => new Grade8ExamRepository());
-            //services.AddTransient<IMaturaExamRepository>(_ => new MaturaExamRepository());
-            //services.AddTransient<IStudentRepository>(_ => new StudentRepository());
 
             services.AddSingleton<ISessionService, SessionService>();
 
-            services.AddTransient<IAccountRepository, AccountRepository>();
-            services.AddTransient<IGrade8ExamRepository, Grade8ExamRepository>();
-            services.AddTransient<IMaturaExamRepository, MaturaExamRepository>();
-            services.AddTransient<IStudentRepository, StudentRepository>();
+            
 
             services.AddTransient<MainForm>();
             services.AddTransient<MainAppView>();
