@@ -15,9 +15,9 @@ using HorizontalAlignment = iText.Layout.Properties.HorizontalAlignment;
 
 namespace ExamTracker.Helpers
 {
-    internal class PdfHelper
+    internal static class PdfHelper
     {
-        internal void CreatePdfInvoice(string filePath, Invoice invoice, List<ProductService> productServiceList)
+        internal static void CreatePdfInvoice(string filePath, Invoice invoice, List<ProductService> productServiceList)
         {
             using (var writer = new PdfWriter(filePath))
             {
@@ -68,6 +68,7 @@ namespace ExamTracker.Helpers
 
                     Table soldGoodsAndServices = new Table(UnitValue.CreatePercentArray(new float[] { 10, 30, 20,20,20 })).UseAllAvailableWidth();
                     int counter = 1;
+                    double totalPrice = 0;
                     soldGoodsAndServices.AddHeaderCell("N0");
                     soldGoodsAndServices.AddHeaderCell("Description");
                     soldGoodsAndServices.AddHeaderCell("Quantity");
@@ -75,12 +76,14 @@ namespace ExamTracker.Helpers
                     soldGoodsAndServices.AddHeaderCell("Total Gross");
                     foreach (ProductService ps in productServiceList)
                     {
+                        soldGoodsAndServices.SetFont(standard);
                         soldGoodsAndServices.AddCell(new Cell().Add(new Paragraph(counter.ToString())));
                         soldGoodsAndServices.AddCell(new Cell().Add(new Paragraph(ps.Description)));
                         soldGoodsAndServices.AddCell(new Cell().Add(new Paragraph((ps.NumberOfItems).ToString())));
-                        soldGoodsAndServices.AddCell(new Cell().Add(new Paragraph((ps.UnitPrice).ToString())));
-                        soldGoodsAndServices.AddCell(new Cell().Add(new Paragraph((ps.TotalGrossPrice).ToString())));
+                        soldGoodsAndServices.AddCell(new Cell().Add(new Paragraph($"{ps.UnitPrice:0.00}")));
+                        soldGoodsAndServices.AddCell(new Cell().Add(new Paragraph($"{ps.TotalGrossPrice:0.00}")));
                         counter++;
+                        totalPrice += ps.TotalGrossPrice;
                     }
                     document.Add(soldGoodsAndServices);
                     document.Add(new Paragraph("\n\n"));
@@ -92,7 +95,7 @@ namespace ExamTracker.Helpers
                         .Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(200).SetMarginTop(5).SetMarginBottom(5))
                         .Add(new Text($"\n{invoice.Remarks}\n"))
                         .Add(new Text($"{invoice.SellersAddress}\n"))
-                        .Add(new Text($"{invoice.NumberOfAccount}\n\n"))
+                        .Add(new Text($"{invoice.NumberOfAccount}\n\n\n"))
                         .Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(150).SetMarginTop(5).SetMarginBottom(5))
                         .Add(new Text($"\nName and surname of a person entitled to the document").SetFontSize(8));
 
@@ -100,9 +103,9 @@ namespace ExamTracker.Helpers
                         .SetFont(standard).SetFontSize(10)
                         .Add(new Text("Owing: \n").SetFont(boldStandard).SetFontSize(12))
                         .Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(150).SetMarginTop(5).SetMarginBottom(5))
-                        .Add(new Text($"\nNet  \t\t\t{((Convert.ToDouble(invoice.TotalNet)) / 100).ToString("F2")} {invoice.Currency}.\n").SetHorizontalAlignment(HorizontalAlignment.LEFT))
-                        .Add(new Text($"VAT  \t\t\t0,00 {invoice.Currency}.\n").SetHorizontalAlignment(HorizontalAlignment.LEFT))
-                        .Add(new Text($"Gross\t\t\t{((Convert.ToDouble(invoice.TotalGross)) / 100).ToString("F2")} {invoice.Currency}.\n\n\n").SetHorizontalAlignment(HorizontalAlignment.LEFT))
+                        .Add(new Text($"\nNet  \t\t\t{totalPrice:0.00} {invoice.Currency} .\n").SetHorizontalAlignment(HorizontalAlignment.LEFT))
+                        .Add(new Text($"VAT  \t\t\t0,00 {invoice.Currency} .\n").SetHorizontalAlignment(HorizontalAlignment.LEFT))
+                        .Add(new Text($"Gross\t\t\t{totalPrice:0.00} {invoice.Currency} .\n\n\n").SetHorizontalAlignment(HorizontalAlignment.LEFT))
                         .Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(150).SetMarginTop(5).SetMarginBottom(5))
                         .Add(new Text($"\nName and surname of a person issuing the document").SetFontSize(8));
 

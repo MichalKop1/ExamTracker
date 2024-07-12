@@ -87,7 +87,7 @@ namespace ExamTracker.UI
         private void SetBillingControl()
         {
             dataPanel.Controls.Clear();
-            BillingControl billingControl = new BillingControl(_invoiceRepository, _productServiceRepository);
+            BillingControl billingControl = new BillingControl(_invoiceRepository, _productServiceRepository, _sessionService);
             dataPanel.Controls.Add(billingControl);
         }
         private void MainAppView_FormClosed(object sender, FormClosedEventArgs e)
