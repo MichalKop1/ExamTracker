@@ -47,6 +47,8 @@
             pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = false;
+            pictureBox.MouseEnter += pictureBox_MouseEnter;
+            pictureBox.MouseLeave += pictureBox_MouseLeave;
             // 
             // EventInfoLabel
             // 
@@ -69,6 +71,8 @@
             DateLabel.Size = new Size(91, 30);
             DateLabel.TabIndex = 2;
             DateLabel.Text = " [ DATE ]";
+            DateLabel.MouseEnter += DateLabel_MouseEnter;
+            DateLabel.MouseLeave += DateLabel_MouseLeave;
             // 
             // TickMarkButton
             // 
@@ -107,10 +111,10 @@
             Cursor = Cursors.Hand;
             Name = "ScheduledWorkControlItem";
             Size = new Size(438, 79);
+            Load += ScheduledWorkControlItem_Load;
             MouseClick += ScheduledWorkControlItem_MouseClick;
             MouseEnter += ScheduledWorkControlItem_MouseEnter;
             MouseLeave += ScheduledWorkControlItem_MouseLeave;
-            MouseHover += ScheduledWorkControlItem_MouseHover;
             ((System.ComponentModel.ISupportInitialize)pictureBox).EndInit();
             ResumeLayout(false);
             PerformLayout();

@@ -12,15 +12,17 @@ using ExamTracker.Helpers;
 using DataAcessLayer.Contracts;
 using ExamTracker.CustomControls;
 using DomainModel.Models;
+using System.Globalization;
 
 namespace ExamTracker.UI.MainAppControls
 {
     public partial class BillingControl : UserControl
     {
-        IInvoiceRepository _invoiceRepository;
-        IProductServiceRepository _productServiceRepository;
-        ISessionService _sessionService;
+        private readonly IInvoiceRepository _invoiceRepository;
+        private readonly IProductServiceRepository _productServiceRepository;
+        private readonly ISessionService _sessionService;
         private List<SoldProductsServicesItems> allitems;
+        private List<Invoice> invoicesList;
         public BillingControl(IInvoiceRepository invoiceRepository, IProductServiceRepository productServiceRepository, ISessionService sessionService)
         {
             InitializeComponent();
@@ -29,6 +31,49 @@ namespace ExamTracker.UI.MainAppControls
             _sessionService = sessionService;
             ItemsFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
             allitems = new List<SoldProductsServicesItems>();
+            invoicesList = new List<Invoice>();
+        }
+
+        private void ChangeLanguage()
+        {
+            if (LanguageHelper.Lang == "pl_pl")
+            {
+                InvoiceListLabel.Text = "Lista faktur";
+                InvoiceLabel.Text = "Zatwierdzone faktury";
+                CreateInvoiceLabel.Text = "Stwórz fakturę";
+                DateOfSaleTextBox.PlaceholderText = "Data sprzedaży (MM-DD-YYYY)";
+                DateOfPaymentTextBox.PlaceholderText = "Data płatności (MM-DD-YYYY)";
+                DescriptionLabel.Text = "Opis";
+                UnitPriceLabel.Text = "Cena jednostkowa";
+                QuantityLabel.Text = "Ilość";
+                AddItemButton.Text = "Dodaj pozycję";
+                AddInvoiceButton.Text ="Dodaj fakturę";
+                InvoicesTable.Columns[0].HeaderText = "Numer faktury";
+                InvoicesTable.Columns[2].HeaderText = "Czy zapłacona?";
+                InvoicesTable.Columns[3].HeaderText = "Klient";
+            }
+            else if (LanguageHelper.Lang == "eng_us")
+            {
+                InvoiceListLabel.Text = "Invoice list";
+                InvoiceLabel.Text = "Approved invoices";
+                CreateInvoiceLabel.Text = "Create invoice";
+                DateOfSaleTextBox.PlaceholderText = "Sell date (MM-DD-YYYY)";
+                DateOfPaymentTextBox.PlaceholderText = "Payment date (MM-DD-YYYY)";
+                DescriptionLabel.Text = "Description";
+                UnitPriceLabel.Text = "Unit price";
+                QuantityLabel.Text = "Quantity";
+                AddItemButton.Text = "Add item";
+                AddInvoiceButton.Text = "Add invoice";
+                InvoicesTable.Columns[0].HeaderText = "Invoice Number";
+                InvoicesTable.Columns[2].HeaderText = "Is paid?";
+                InvoicesTable.Columns[3].HeaderText = "Client";
+            }
+        }
+
+        private void Click_LostFocus(object? sender, EventArgs e)
+        {
+            PaymentCalendar.Visible = false;
+            SellDateCalendar.Visible = false;
         }
 
         private string GenerateInvoiceNumber()
@@ -43,38 +88,46 @@ namespace ExamTracker.UI.MainAppControls
         }
         private void CustomizeGridAppearance()
         {
-            InvoicesTable.AutoSizeColumnsMode =
-                DataGridViewAutoSizeColumnsMode.Fill;
-
             InvoicesTable.AutoGenerateColumns = false;
 
             DataGridViewColumn[] columns = new DataGridViewColumn[4];
 
-            //picture doesnt show
             columns[0] = new DataGridViewTextBoxColumn() { DataPropertyName = "InvoiceNumber", HeaderText = "Invoice Number" };
+            columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
             columns[1] = new DataGridViewImageColumn() { DataPropertyName = "picture", HeaderText = "" };
+            columns[1].Width = 30;
+            columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
             columns[2] = new DataGridViewTextBoxColumn() { DataPropertyName = "Is Paid?", HeaderText = "Is Paid?" };
-            columns[3] = new DataGridViewTextBoxColumn() { DataPropertyName = "Buyer", HeaderText = "Client" };
+            columns[2].Width = 40;
+            columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
+            columns[3] = new DataGridViewTextBoxColumn() { DataPropertyName = "Buyer", HeaderText= "Client" };
+            columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
 
 
             InvoicesTable.RowHeadersVisible = false;
             InvoicesTable.Columns.Clear();
             InvoicesTable.Columns.AddRange(columns);
+
+        }
+
+        private void ClearInformationBoxes()
+        {
+            DateOfSaleTextBox.Clear();
+            DateOfPaymentTextBox.Clear();
+            RemarksTextBox.Clear();
+            ItemsFlowLayoutPanel.Controls.Clear();
+            allitems.Clear();
         }
 
         private async Task PopulateInvoicesTable()
         {
-            List<Invoice> invList = await _invoiceRepository.GetAllInvoicesOfAnAccount(_sessionService.CurrentAccount.Id);
-            InvoicesTable.DataSource = invList;
-
-            
-
-
-            //for (int row = 0; row <= InvoicesTable.Rows.Count - 1; row++)
-            //{
-            //    ((DataGridViewImageCell)InvoicesTable.Rows[row].Cells[1]).Value = Properties.Resources.pdf;
-            //}
-
+            InvoicesTable.DataSource = null;
+            invoicesList = await _invoiceRepository.GetAllInvoicesOfAnAccount(_sessionService.CurrentAccount.Id);
+            InvoicesTable.DataSource = invoicesList;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -87,20 +140,46 @@ namespace ExamTracker.UI.MainAppControls
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                PdfHelper.CreatePdfInvoice(saveFileDialog.FileName, _invoiceRepository.GetInvoice(1), _productServiceRepository.GetAllOrders());
+                PdfHelper pdfHelper = new PdfHelper();
+                pdfHelper.CreatePdfInvoice(saveFileDialog.FileName, _invoiceRepository.GetInvoice(1), _productServiceRepository.GetAllOrders());
             }
         }
 
         private void AddRowButton_Click(object sender, EventArgs e)
         {
             SoldProductsServicesItems panel = new SoldProductsServicesItems();
+            panel.ItemIsValid += Panel_ItemIsValid;
             allitems.Add(panel);
             ItemsFlowLayoutPanel.Controls.Add(panel);
         }
-        
-        private void AddInvoiceButton_Click(object sender, EventArgs e)
+
+        private void Panel_ItemIsValid(bool isValid)
         {
+            if (!isValid)
+            {
+                MessageBox.Show("Provide valid numbers", "Error while providing a number");
+            }
+        }
+
+        private async void AddInvoiceButton_Click(object sender, EventArgs e)
+        {
+            // for simplicity assume 12% tax
+            double Tax = 0.88;
             int uniqueId = GenerateUniqueIdentifier();
+            int GrossAmount = 0;
+            foreach (var item in allitems)
+            {
+                int numbOfItems = item.GetQuantity();
+                double unitPrice = item.GetPrice() * 100; //*100 to prevent loss of data
+                int totalPriceOfItem = Convert.ToInt32(numbOfItems * unitPrice);
+                GrossAmount += totalPriceOfItem;
+
+                ProductService ps = new ProductService(item.GetItemType(), numbOfItems, unitPrice, totalPriceOfItem, uniqueId);
+                await _productServiceRepository.InsertProductService(ps);
+            }
+            int NetAmount = Convert.ToInt32(Math.Round(GrossAmount * Tax));
+
+
             string now = (DateTime.Now).Date.ToShortDateString();
             string buyerAddress = "Warszawa, Bolka i Lolka 23/2A";
             string selersAddress = "Kraków, Koziolka Matolka 11/3D Pokoj 3";
@@ -108,23 +187,11 @@ namespace ExamTracker.UI.MainAppControls
             string remarks = RemarksTextBox.Text;
             Invoice invoice = new Invoice(GenerateInvoiceNumber(), now, DateOfSaleTextBox.Text, DateOfPaymentTextBox.Text,
                                     "Transfer", "Me, myself and I Inc.", buyerAddress, "You solobolo limited", selersAddress, accNum,
-                                    "zl", remarks, 20, 20, _sessionService.CurrentAccount.Id, uniqueId);
+                                    "zl", remarks, GrossAmount, NetAmount, _sessionService.CurrentAccount.Id, uniqueId);
 
-            _invoiceRepository.InsertInvoice(invoice);
-
-
-            Invoice inv = _invoiceRepository.GetInvoice(uniqueId);
-            int invoiceId = inv.Id;
-            foreach (var item in allitems)
-            {
-                int numbOfItems = item.GetQuantity();
-                double unitPrice = item.GetPrice();
-                double totalPrice = numbOfItems * (unitPrice*100);
-
-
-                ProductService ps = new ProductService(item.GetItemType(), numbOfItems, unitPrice, totalPrice, invoiceId);
-                _productServiceRepository.InsertProductService(ps);
-            }
+            await _invoiceRepository.InsertInvoice(invoice);
+            ClearInformationBoxes();
+            await PopulateInvoicesTable();
         }
 
         private void InvoicesTable_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -133,21 +200,21 @@ namespace ExamTracker.UI.MainAppControls
             {
                 if (InvoicesTable.CurrentCell.OwningColumn.DataPropertyName == "picture")
                 {
-                    Invoice clicekdInvoice = (Invoice)InvoicesTable.Rows[e.RowIndex].DataBoundItem;
+                    Invoice clickedInvoice = (Invoice)InvoicesTable.Rows[e.RowIndex].DataBoundItem;
 
                     SaveFileDialog saveFileDialog = new SaveFileDialog
                     {
                         Filter = "PDF files (*.pdf)|*.pdf",
-                        Title = "Save PDF Invoice"
+                        Title = "Save PDF Invoice",
+                        FileName = $"{(clickedInvoice.InvoiceNumber).Replace("/", "_")}.pdf"
                     };
 
                     if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
-                        PdfHelper.CreatePdfInvoice(saveFileDialog.FileName, _invoiceRepository.GetInvoice(clicekdInvoice.UniqueIdentifier),
-                            _productServiceRepository.GetAllOrdersOfTheInvoice(clicekdInvoice.Id));
+                        PdfHelper pdfHelper = new PdfHelper();
+                        pdfHelper.CreatePdfInvoice(saveFileDialog.FileName, _invoiceRepository.GetInvoice(clickedInvoice.UniqueIdentifier),
+                            _productServiceRepository.GetAllOrdersOfTheInvoice(clickedInvoice.UniqueIdentifier));
                     }
-
-
                 }
             }
         }
@@ -156,21 +223,99 @@ namespace ExamTracker.UI.MainAppControls
         {
             CustomizeGridAppearance();
             await PopulateInvoicesTable();
+            ChangeLanguage();
         }
 
         private void InvoicesTable_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            Image sameImage = Image.FromFile("C:\\Users\\Michal\\source\\repos\\ExamTracker_project\\ExamTracker\\Assets\\pictures\\pdf_ico.ico");
+            Image pdfIco = Properties.Resources.pdf;
 
-            // Set the same image for each row in the image column
             foreach (DataGridViewRow row in InvoicesTable.Rows)
             {
                 if (row.Cells[1] is DataGridViewImageCell imageCell)
                 {
                     imageCell.ImageLayout = DataGridViewImageCellLayout.Zoom;
-                    imageCell.Value = sameImage;
+                    imageCell.Value = pdfIco;
                 }
             }
+            InvoicesTable.ClearSelection();
+            InvoicesTable.EnableHeadersVisualStyles = false;
+            InvoicesTable.ColumnHeadersDefaultCellStyle.BackColor = Color.LightGray;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            SellDateCalendar.Visible = true;
+        }
+
+        private void SellDateCalendar_DateSelected(object sender, DateRangeEventArgs e)
+        {
+            DateOfSaleTextBox.Text = e.Start.ToShortDateString();
+            SellDateCalendar.Visible = false;
+        }
+
+        private void PaymentCalendarButton_Click(object sender, EventArgs e)
+        {
+            PaymentCalendar.Visible = true;
+        }
+
+        private void PaymentCalendar_DateChanged(object sender, DateRangeEventArgs e)
+        {
+            DateOfPaymentTextBox.Text = e.Start.ToShortDateString();
+            PaymentCalendar.Visible = false;
+        }
+
+        private void InvoicesTable_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                InvoicesTable.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Yellow;
+                if (e.ColumnIndex == 1)
+                {
+                    InvoicesTable.Cursor = Cursors.Hand;
+                }
+            }
+        }
+
+        private void InvoicesTable_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                InvoicesTable.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+                if (e.ColumnIndex == 1)
+                {
+                    InvoicesTable.Cursor = Cursors.Arrow;
+                }
+            }
+        }
+
+        private void BillingControl_Click(object sender, EventArgs e)
+        {
+            PaymentCalendar.Visible = false;
+            SellDateCalendar.Visible = false;
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+            PaymentCalendar.Visible = false;
+            SellDateCalendar.Visible = false;
+        }
+
+        private void ItemsFlowLayoutPanel_Click(object sender, EventArgs e)
+        {
+            PaymentCalendar.Visible = false;
+            SellDateCalendar.Visible = false;
+        }
+
+        private void BillingControl_MouseClick(object sender, MouseEventArgs e)
+        {
+            PaymentCalendar.Visible = false;
+            SellDateCalendar.Visible = false;
+        }
+
+        private void InvoicesTable_SelectionChanged(object sender, EventArgs e)
+        {
+            InvoicesTable.ClearSelection();
         }
     }
 }

@@ -31,11 +31,12 @@
             QuantityTextBox = new TextBox();
             PricePerUnitTextBox = new TextBox();
             ItemsComboBox = new ComboBox();
+            removeButton = new Button();
             SuspendLayout();
             // 
             // QuantityTextBox
             // 
-            QuantityTextBox.Location = new Point(154, 17);
+            QuantityTextBox.Location = new Point(142, 17);
             QuantityTextBox.Name = "QuantityTextBox";
             QuantityTextBox.Size = new Size(100, 23);
             QuantityTextBox.TabIndex = 1;
@@ -43,7 +44,7 @@
             // 
             // PricePerUnitTextBox
             // 
-            PricePerUnitTextBox.Location = new Point(299, 17);
+            PricePerUnitTextBox.Location = new Point(260, 17);
             PricePerUnitTextBox.Name = "PricePerUnitTextBox";
             PricePerUnitTextBox.Size = new Size(100, 23);
             PricePerUnitTextBox.TabIndex = 2;
@@ -52,22 +53,34 @@
             // ItemsComboBox
             // 
             ItemsComboBox.FormattingEnabled = true;
-            ItemsComboBox.Items.AddRange(new object[] { "Vending (GTU_24)", "Languages (GTU_12)", "Cleaning (GTU_8)" });
-            ItemsComboBox.Location = new Point(15, 17);
+            ItemsComboBox.Location = new Point(3, 17);
             ItemsComboBox.Name = "ItemsComboBox";
             ItemsComboBox.Size = new Size(121, 23);
             ItemsComboBox.TabIndex = 4;
+            // 
+            // removeButton
+            // 
+            removeButton.FlatAppearance.BorderSize = 0;
+            removeButton.FlatStyle = FlatStyle.Flat;
+            removeButton.Image = Properties.Resources.x_mark;
+            removeButton.Location = new Point(379, 5);
+            removeButton.Name = "removeButton";
+            removeButton.Size = new Size(45, 45);
+            removeButton.TabIndex = 5;
+            removeButton.UseVisualStyleBackColor = true;
+            removeButton.Click += removeButton_Click;
             // 
             // SoldProductsServicesItems
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Transparent;
+            Controls.Add(removeButton);
             Controls.Add(ItemsComboBox);
             Controls.Add(PricePerUnitTextBox);
             Controls.Add(QuantityTextBox);
             Name = "SoldProductsServicesItems";
-            Size = new Size(420, 55);
+            Size = new Size(437, 55);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -77,5 +90,6 @@
         private TextBox QuantityTextBox;
         private TextBox PricePerUnitTextBox;
         private ComboBox ItemsComboBox;
+        private Button removeButton;
     }
 }

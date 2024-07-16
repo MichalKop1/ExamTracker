@@ -143,7 +143,7 @@
             // Grade8RadioButton
             // 
             Grade8RadioButton.AutoSize = true;
-            Grade8RadioButton.Location = new Point(36, 449);
+            Grade8RadioButton.Location = new Point(36, 394);
             Grade8RadioButton.Name = "Grade8RadioButton";
             Grade8RadioButton.Size = new Size(154, 41);
             Grade8RadioButton.TabIndex = 12;
@@ -154,7 +154,7 @@
             // MaturaRadioButton
             // 
             MaturaRadioButton.AutoSize = true;
-            MaturaRadioButton.Location = new Point(232, 449);
+            MaturaRadioButton.Location = new Point(36, 458);
             MaturaRadioButton.Name = "MaturaRadioButton";
             MaturaRadioButton.Size = new Size(129, 41);
             MaturaRadioButton.TabIndex = 13;

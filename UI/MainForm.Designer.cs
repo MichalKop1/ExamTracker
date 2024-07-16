@@ -26,6 +26,7 @@
             getStartedButton = new Button();
             label2 = new Label();
             logoBox = new PictureBox();
+            LanguagesComboBox = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)logoBox).BeginInit();
             SuspendLayout();
             // 
@@ -135,12 +136,24 @@
             logoBox.TabIndex = 8;
             logoBox.TabStop = false;
             // 
+            // LanguagesComboBox
+            // 
+            LanguagesComboBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            LanguagesComboBox.FormattingEnabled = true;
+            LanguagesComboBox.Items.AddRange(new object[] { "polski (polish)", "angielski (English)" });
+            LanguagesComboBox.Location = new Point(684, 21);
+            LanguagesComboBox.Name = "LanguagesComboBox";
+            LanguagesComboBox.Size = new Size(178, 29);
+            LanguagesComboBox.TabIndex = 10;
+            LanguagesComboBox.SelectedIndexChanged += LanguagesComboBox_SelectedIndexChanged;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(874, 1064);
+            Controls.Add(LanguagesComboBox);
             Controls.Add(label2);
             Controls.Add(logoBox);
             Controls.Add(getStartedButton);
@@ -166,5 +179,6 @@
         private System.Windows.Forms.Button getStartedButton;
         private Label label2;
         private PictureBox logoBox;
+        private ComboBox LanguagesComboBox;
     }
 }

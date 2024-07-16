@@ -28,35 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             InvoicesTable = new DataGridView();
             InvoiceLabel = new Label();
             InvoiceListLabel = new Label();
-            label1 = new Label();
+            CreateInvoiceLabel = new Label();
             DateOfSaleTextBox = new TextBox();
             DateOfPaymentTextBox = new TextBox();
             RemarksTextBox = new RichTextBox();
             button2 = new Button();
-            button3 = new Button();
+            PaymentCalendarButton = new Button();
             ItemsFlowLayoutPanel = new FlowLayoutPanel();
-            AddRowButton = new Button();
+            AddItemButton = new Button();
             AddInvoiceButton = new Button();
-            label2 = new Label();
-            label3 = new Label();
-            label4 = new Label();
+            DescriptionLabel = new Label();
+            QuantityLabel = new Label();
+            UnitPriceLabel = new Label();
+            SellDateCalendar = new MonthCalendar();
+            PaymentCalendar = new MonthCalendar();
             ((System.ComponentModel.ISupportInitialize)InvoicesTable).BeginInit();
             SuspendLayout();
-            // 
-            // button1
-            // 
-            button1.BackColor = Color.IndianRed;
-            button1.Location = new Point(319, 18);
-            button1.Name = "button1";
-            button1.Size = new Size(83, 66);
-            button1.TabIndex = 0;
-            button1.Text = "Test invoice";
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += button1_Click;
             // 
             // InvoicesTable
             // 
@@ -64,20 +56,44 @@
             InvoicesTable.AllowUserToDeleteRows = false;
             InvoicesTable.AllowUserToResizeColumns = false;
             InvoicesTable.AllowUserToResizeRows = false;
+            InvoicesTable.BackgroundColor = Color.White;
+            InvoicesTable.BorderStyle = BorderStyle.None;
+            InvoicesTable.CellBorderStyle = DataGridViewCellBorderStyle.None;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.Silver;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            InvoicesTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             InvoicesTable.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = Color.Black;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            InvoicesTable.DefaultCellStyle = dataGridViewCellStyle2;
             InvoicesTable.Location = new Point(16, 112);
             InvoicesTable.MultiSelect = false;
             InvoicesTable.Name = "InvoicesTable";
+            InvoicesTable.ReadOnly = true;
+            InvoicesTable.RowTemplate.Height = 32;
             InvoicesTable.Size = new Size(463, 755);
             InvoicesTable.TabIndex = 1;
             InvoicesTable.CellClick += InvoicesTable_CellClick;
+            InvoicesTable.CellMouseEnter += InvoicesTable_CellMouseEnter;
+            InvoicesTable.CellMouseLeave += InvoicesTable_CellMouseLeave;
             InvoicesTable.DataBindingComplete += InvoicesTable_DataBindingComplete;
+            InvoicesTable.SelectionChanged += InvoicesTable_SelectionChanged;
             // 
             // InvoiceLabel
             // 
             InvoiceLabel.AutoSize = true;
             InvoiceLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            InvoiceLabel.Location = new Point(16, 88);
+            InvoiceLabel.Location = new Point(28, 75);
             InvoiceLabel.Name = "InvoiceLabel";
             InvoiceLabel.Size = new Size(138, 21);
             InvoiceLabel.TabIndex = 2;
@@ -89,24 +105,25 @@
             InvoiceListLabel.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point, 238);
             InvoiceListLabel.Location = new Point(16, 18);
             InvoiceListLabel.Name = "InvoiceListLabel";
-            InvoiceListLabel.Size = new Size(185, 45);
+            InvoiceListLabel.Size = new Size(171, 45);
             InvoiceListLabel.TabIndex = 3;
-            InvoiceListLabel.Text = "Invoices list";
+            InvoiceListLabel.Text = "Invoice list";
             // 
-            // label1
+            // CreateInvoiceLabel
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label1.Location = new Point(674, 18);
-            label1.Name = "label1";
-            label1.Size = new Size(221, 45);
-            label1.TabIndex = 4;
-            label1.Text = "Create invoice";
+            CreateInvoiceLabel.AutoSize = true;
+            CreateInvoiceLabel.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            CreateInvoiceLabel.Location = new Point(590, 18);
+            CreateInvoiceLabel.Name = "CreateInvoiceLabel";
+            CreateInvoiceLabel.Size = new Size(221, 45);
+            CreateInvoiceLabel.TabIndex = 4;
+            CreateInvoiceLabel.Text = "Create invoice";
+            CreateInvoiceLabel.Click += label1_Click;
             // 
             // DateOfSaleTextBox
             // 
             DateOfSaleTextBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            DateOfSaleTextBox.Location = new Point(498, 112);
+            DateOfSaleTextBox.Location = new Point(562, 104);
             DateOfSaleTextBox.Name = "DateOfSaleTextBox";
             DateOfSaleTextBox.PlaceholderText = "Sell date (YYYY-MM-DD)";
             DateOfSaleTextBox.Size = new Size(261, 29);
@@ -115,7 +132,7 @@
             // DateOfPaymentTextBox
             // 
             DateOfPaymentTextBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            DateOfPaymentTextBox.Location = new Point(498, 163);
+            DateOfPaymentTextBox.Location = new Point(562, 155);
             DateOfPaymentTextBox.Name = "DateOfPaymentTextBox";
             DateOfPaymentTextBox.PlaceholderText = "Payment date (YYYY-MM-DD)";
             DateOfPaymentTextBox.Size = new Size(261, 29);
@@ -123,7 +140,7 @@
             // 
             // RemarksTextBox
             // 
-            RemarksTextBox.Location = new Point(498, 210);
+            RemarksTextBox.Location = new Point(562, 202);
             RemarksTextBox.Name = "RemarksTextBox";
             RemarksTextBox.Size = new Size(298, 109);
             RemarksTextBox.TabIndex = 7;
@@ -131,21 +148,29 @@
             // 
             // button2
             // 
-            button2.Location = new Point(756, 112);
+            button2.BackgroundImageLayout = ImageLayout.Zoom;
+            button2.FlatAppearance.BorderSize = 0;
+            button2.FlatStyle = FlatStyle.Flat;
+            button2.Image = Properties.Resources.calendar;
+            button2.Location = new Point(822, 102);
             button2.Name = "button2";
-            button2.Size = new Size(40, 29);
+            button2.Size = new Size(40, 32);
             button2.TabIndex = 8;
-            button2.Text = "button2";
             button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
-            // button3
+            // PaymentCalendarButton
             // 
-            button3.Location = new Point(756, 163);
-            button3.Name = "button3";
-            button3.Size = new Size(40, 30);
-            button3.TabIndex = 9;
-            button3.Text = "button3";
-            button3.UseVisualStyleBackColor = true;
+            PaymentCalendarButton.BackgroundImageLayout = ImageLayout.Zoom;
+            PaymentCalendarButton.FlatAppearance.BorderSize = 0;
+            PaymentCalendarButton.FlatStyle = FlatStyle.Flat;
+            PaymentCalendarButton.Image = Properties.Resources.calendar;
+            PaymentCalendarButton.Location = new Point(822, 153);
+            PaymentCalendarButton.Name = "PaymentCalendarButton";
+            PaymentCalendarButton.Size = new Size(40, 32);
+            PaymentCalendarButton.TabIndex = 9;
+            PaymentCalendarButton.UseVisualStyleBackColor = true;
+            PaymentCalendarButton.Click += PaymentCalendarButton_Click;
             // 
             // ItemsFlowLayoutPanel
             // 
@@ -155,16 +180,17 @@
             ItemsFlowLayoutPanel.Name = "ItemsFlowLayoutPanel";
             ItemsFlowLayoutPanel.Size = new Size(450, 440);
             ItemsFlowLayoutPanel.TabIndex = 10;
+            ItemsFlowLayoutPanel.Click += ItemsFlowLayoutPanel_Click;
             // 
-            // AddRowButton
+            // AddItemButton
             // 
-            AddRowButton.Location = new Point(498, 810);
-            AddRowButton.Name = "AddRowButton";
-            AddRowButton.Size = new Size(92, 41);
-            AddRowButton.TabIndex = 11;
-            AddRowButton.Text = "Add row";
-            AddRowButton.UseVisualStyleBackColor = true;
-            AddRowButton.Click += AddRowButton_Click;
+            AddItemButton.Location = new Point(498, 810);
+            AddItemButton.Name = "AddItemButton";
+            AddItemButton.Size = new Size(92, 41);
+            AddItemButton.TabIndex = 11;
+            AddItemButton.Text = "Add item";
+            AddItemButton.UseVisualStyleBackColor = true;
+            AddItemButton.Click += AddRowButton_Click;
             // 
             // AddInvoiceButton
             // 
@@ -176,79 +202,100 @@
             AddInvoiceButton.UseVisualStyleBackColor = true;
             AddInvoiceButton.Click += AddInvoiceButton_Click;
             // 
-            // label2
+            // DescriptionLabel
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(532, 330);
-            label2.Name = "label2";
-            label2.Size = new Size(67, 15);
-            label2.TabIndex = 13;
-            label2.Text = "Description";
+            DescriptionLabel.AutoSize = true;
+            DescriptionLabel.Location = new Point(532, 330);
+            DescriptionLabel.Name = "DescriptionLabel";
+            DescriptionLabel.Size = new Size(67, 15);
+            DescriptionLabel.TabIndex = 13;
+            DescriptionLabel.Text = "Description";
             // 
-            // label3
+            // QuantityLabel
             // 
-            label3.AutoSize = true;
-            label3.Location = new Point(664, 330);
-            label3.Name = "label3";
-            label3.Size = new Size(53, 15);
-            label3.TabIndex = 14;
-            label3.Text = "Quantity";
+            QuantityLabel.AutoSize = true;
+            QuantityLabel.Location = new Point(664, 330);
+            QuantityLabel.Name = "QuantityLabel";
+            QuantityLabel.Size = new Size(53, 15);
+            QuantityLabel.TabIndex = 14;
+            QuantityLabel.Text = "Quantity";
             // 
-            // label4
+            // UnitPriceLabel
             // 
-            label4.AutoSize = true;
-            label4.Location = new Point(802, 330);
-            label4.Name = "label4";
-            label4.Size = new Size(58, 15);
-            label4.TabIndex = 15;
-            label4.Text = "Unit Price";
+            UnitPriceLabel.AutoSize = true;
+            UnitPriceLabel.Location = new Point(802, 330);
+            UnitPriceLabel.Name = "UnitPriceLabel";
+            UnitPriceLabel.Size = new Size(58, 15);
+            UnitPriceLabel.TabIndex = 15;
+            UnitPriceLabel.Text = "Unit Price";
+            // 
+            // SellDateCalendar
+            // 
+            SellDateCalendar.Location = new Point(562, 133);
+            SellDateCalendar.MaxSelectionCount = 1;
+            SellDateCalendar.Name = "SellDateCalendar";
+            SellDateCalendar.TabIndex = 16;
+            SellDateCalendar.Visible = false;
+            SellDateCalendar.DateSelected += SellDateCalendar_DateSelected;
+            // 
+            // PaymentCalendar
+            // 
+            PaymentCalendar.Location = new Point(563, 183);
+            PaymentCalendar.MaxSelectionCount = 1;
+            PaymentCalendar.Name = "PaymentCalendar";
+            PaymentCalendar.TabIndex = 17;
+            PaymentCalendar.Visible = false;
+            PaymentCalendar.DateChanged += PaymentCalendar_DateChanged;
             // 
             // BillingControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            Controls.Add(label4);
-            Controls.Add(label3);
-            Controls.Add(label2);
+            Controls.Add(PaymentCalendar);
+            Controls.Add(SellDateCalendar);
+            Controls.Add(UnitPriceLabel);
+            Controls.Add(QuantityLabel);
+            Controls.Add(DescriptionLabel);
             Controls.Add(AddInvoiceButton);
-            Controls.Add(AddRowButton);
+            Controls.Add(AddItemButton);
             Controls.Add(ItemsFlowLayoutPanel);
-            Controls.Add(button3);
+            Controls.Add(PaymentCalendarButton);
             Controls.Add(button2);
             Controls.Add(RemarksTextBox);
             Controls.Add(DateOfPaymentTextBox);
             Controls.Add(DateOfSaleTextBox);
-            Controls.Add(label1);
+            Controls.Add(CreateInvoiceLabel);
             Controls.Add(InvoiceListLabel);
             Controls.Add(InvoiceLabel);
             Controls.Add(InvoicesTable);
-            Controls.Add(button1);
             Name = "BillingControl";
             Size = new Size(965, 870);
             Load += BillingControl_Load;
+            Click += BillingControl_Click;
+            MouseClick += BillingControl_MouseClick;
             ((System.ComponentModel.ISupportInitialize)InvoicesTable).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private Button button1;
         private DataGridView InvoicesTable;
         private Label InvoiceLabel;
         private Label InvoiceListLabel;
-        private Label label1;
+        private Label CreateInvoiceLabel;
         private TextBox DateOfSaleTextBox;
         private TextBox DateOfPaymentTextBox;
         private RichTextBox RemarksTextBox;
         private Button button2;
-        private Button button3;
+        private Button PaymentCalendarButton;
         private FlowLayoutPanel ItemsFlowLayoutPanel;
-        private Button AddRowButton;
+        private Button AddItemButton;
         private Button AddInvoiceButton;
-        private Label label2;
-        private Label label3;
-        private Label label4;
+        private Label DescriptionLabel;
+        private Label QuantityLabel;
+        private Label UnitPriceLabel;
+        private MonthCalendar SellDateCalendar;
+        private MonthCalendar PaymentCalendar;
     }
 }

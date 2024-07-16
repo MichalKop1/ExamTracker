@@ -63,9 +63,19 @@ namespace ExamTracker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap calendar {
+            get {
+                object obj = ResourceManager.GetObject("calendar", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap check_mark {
             get {
-                object obj = ResourceManager.GetObject("check-mark", resourceCulture);
+                object obj = ResourceManager.GetObject("check_mark", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -105,7 +115,7 @@ namespace ExamTracker.Properties {
         /// </summary>
         public static System.Drawing.Bitmap x_mark {
             get {
-                object obj = ResourceManager.GetObject("x-mark", resourceCulture);
+                object obj = ResourceManager.GetObject("x_mark", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

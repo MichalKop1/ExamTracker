@@ -263,7 +263,7 @@
             // 
             // EditStudentNameBox
             // 
-            EditStudentNameBox.BackColor = Color.Gray;
+            EditStudentNameBox.BackColor = Color.LightGray;
             EditStudentNameBox.BorderStyle = BorderStyle.None;
             EditStudentNameBox.Font = new Font("Segoe UI", 15.75F);
             EditStudentNameBox.ForeColor = Color.White;
@@ -276,7 +276,7 @@
             // 
             // EditStudentSurnameBox
             // 
-            EditStudentSurnameBox.BackColor = Color.Gray;
+            EditStudentSurnameBox.BackColor = Color.LightGray;
             EditStudentSurnameBox.BorderStyle = BorderStyle.None;
             EditStudentSurnameBox.Font = new Font("Segoe UI", 15.75F);
             EditStudentSurnameBox.ForeColor = Color.White;
@@ -289,7 +289,7 @@
             // 
             // EditStudentEmailBox
             // 
-            EditStudentEmailBox.BackColor = Color.Gray;
+            EditStudentEmailBox.BackColor = Color.LightGray;
             EditStudentEmailBox.BorderStyle = BorderStyle.None;
             EditStudentEmailBox.Font = new Font("Segoe UI", 15.75F);
             EditStudentEmailBox.ForeColor = Color.White;
@@ -302,7 +302,7 @@
             // 
             // EditStudentAgeBox
             // 
-            EditStudentAgeBox.BackColor = Color.Gray;
+            EditStudentAgeBox.BackColor = Color.LightGray;
             EditStudentAgeBox.BorderStyle = BorderStyle.None;
             EditStudentAgeBox.Font = new Font("Segoe UI", 15.75F);
             EditStudentAgeBox.ForeColor = Color.White;

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DomainModel.Models;
 using ExamTracker.UI.MainAppControls;
+using static System.Windows.Forms.AxHost;
 
 namespace ExamTracker.CustomControls
 {
@@ -20,14 +21,18 @@ namespace ExamTracker.CustomControls
         // 1 = Exam
         // 2 = Meeting
         //-1 = Error
-        public event EventHandler<int> RemoveRequested;
-        public event EventHandler EventClicked;
+        public event EventHandler Clicked = delegate { };
+        public event EventHandler MouseHasEntered = delegate { };
+        public event EventHandler MouseHasLeft = delegate { };
+        public event EventHandler<int> RemoveRequested = delegate { };
+        public event EventHandler DueDatePassed = delegate { };
 
-        bool Clicked;
+        public bool isSelected { get; set; }
+        public bool isPastDueDate { get; set; }
         Image Image { get; set; }
         string ShortDesc { get; set; }
         string LongDesc { get; set; }
-        DateTime DT { get; set; }
+        public DateTime SetDate { get; set; }
         int EventId { get; set; }
         public ScheduledWorkControlItem(Event _event)
         {
@@ -35,16 +40,16 @@ namespace ExamTracker.CustomControls
             Image = SetEventImage(_event.EventType);
             ShortDesc = _event.ShortDesc;
             LongDesc = _event.LongDesc;
-            DT = _event.EventDate;
-            DueDatePassed(DT);
+            SetDate = _event.EventDate;
+            isPastDueDate = PastDueDate();
             EventInfoLabel.Text = ShortDesc;
-            DateLabel.Text = DT.ToString();
+            DateLabel.Text = SetDate.ToShortDateString();
             pictureBox.Image = Image;
             toolTip1.SetToolTip(this, LongDesc);
             toolTip1.SetToolTip(EventInfoLabel, LongDesc);
             EventId = _event.EventId;
 
-            this.MouseClick += ScheduledWorkControlItem_MouseClick;
+            //this.MouseClick += ScheduledWorkControlItem_MouseClick;
         }
 
         private Image SetEventImage(int eventType)
@@ -64,16 +69,6 @@ namespace ExamTracker.CustomControls
             }
             return img;
         }
-        private bool DueDatePassed(DateTime dt)
-        {
-            bool tooLate = false;
-            if (dt > DateTime.Now)
-            {
-                this.BackColor = Color.Red;
-                tooLate = true;
-            }
-            return tooLate;
-        }
         public void ShowButtons()
         {
             XMarkButton.Visible = true;
@@ -84,56 +79,68 @@ namespace ExamTracker.CustomControls
             XMarkButton.Visible = false;
             TickMarkButton.Visible = false;
         }
-
-        private void ScheduledWorkControlItem_MouseHover(object sender, EventArgs e)
+        private bool PastDueDate()
         {
-
-        }
-
-        private void ScheduledWorkControlItem_MouseEnter(object sender, EventArgs e)
-        {
-            if (!DueDatePassed(DT) && !Clicked)
-                this.BackColor = Color.Silver;
-
-
-        }
-
-        private void ScheduledWorkControlItem_MouseLeave(object sender, EventArgs e)
-        {
-            if (!DueDatePassed(DT) && !Clicked)
-                this.BackColor = Color.White;
-        }
-
-        private void EventInfoLabel_MouseEnter(object sender, EventArgs e)
-        {
-            if (!DueDatePassed(DT) && !Clicked)
-                this.BackColor = Color.Silver;
-        }
-
-        private void EventInfoLabel_MouseLeave(object sender, EventArgs e)
-        {
-            if (DueDatePassed(DT) && !Clicked)
-                this.BackColor = Color.White;
-        }
-
-        private void ScheduledWorkControlItem_MouseClick(object sender, MouseEventArgs e)
-        {
-            XMarkButton.Visible = true;
-            TickMarkButton.Visible = true;
-            this.BackColor = Color.Thistle;
-            Clicked = true;
-
-            EventClicked?.Invoke(this, EventArgs.Empty);
+            if (DateTime.Now > SetDate)
+            {
+                DueDatePassed?.Invoke(this, new EventArgs());
+                return true;
+            }
+            return false;
         }
 
         private void TickMarkButton_Click(object sender, EventArgs e)
         {
-            
+            XMarkButton.Visible = false;
+            TickMarkButton.Visible = false;
+            this.BackColor = Color.White;
         }
-
         private void XMarkButton_Click(object sender, EventArgs e)
         {
             RemoveRequested?.Invoke(this, EventId);
+        }
+
+        private void ScheduledWorkControlItem_MouseClick(object sender, MouseEventArgs e)
+        {
+            Clicked?.Invoke(this, e);
+        }
+
+        private void ScheduledWorkControlItem_MouseEnter(object sender, EventArgs e)
+        {
+            MouseHasEntered?.Invoke(this, e);
+        }
+        private void EventInfoLabel_MouseEnter(object sender, EventArgs e)
+        {
+            MouseHasEntered?.Invoke(this, e);
+        }
+
+        private void DateLabel_MouseEnter(object sender, EventArgs e)
+        {
+            MouseHasEntered?.Invoke(this, e);
+        }
+        private void pictureBox_MouseEnter(object sender, EventArgs e)
+        {
+            MouseHasEntered?.Invoke(this, e);
+        }
+        private void ScheduledWorkControlItem_MouseLeave(object sender, EventArgs e)
+        {
+            MouseHasLeft?.Invoke(this, e);
+        }
+        private void EventInfoLabel_MouseLeave(object sender, EventArgs e)
+        {
+            MouseHasLeft?.Invoke(this, e);
+        }
+        private void DateLabel_MouseLeave(object sender, EventArgs e)
+        {
+            MouseHasLeft?.Invoke(this, e);
+        }
+        private void pictureBox_MouseLeave(object sender, EventArgs e)
+        {
+            MouseHasLeft?.Invoke(this, e);
+        }
+        private void ScheduledWorkControlItem_Load(object sender, EventArgs e)
+        {
+            PastDueDate();
         }
     }
 }

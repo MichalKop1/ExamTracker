@@ -15,27 +15,35 @@ using ExamTracker.Helpers;
 
 namespace ExamTracker.UI
 {
-    public partial class LoginControl : UserControl
+    internal partial class LoginControl : UserControl
     {
         private readonly IServiceProvider _serviceProvider;
         private IAccountRepository _accountRepository;
         private readonly ISessionService _sessionService;
-        
-        public LoginControl(IServiceProvider serviceProvider, IAccountRepository accountRepository, ISessionService sessionService)
+        MainForm m;
+        public LoginControl(MainForm mf, IServiceProvider serviceProvider, IAccountRepository accountRepository, ISessionService sessionService)
         {
             InitializeComponent();
             ChangeLanguage(LanguageHelper.Lang);
             _serviceProvider = serviceProvider;
             _accountRepository = accountRepository;
             _sessionService = sessionService;
+            m = mf;
+            m.LanguageChanged += ChangeLanguage;
         }
-        private void ChangeLanguage(string language)
+        internal void ChangeLanguage(string language)
         {
             if (language == "pl_pl")
             {
                 passwordBox.PlaceholderText = "Hasło";
                 loginButton.Text = "Zaloguj";
                 loginButton.Size = new System.Drawing.Size(145, 51);
+            }
+            else if (language == "eng_us")
+            {
+                passwordBox.PlaceholderText = "Password";
+                loginButton.Text = "Login";
+                loginButton.Size = new System.Drawing.Size(121, 51);
             }
         }
 

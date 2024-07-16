@@ -17,9 +17,12 @@ namespace ExamTracker.UI
     public partial class RegisterControl : UserControl
     {
         private readonly IAccountRepository _accountRepository;
-        public RegisterControl(IAccountRepository accountRepository)
+        MainForm mainForm;
+        public RegisterControl(MainForm mf, IAccountRepository accountRepository)
         {
             InitializeComponent();
+            mainForm = mf;
+            mainForm.LanguageChanged += ChangeLanguage;
             ChangeLanguage(LanguageHelper.Lang);
             _accountRepository = accountRepository;
         }
@@ -33,6 +36,16 @@ namespace ExamTracker.UI
                 passwordBox1.PlaceholderText = "Hasło";
                 passwordBox2.PlaceholderText = "Potwierdź hasło";
                 registerButton.Text = "Zarejestruj";
+                registerButton.Size = new System.Drawing.Size(190, 61);
+            }
+            else if (language == "eng_us")
+            {
+                nameBox.PlaceholderText = "Name";
+                surnameBox.PlaceholderText = "Surname";
+                surnameBox.PlaceholderText = "User Name";
+                passwordBox1.PlaceholderText = "Password";
+                passwordBox2.PlaceholderText = "Confirm password";
+                registerButton.Text = "Register";
                 registerButton.Size = new System.Drawing.Size(190, 61);
             }
         }

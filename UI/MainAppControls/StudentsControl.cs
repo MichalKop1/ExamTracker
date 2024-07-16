@@ -27,7 +27,7 @@ namespace ExamTracker.UI.MainAppControls
         public StudentsControl(IStudentRepository studentRepository, IMaturaExamRepository maturaExamRepository, IGrade8ExamRepository grade8ExamRepository, ISessionService sessionService)
         {
             InitializeComponent();
-            ChangeLanguage(LanguageHelper.Lang);
+            ChangeLanguage();
             _students = [];
             _selectedStudent = new Student();
             _studentRepository = studentRepository;
@@ -43,10 +43,10 @@ namespace ExamTracker.UI.MainAppControls
             MessageBox.Show(errMg, "An error occured");
         }
 
-        private void ChangeLanguage(string language)
+        private void ChangeLanguage()
         {
             List<TextBox> allBoxes = get8ClassTextBoxes();
-            if (language == "pl_pl")
+            if (LanguageHelper.Lang == "pl_pl")
             {
                 int allBoxesCount = 14;
                 StudentName.Text = "Wyniki egzaminów";
@@ -61,7 +61,22 @@ namespace ExamTracker.UI.MainAppControls
                 EditStudentAgeBox.PlaceholderText = "Wiek";
                 EditStudentNameBox.PlaceholderText = "Imię";
                 EditStudentSurnameBox.PlaceholderText = "Nazwisko";
-
+            }
+            else if (LanguageHelper.Lang == "eng_us")
+            {
+                int allBoxesCount = 14;
+                StudentName.Text = "Exam Results";
+                StudentLabel.Text = "Student";
+                for (int i = 0; i < allBoxesCount; i++)
+                {
+                    allBoxes[i].PlaceholderText = $"Exercise {i + 1}";
+                }
+                SubmitButton.Text = "Submit";
+                EditButton.Text = "Edit";
+                ConfirmButton.Text = "Confirm";
+                EditStudentAgeBox.PlaceholderText = "Age";
+                EditStudentNameBox.PlaceholderText = "Name";
+                EditStudentSurnameBox.PlaceholderText = "Surname";
             }
         }
         private bool ValidateEditBoxes()

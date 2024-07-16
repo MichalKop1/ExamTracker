@@ -51,6 +51,17 @@ namespace ExamTracker.UI
                 profileButton.Text = "Profil";
                 this.Text = "Exam Tracker   -  Obecnie zalogowany/a: " + _sessionService.CurrentAccount.ContactName;
             }
+            else if (LanguageHelper.Lang == "eng_us")
+            {
+                dashboardButton.Text = "Dashboard";
+                studentsButton.Text = "Students";
+                scheduleButton.Text = "Schedule";
+                billingButton.Text = "Billing";
+                businessButton.Text = "Business";
+                profileButton.Text = "Profile";
+                this.Text = "Exam Tracker   -  Currently logged in: " + _sessionService.CurrentAccount.ContactName;
+
+            }
         }
 
         private void AnErrorHasOccured(string errMsg)

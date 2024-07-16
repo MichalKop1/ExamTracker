@@ -38,6 +38,22 @@ namespace ExamTracker.UI.MainAppControls
                 cancelButton.Text = "Anuluj";
                 submitButton.Text = "Zatwierdź";
                 submitButton.Size = new System.Drawing.Size(155,54);
+                Grade8RadioButton.Text = "8 klasisty";
+                MaturaRadioButton.Text = "Matura";
+            }
+            else if (LanguageHelper.Lang == "eng_us")
+            {
+                addStudentLabel.Text = "Add student";
+                studentNameLabel.Text = "Student Name";
+                studentEmailLabel.Text = "Student Email";
+                studentEmailTextBox.PlaceholderText = "(optional)";
+                studentAgeLabel.Text = "Student Age";
+                studentAgeTextBox.PlaceholderText = "(optional)";
+                cancelButton.Text = "Cancel";
+                submitButton.Text = "Submit";
+                submitButton.Size = new System.Drawing.Size(155, 54);
+                Grade8RadioButton.Text = "Final elementary exam";
+                MaturaRadioButton.Text = "Final highschool exam";
             }
         }
         private void ClearFields()
