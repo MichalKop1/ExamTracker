@@ -67,3 +67,7 @@ Below is a view from an example part of the file
 ### If you desire to add an invoice you can add new items, provide data for them and click "Add invoice"
 ![invoices_page](https://github.com/user-attachments/assets/0e42337e-c48c-411b-929f-bd359b5ac832)
 
+### Examplary invoice below
+### (The looks of it can be change depending of ones needs)
+![invoice_ex](https://github.com/user-attachments/assets/0e99a3c6-af57-4683-9993-3e01009de3c6)
+
