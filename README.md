@@ -4,7 +4,8 @@
 
 ExamTracker is an application created using Windows Forms and .NET core. It uses  
 both SQLite and SQL Server to store data (the user can choose which one to use).  
-It contains almost full localization for English and Polish that can be changed using a  
+To validate some components of the form regex is used with its custom-made patterns.  
+Also, the application contains almost full localization for English and Polish that can be changed using a  
 drop-down menu (ComboBox).
 
 ![login_page](https://github.com/user-attachments/assets/fd57e102-d023-446d-88b1-2f75f5ff3e29)
