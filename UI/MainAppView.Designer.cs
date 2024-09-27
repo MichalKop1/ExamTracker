@@ -38,10 +38,12 @@
             billingButton = new Button();
             businessButton = new Button();
             profileButton = new Button();
+            logoutButton = new Button();
             SuspendLayout();
             // 
             // dataPanel
             // 
+            dataPanel.AutoScroll = true;
             dataPanel.Location = new Point(263, 6);
             dataPanel.Name = "dataPanel";
             dataPanel.Size = new Size(965, 870);
@@ -153,12 +155,29 @@
             profileButton.UseVisualStyleBackColor = true;
             profileButton.Click += button6_Click;
             // 
+            // logoutButton
+            // 
+            logoutButton.FlatAppearance.BorderSize = 0;
+            logoutButton.FlatStyle = FlatStyle.Flat;
+            logoutButton.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
+            logoutButton.Image = Properties.Resources.logout;
+            logoutButton.ImageAlign = ContentAlignment.MiddleLeft;
+            logoutButton.Location = new Point(34, 640);
+            logoutButton.Name = "logoutButton";
+            logoutButton.Size = new Size(163, 42);
+            logoutButton.TabIndex = 10;
+            logoutButton.Text = "Log Out";
+            logoutButton.UseVisualStyleBackColor = true;
+            logoutButton.Click += logoutButton_Click;
+            // 
             // MainAppView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoScroll = true;
             BackColor = Color.White;
             ClientSize = new Size(1240, 898);
+            Controls.Add(logoutButton);
             Controls.Add(profileButton);
             Controls.Add(businessButton);
             Controls.Add(billingButton);
@@ -169,6 +188,7 @@
             Controls.Add(miscPanel);
             Controls.Add(dataPanel);
             Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MainAppView";
             Text = "Exam Tracker";
@@ -189,5 +209,6 @@
         private Button billingButton;
         private Button businessButton;
         private Button profileButton;
+        private Button logoutButton;
     }
 }

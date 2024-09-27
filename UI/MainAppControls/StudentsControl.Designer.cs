@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             StudentName = new Label();
             studentsComboBox = new ComboBox();
             ExamsGrid = new DataGridView();
@@ -55,6 +55,7 @@
             EditStudentAgeBox = new TextBox();
             EditButton = new Button();
             ConfirmButton = new Button();
+            TableDescLabel = new Label();
             ((System.ComponentModel.ISupportInitialize)ExamsGrid).BeginInit();
             SuspendLayout();
             // 
@@ -85,26 +86,26 @@
             ExamsGrid.BackgroundColor = Color.White;
             ExamsGrid.BorderStyle = BorderStyle.Fixed3D;
             ExamsGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            ExamsGrid.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Window;
+            dataGridViewCellStyle3.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
+            ExamsGrid.DefaultCellStyle = dataGridViewCellStyle3;
             ExamsGrid.GridColor = Color.ForestGreen;
             ExamsGrid.Location = new Point(19, 196);
             ExamsGrid.Name = "ExamsGrid";
             ExamsGrid.ReadOnly = true;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Control;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            ExamsGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.Control;
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            dataGridViewCellStyle4.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            ExamsGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             ExamsGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             ExamsGrid.Size = new Size(923, 305);
             ExamsGrid.TabIndex = 3;
@@ -116,9 +117,9 @@
             StudentLabel.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 238);
             StudentLabel.Location = new Point(19, 74);
             StudentLabel.Name = "StudentLabel";
-            StudentLabel.Size = new Size(89, 30);
+            StudentLabel.Size = new Size(187, 30);
             StudentLabel.TabIndex = 4;
-            StudentLabel.Text = "Student";
+            StudentLabel.Text = "Choose a student:";
             // 
             // ex1
             // 
@@ -343,11 +344,22 @@
             ConfirmButton.Visible = false;
             ConfirmButton.Click += ConfirmButton_Click;
             // 
+            // TableDescLabel
+            // 
+            TableDescLabel.AutoSize = true;
+            TableDescLabel.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            TableDescLabel.Location = new Point(21, 163);
+            TableDescLabel.Name = "TableDescLabel";
+            TableDescLabel.Size = new Size(129, 30);
+            TableDescLabel.TabIndex = 27;
+            TableDescLabel.Text = "Exams' table";
+            // 
             // StudentsControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
+            Controls.Add(TableDescLabel);
             Controls.Add(ConfirmButton);
             Controls.Add(EditButton);
             Controls.Add(EditStudentAgeBox);
@@ -408,5 +420,6 @@
         private TextBox EditStudentAgeBox;
         private Button EditButton;
         private Button ConfirmButton;
+        private Label TableDescLabel;
     }
 }

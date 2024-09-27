@@ -151,6 +151,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoScroll = true;
             BackColor = Color.White;
             ClientSize = new Size(874, 1064);
             Controls.Add(LanguagesComboBox);
@@ -163,6 +164,7 @@
             Controls.Add(panelUnderline);
             Controls.Add(btnRegister);
             Controls.Add(btnLogin);
+            FormBorderStyle = FormBorderStyle.Fixed3D;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(2);
             Name = "MainForm";

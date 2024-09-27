@@ -43,13 +43,11 @@ namespace ExamTracker.CustomControls
             SetDate = _event.EventDate;
             isPastDueDate = PastDueDate();
             EventInfoLabel.Text = ShortDesc;
-            DateLabel.Text = SetDate.ToShortDateString();
+            DateLabel.Text = SetDate.ToString("dd/MM/yyyy");
             pictureBox.Image = Image;
             toolTip1.SetToolTip(this, LongDesc);
             toolTip1.SetToolTip(EventInfoLabel, LongDesc);
             EventId = _event.EventId;
-
-            //this.MouseClick += ScheduledWorkControlItem_MouseClick;
         }
 
         private Image SetEventImage(int eventType)

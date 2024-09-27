@@ -10,8 +10,6 @@ using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
-using System.Drawing.Text;
-using System.Security.Cryptography.X509Certificates;
 using HorizontalAlignment = iText.Layout.Properties.HorizontalAlignment;
 
 namespace ExamTracker.Helpers
@@ -47,14 +45,18 @@ namespace ExamTracker.Helpers
                 using (var pdf = new PdfDocument(writer))
                 {
                     string fontPath = "C:/Windows/Fonts/times.ttf";
-                    PdfFont standard = PdfFontFactory.CreateFont(fontPath, PdfEncodings.IDENTITY_H);
+                    //PdfFont standard = PdfFontFactory.CreateFont(fontPath, PdfEncodings.IDENTITY_H);
+                    PdfFont standard = PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN);
                     PdfFont standard2 = PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN);
                     PdfFont boldStandard = PdfFontFactory.CreateFont(StandardFonts.TIMES_BOLD);
                     
 
                     var document = new Document(pdf);
 
-                    ImageData logoImage = ImageDataFactory.Create("C:\\Users\\Michal\\source\\repos\\ExamTracker_project\\ExamTracker\\Assets\\invoice_logo.png");
+                    //ImageData logoImage = ImageDataFactory.Create("C:\\Users\\Michal\\source\\repos\\ExamTracker_project\\ExamTracker\\Assets\\invoice_logo.png");
+
+                    ImageData logoImage = ImageDataFactory.Create(ToByteArray(Properties.Resources.invoice_logo));
+
                     iText.Layout.Element.Image image = new iText.Layout.Element.Image(logoImage);
                     
                     image.SetHorizontalAlignment(HorizontalAlignment.LEFT);
@@ -87,27 +89,29 @@ namespace ExamTracker.Helpers
 
                     Table table = new Table(UnitValue.CreatePercentArray(new float[] { 50, 50 })).UseAllAvailableWidth();
 
-                    // Create and add seller info paragraph
                     Paragraph sellerInfo = new Paragraph()
                         .SetFont(standard).SetFontSize(10)
                         .Add("\n")
                         .Add(new Text($"{Seller}\n").SetFont(boldStandard))
-                        .Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(150).SetMarginTop(5).SetMarginBottom(5))
+                        .Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(230).SetMarginTop(5).SetMarginBottom(5))
                         .Add($"\n{invoice.Seller}\n")
                         .Add($"{invoice.SellersAddress}\n")
                         .Add($"{AccNumber} {invoice.NumberOfAccount}");
 
-                    // Create and add buyer info paragraph
                     Paragraph buyerInfo = new Paragraph()
                         .SetFont(standard).SetFontSize(10)
                         .Add("\n")
                         .Add(new Text($"{Buyer}\n").SetFont(boldStandard))
-                        .Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(150).SetMarginTop(5).SetMarginBottom(5))
+                        .Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(230).SetMarginTop(5).SetMarginBottom(5))
                         .Add($"\n{invoice.Buyer}\n")
-                        .Add($"{invoice.BuyersAddress}\n");
-                        
+                        .Add($"{invoice.BuyersAddress}\n\n\n");
+
+
                     table.AddCell(new Cell().Add(buyerInfo).SetBorder(Border.NO_BORDER));
                     table.AddCell(new Cell().Add(sellerInfo).SetBorder(Border.NO_BORDER));
+
+                    table.AddCell(new Cell().Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(230).SetMarginTop(5).SetMarginBottom(5)).SetBorder(Border.NO_BORDER));
+                    table.AddCell(new Cell().Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(230).SetMarginTop(5).SetMarginBottom(5)).SetBorder(Border.NO_BORDER));
 
                     document.Add(table);
                     document.Add(new Paragraph());
@@ -136,31 +140,39 @@ namespace ExamTracker.Helpers
                     Paragraph remarks = new Paragraph()
                         .SetFont(standard).SetFontSize(10)
                         .Add(new Text($"{Remarks}\n").SetFont(boldStandard).SetFontSize(12))
-                        .Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(200).SetMarginTop(5).SetMarginBottom(5))
-                        .Add(new Text($"\n{invoice.Remarks}\n"))
-                        .Add(new Text($"{invoice.SellersAddress}\n"))
-                        .Add(new Text($"{invoice.NumberOfAccount}\n\n\n"))
-                        .Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(150).SetMarginTop(5).SetMarginBottom(5))
-                        .Add(new Text($"\n{EntitledPersonText}").SetFontSize(8));
+                        .Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(230).SetMarginTop(5).SetMarginBottom(5))
+                        .Add(new Text($"\n{invoice.Remarks}\n\n"));
 
                     Paragraph owing = new Paragraph()
                         .SetFont(standard).SetFontSize(10)
                         .Add(new Text($"{Owing}: \n").SetFont(boldStandard).SetFontSize(12))
-                        .Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(150).SetMarginTop(5).SetMarginBottom(5))
-                        .Add(new Text($"\n{Net}\t\t\t\t\t{invoice.TotalNet/100:0.00} {invoice.Currency} .\n").SetTextAlignment(TextAlignment.LEFT))
-                        .Add(new Text($"{Vat}  \t\t\t\t0,00 {invoice.Currency} .\n").SetTextAlignment(TextAlignment.LEFT))
-                        .Add(new Text($"{Gross}\t\t\t\t{invoice.TotalGross/100:0.00} {invoice.Currency} .\n\n\n").SetTextAlignment(TextAlignment.LEFT))
-                        .Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(150).SetMarginTop(5).SetMarginBottom(5))
-                        .Add(new Text($"\n{IssuingPersonText}").SetFontSize(8));
+                        .Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(230).SetMarginTop(5).SetMarginBottom(5))
+                        .Add(new Text($"\n{Net}\t\t\t\t\t{invoice.TotalNet / 100:0.00} {invoice.Currency}.\n").SetTextAlignment(TextAlignment.LEFT))
+                        .Add(new Text($"{Vat}\t\t\t\t\t0,00 {invoice.Currency} .\n").SetTextAlignment(TextAlignment.LEFT))
+                        .Add(new Text($"{Gross}\t\t\t\t\t{invoice.TotalGross / 100:0.00} {invoice.Currency}.\n\n\n").SetTextAlignment(TextAlignment.LEFT));
 
                     lowerInfoTable.AddCell(new Cell().Add(remarks).SetBorder(Border.NO_BORDER));
                     lowerInfoTable.AddCell(new Cell().Add(owing).SetBorder(Border.NO_BORDER));
+
+                    lowerInfoTable.AddCell(new Cell().Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(230).SetMarginTop(5).SetMarginBottom(5)).SetBorder(Border.NO_BORDER));
+                    lowerInfoTable.AddCell(new Cell().Add(new LineSeparator(new SolidLine()).SetStrokeColor(ColorConstants.BLACK).SetWidth(230).SetMarginTop(5).SetMarginBottom(5)).SetBorder(Border.NO_BORDER));
+                    lowerInfoTable.AddCell(new Cell().Add(new Paragraph($"\n{EntitledPersonText}").SetFontSize(8)).SetBorder(Border.NO_BORDER)).SetMarginTop(0);
+                    lowerInfoTable.AddCell(new Cell().Add(new Paragraph(new Text($"\n{IssuingPersonText}").SetFontSize(8))).SetBorder(Border.NO_BORDER)).SetMarginTop(0);
+
                     document.Add(lowerInfoTable);
-                    // Close the document
                     document.Close();
                 }
             }
             
+        }
+
+        private byte[] ToByteArray(System.Drawing.Image image)
+        {
+            using(MemoryStream memoryStream = new MemoryStream())
+            {
+                image.Save(memoryStream, image.RawFormat);
+                return memoryStream.ToArray();
+            }
         }
         public PdfHelper()
         {

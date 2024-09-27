@@ -24,7 +24,8 @@ namespace ExamTracker.UI.MainAppControls
         private List<Student> _students;
         private int _student_id;
         private Student _selectedStudent;
-        public StudentsControl(IStudentRepository studentRepository, IMaturaExamRepository maturaExamRepository, IGrade8ExamRepository grade8ExamRepository, ISessionService sessionService)
+        public StudentsControl(IStudentRepository studentRepository, IMaturaExamRepository maturaExamRepository,
+            IGrade8ExamRepository grade8ExamRepository, ISessionService sessionService)
         {
             InitializeComponent();
             ChangeLanguage();
@@ -61,6 +62,7 @@ namespace ExamTracker.UI.MainAppControls
                 EditStudentAgeBox.PlaceholderText = "Wiek";
                 EditStudentNameBox.PlaceholderText = "Imię";
                 EditStudentSurnameBox.PlaceholderText = "Nazwisko";
+                TableDescLabel.Text = "Tabela egzaminów";
             }
             else if (LanguageHelper.Lang == "eng_us")
             {

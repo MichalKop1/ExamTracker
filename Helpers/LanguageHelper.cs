@@ -1,20 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
 using System.Xml.Linq;
+using DataAcessLayer;
+using DomainModel;
+using Microsoft.Extensions.Configuration;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ExamTracker.Helpers
 {
     internal class LanguageHelper
     {
+  
         internal static string Lang
         {
             get
             {
-                string? lang = ConfigurationManager.AppSettings["Lang"];
+                // old config code
+                //string? lang = ConfigurationManager.AppSettings["Lang"];
+                ConnectionHelper.ReloadSettings();
+                string lang = ConnectionHelper.settings.AppSettings.Lang;
 
                 if (lang != null)
                 {
@@ -27,24 +31,42 @@ namespace ExamTracker.Helpers
             }
             set
             {
-                string configFilePath = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath;
+                //string configFilePath = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath;
+                //string configFilePath = "ExamTracker.dll.config";
                 // Update the configuration file
-                XDocument configDoc = XDocument.Load(configFilePath);
+                string jsonConfigPath = Path.Join(Directory.GetCurrentDirectory(),"appsettings.json");
 
-                var appSettings = configDoc.Descendants("appSettings").FirstOrDefault();
-                if (appSettings != null)
+                if (File.Exists(jsonConfigPath))
                 {
-                    var langElement = appSettings.Elements("add")
-                                                 .FirstOrDefault(e => e.Attribute("key")?.Value == "Lang");
-                    if (langElement != null)
-                    {
-                        langElement.SetAttributeValue("value", value);
-                        configDoc.Save(configFilePath);
+                    string jsonString = File.ReadAllText(jsonConfigPath);
 
-                        // Refresh the appSettings section to reflect the change
-                        ConfigurationManager.RefreshSection("appSettings");
+                    Settings? settings = JsonSerializer.Deserialize<Settings>(jsonString);
+                    if (settings != null)
+                    {
+                        settings.AppSettings.Lang = value;
                     }
+                    string modifiedJson = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
+                    File.WriteAllText(jsonConfigPath, modifiedJson);
+
+                    ConnectionHelper.settings.AppSettings.Lang = value;
                 }
+
+                //XDocument configDoc = XDocument.Load(configFilePath);
+
+                //var appSettings = configDoc.Descendants("appSettings").FirstOrDefault();
+                //if (appSettings != null)
+                //{
+                //    var langElement = appSettings.Elements("add")
+                //                                 .FirstOrDefault(e => e.Attribute("key")?.Value == "Lang");
+                //    if (langElement != null)
+                //    {
+                //        langElement.SetAttributeValue("value", value);
+                //        configDoc.Save(configFilePath);
+
+                //        // Refresh the appSettings section to reflect the change
+                //        ConfigurationManager.RefreshSection("appSettings");
+                //    }
+                //}
             }
         }
     }

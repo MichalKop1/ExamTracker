@@ -42,7 +42,7 @@ namespace ExamTracker.UI.MainAppControls
                 ExamRadioButton.Text = "Egzamin";
                 MeetingRadioButton.Text = "Spotkanie";
                 ShortDescTextBox.PlaceholderText = "Nazwa wydarzenia";
-
+                currScheduleLabel.Text = "Obecny harmonogram";
             }
             else if (LanguageHelper.Lang == "eng_us")
             {
@@ -50,6 +50,7 @@ namespace ExamTracker.UI.MainAppControls
                 ExamRadioButton.Text = "Exam";
                 MeetingRadioButton.Text = "Meeting";
                 ShortDescTextBox.PlaceholderText = "Event name";
+                currScheduleLabel.Text = "Your current schedule";
             }
         }
 
@@ -64,25 +65,60 @@ namespace ExamTracker.UI.MainAppControls
         private bool VerifyInformation()
         {
             int counter = 1;
-            StringBuilder sb = new StringBuilder("There was an issue with your form. Try:\n");
+            StringBuilder sb = new StringBuilder();
             bool isValid = true;
+            string lang = LanguageHelper.Lang;
+
+            if (lang == "pl_pl")
+            {
+                sb.Append("Wystąpił problem z twoim formularzem. Spróbuj:\n");
+            }
+            else if (lang == "eng_us")
+            {
+                sb.Append("There was an issue with your form. Try:\n");
+            }
+
 
             if (string.IsNullOrEmpty(ShortDescTextBox.Text))
             {
-                sb.Append($"{counter}. You have to give a name to your event.\n");
+                if (lang == "pl_pl")
+                {
+                    sb.Append($"{counter}. Musisz nazwać swoje wydarzenie.\n");
+
+                }
+                else if (lang == "eng_us")
+                {
+                    sb.Append($"{counter}. You have to give a name to your event.\n");
+                }
                 counter++;
                 isValid = false;
             }
             if(!ExamRadioButton.Checked && !MeetingRadioButton.Checked)
             {
-                sb.Append($"{counter}. Select type of event.");
+                if (lang == "pl_pl")
+                {
+                    sb.Append($"{counter}. Zaznacz rodzaj wydarzenia.");
+
+                }
+                else if (lang == "eng_us")
+                {
+                    sb.Append($"{counter}. Select type of event.");
+
+                }
                 counter++;
                 isValid = false;
             }
 
             if (!isValid)
             {
-                MessageBox.Show(sb.ToString(), "Form not valid!");
+                if (lang == "pl_pl")
+                {
+                    MessageBox.Show(sb.ToString(), "Formularz nie jest poprawny!");
+                }
+                else if (lang == "eng_us")
+                {
+                    MessageBox.Show(sb.ToString(), "Form not valid!");
+                }
             }
             return isValid;
         }

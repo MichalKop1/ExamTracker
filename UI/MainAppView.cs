@@ -2,6 +2,7 @@
 using DomainModel.Models;
 using ExamTracker.Helpers;
 using ExamTracker.UI.MainAppControls;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,8 +25,10 @@ namespace ExamTracker.UI
         IInvoiceRepository _invoiceRepository;
         IProductServiceRepository _productServiceRepository;
         ISessionService _sessionService;
+        IServiceProvider _serviceProvider;
+        
         public MainAppView(IStudentRepository studentRepository, IMaturaExamRepository maturaExamRepository, IGrade8ExamRepository grade8ExamRepository, IAccountRepository accountRepository, ISessionService sesionService, IEventRepository eventRepository,
-            IInvoiceRepository invoiceRepository, IProductServiceRepository productServiceRepository)
+            IInvoiceRepository invoiceRepository, IProductServiceRepository productServiceRepository, IServiceProvider serviceProvider)
         {
             InitializeComponent();
             _studentRepository = studentRepository;
@@ -37,6 +40,7 @@ namespace ExamTracker.UI
             _studentRepository.OnError += AnErrorHasOccured;
             _invoiceRepository = invoiceRepository;
             _productServiceRepository = productServiceRepository;
+            _serviceProvider = serviceProvider;
         }
 
         private void ChangeLanguage()
@@ -49,6 +53,7 @@ namespace ExamTracker.UI
                 billingButton.Text = "Opłaty";
                 businessButton.Text = "Biznes";
                 profileButton.Text = "Profil";
+                logoutButton.Text = "Wyloguj";
                 this.Text = "Exam Tracker   -  Obecnie zalogowany/a: " + _sessionService.CurrentAccount.ContactName;
             }
             else if (LanguageHelper.Lang == "eng_us")
@@ -59,6 +64,7 @@ namespace ExamTracker.UI
                 billingButton.Text = "Billing";
                 businessButton.Text = "Business";
                 profileButton.Text = "Profile";
+                logoutButton.Text = "Log out";
                 this.Text = "Exam Tracker   -  Currently logged in: " + _sessionService.CurrentAccount.ContactName;
 
             }
@@ -137,6 +143,20 @@ namespace ExamTracker.UI
         private void billingButton_Click(object sender, EventArgs e)
         {
             SetBillingControl();
+        }
+
+        private void logoutButton_Click(object sender, EventArgs e)
+        {
+            _sessionService.CurrentAccount = new Account();
+            MainForm mainForm = _serviceProvider.GetService<MainForm>();
+            mainForm.Show();
+
+            Form? main = this;
+            if (main != null)
+            {
+                main.Hide();
+            }
+
         }
     }
 }

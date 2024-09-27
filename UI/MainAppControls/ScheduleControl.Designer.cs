@@ -35,6 +35,7 @@
             ExamRadioButton = new RadioButton();
             MeetingRadioButton = new RadioButton();
             LongDescTextBox = new RichTextBox();
+            currScheduleLabel = new Label();
             SuspendLayout();
             // 
             // Calendar
@@ -48,9 +49,9 @@
             // flowLayoutPanel
             // 
             flowLayoutPanel.AutoScroll = true;
-            flowLayoutPanel.Location = new Point(19, 9);
+            flowLayoutPanel.Location = new Point(19, 73);
             flowLayoutPanel.Name = "flowLayoutPanel";
-            flowLayoutPanel.Size = new Size(467, 845);
+            flowLayoutPanel.Size = new Size(467, 781);
             flowLayoutPanel.TabIndex = 1;
             flowLayoutPanel.WrapContents = false;
             // 
@@ -107,11 +108,22 @@
             LongDescTextBox.TabIndex = 6;
             LongDescTextBox.Text = "";
             // 
+            // currScheduleLabel
+            // 
+            currScheduleLabel.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            currScheduleLabel.Location = new Point(19, 29);
+            currScheduleLabel.Name = "currScheduleLabel";
+            currScheduleLabel.Size = new Size(467, 41);
+            currScheduleLabel.TabIndex = 7;
+            currScheduleLabel.Text = "Your current schedule:";
+            currScheduleLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // ScheduleControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
+            Controls.Add(currScheduleLabel);
             Controls.Add(LongDescTextBox);
             Controls.Add(MeetingRadioButton);
             Controls.Add(ExamRadioButton);
@@ -135,5 +147,6 @@
         private RadioButton ExamRadioButton;
         private RadioButton MeetingRadioButton;
         private RichTextBox LongDescTextBox;
+        private Label currScheduleLabel;
     }
 }

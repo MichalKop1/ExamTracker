@@ -30,7 +30,7 @@ namespace ExamTracker.UI.MainAppControls
             if (LanguageHelper.Lang == "pl_pl")
             {
                 addStudentLabel.Text = "Dodaj ucznia";
-                studentNameLabel.Text = "Imię ucznia";
+                studentNameLabel.Text = "Imię i nazwisko ucznia";
                 studentEmailLabel.Text = "Email ucznia";
                 studentEmailTextBox.PlaceholderText = "(opcjonalne)";
                 studentAgeLabel.Text = "Wiek ucznia";
@@ -44,7 +44,7 @@ namespace ExamTracker.UI.MainAppControls
             else if (LanguageHelper.Lang == "eng_us")
             {
                 addStudentLabel.Text = "Add student";
-                studentNameLabel.Text = "Student Name";
+                studentNameLabel.Text = "Student's Fullname";
                 studentEmailLabel.Text = "Student Email";
                 studentEmailTextBox.PlaceholderText = "(optional)";
                 studentAgeLabel.Text = "Student Age";
@@ -67,45 +67,100 @@ namespace ExamTracker.UI.MainAppControls
 
         private bool ValidateForm()
         {
-            StringBuilder sb = new StringBuilder("There were some problems with your form. Try:\n\n");
+            StringBuilder sb = new StringBuilder();
             int counter = 1;
             bool isValid = true;
             string fullNamePattern = "^[a-zA-Z]+ [a-zA-Z]+$";
             string areNumbersInString = "^[0-9]+( [0-9]+)?$";
+            string lang = LanguageHelper.Lang;
+
+            if (lang == "pl_pl")
+            {
+                sb.Append("Wystąpił problem z twoim formularzem. Spróbuj:\n\n");
+            }
+            else if (lang == "eng_us")
+            {
+                sb.Append("There were some problems with your form. Try:\n\n");
+            }
+
             if (Regex.Match(studentNameTextBox.Text, areNumbersInString).Success)
             {
-                sb.Append($"{counter}. Student name can't be numbers.\n");
+                if (lang == "pl_pl")
+                {
+                    sb.Append($"{counter}. W imieniu ucznia nie mogą pojawić się liczby.\n");
+                }
+                else if (lang == "eng_us")
+                {
+                    sb.Append($"{counter}. Student name can't be numbers.\n");
+                }
                 counter++;
                 isValid = false;
             }
             if (!Regex.Match(studentNameTextBox.Text, fullNamePattern).Success)
             {
-                sb.Append($"{counter}. Add both name and surname of your student.\n");
+                if (lang == "pl_pl")
+                {
+                    sb.Append($"{counter}. Podaj imię i nazwisko ucznia.\n");
+                }
+                else if (lang == "eng_us")
+                {
+                    sb.Append($"{counter}. Add both name and surname of your student.\n");
+                }
                 counter++;
                 isValid = false;
             }
             var emailPattern = @"^[a-zA-Z0-9]+\.?[a-zA-Z0-9]*@[a-z]+\.[a-z]{2,3}$";
             if (!string.IsNullOrWhiteSpace(studentEmailTextBox.Text) && !(Regex.Match(studentEmailTextBox.Text, emailPattern).Success))
-            { 
-                sb.Append($"{counter}. Provide a valid email.\n");
+            {
+                if (lang == "pl_pl")
+                {
+                    sb.Append($"{counter}. Wprowadź poprawny email.\n");
+                }
+                else if (lang == "eng_us")
+                {
+                    sb.Append($"{counter}. Provide a valid email.\n");
+                }
                 counter++;
                 isValid = false;
             }
             if (!(int.TryParse(studentAgeTextBox.Text, out _)) && !string.IsNullOrWhiteSpace(studentAgeTextBox.Text))
             {
-                sb.Append($"{counter}. Provide a corrent age.\n");
+                if (lang == "pl_pl")
+                {
+                    sb.Append($"{counter}. Wprowadź poprawny wiek.\n");
+                }
+                else if (lang == "eng_us")
+                {
+                    sb.Append($"{counter}. Provide a corrent age.\n");
+                }
                 counter++;
                 isValid = false;
             }
             if (!MaturaRadioButton.Checked && !Grade8RadioButton.Checked)
             {
-                sb.Append($"{counter}. Check the box with an appriopriate exam type.\n");
+                if (lang == "pl_pl")
+                {
+                    sb.Append($"{counter}. Zaznacz odpowiedni egzamin.\n");
+                }
+                else if (lang == "eng_us")
+                {
+                    sb.Append($"{counter}. Check the box with an appriopriate exam type.\n");
+                }
                 counter++;
                 isValid = false;
             }
 
-            if (!isValid) MessageBox.Show(sb.ToString(), "Form not valid");
-            
+            if (!isValid)
+            {
+                if (lang == "pl_pl")
+                {
+                    MessageBox.Show(sb.ToString(), "Formularz nie jest poprawny");
+                }
+                else if (lang == "eng_us")
+                {
+                    MessageBox.Show(sb.ToString(), "Form not valid");
+                }
+            }
             return isValid;
         }
 

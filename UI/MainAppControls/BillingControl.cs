@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using iText;
+﻿using System.Text;
 using ExamTracker.Helpers;
 using DataAcessLayer.Contracts;
 using ExamTracker.CustomControls;
 using DomainModel.Models;
-using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace ExamTracker.UI.MainAppControls
 {
@@ -148,21 +139,144 @@ namespace ExamTracker.UI.MainAppControls
         private void AddRowButton_Click(object sender, EventArgs e)
         {
             SoldProductsServicesItems panel = new SoldProductsServicesItems();
-            panel.ItemIsValid += Panel_ItemIsValid;
             allitems.Add(panel);
             ItemsFlowLayoutPanel.Controls.Add(panel);
         }
-
-        private void Panel_ItemIsValid(bool isValid)
+        private bool ValidateFlowItems()
         {
+            foreach(SoldProductsServicesItems item in ItemsFlowLayoutPanel.Controls)
+            {
+                if(!item.ValidateItem())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool ValidateInvoiceForm()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            int counter = 1;
+            bool isValid = true;
+
+            string patternEng = "^[0-9]{2}\\/[0-9]{2}\\/[0-9]{4}$";
+            string patternPl = "^[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}$";
+            string lang = LanguageHelper.Lang;
+
+            if (lang == "pl_pl")
+            {
+                stringBuilder.Append("Wystąpił problem z twoim formularzem:\n");
+            }
+            else if (lang == "eng_us")
+            {
+                stringBuilder.Append("There was  aproblem with your form:\n");
+            }
+            
+            if (string.IsNullOrEmpty(DateOfSaleTextBox.Text))
+            {
+                if (lang == "pl_pl")
+                {
+                    stringBuilder.Append($"{counter}. Wprowadź datę sprzedaży.\n");
+                }
+                else if (lang == "eng_us")
+                {
+                    stringBuilder.Append($"{counter}. Provide a date of sale.\n");
+                }
+                isValid = false;
+                counter++;
+            }
+            else if (!Regex.Match(DateOfSaleTextBox.Text, patternEng).Success && 
+                        !Regex.Match(DateOfSaleTextBox.Text, patternPl).Success)
+            {
+                if (lang == "pl_pl")
+                {
+                    stringBuilder.Append($"{counter}. Wprowadź poprawną datę sprzedaży.\n");
+                }
+                else if (lang == "eng_us")
+                {
+                    stringBuilder.Append($"{counter}. Provide a valid date of sale.\n");
+                }
+                counter++;
+                isValid = false;
+            }
+
+            if (string.IsNullOrEmpty(DateOfPaymentTextBox.Text))
+            {
+                if (lang == "pl_pl")
+                {
+                    stringBuilder.Append($"{counter}. Wprowadź datę płatności.\n");
+                }
+                else if (lang == "eng_us")
+                {
+                    stringBuilder.Append($"{counter}. Provide a date of payment.\n");
+                }
+                counter++;
+                isValid = false;
+            }
+            else if (!Regex.Match(DateOfPaymentTextBox.Text, patternEng).Success &&
+                        !Regex.Match(DateOfPaymentTextBox.Text, patternPl).Success)
+            {
+                if (lang == "pl_pl")
+                {
+                    stringBuilder.Append($"{counter}. Wprowadź poprawną datę płatności.\n");
+                }
+                else if (lang == "eng_us")
+                {
+                    stringBuilder.Append($"{counter}. Provide a valid date of payment.\n");
+                }
+                counter++;
+                isValid = false;
+            }
+            if (allitems.Count < 1)
+            {
+                if (lang == "pl_pl")
+                {
+                    stringBuilder.Append($"{counter}. Wprowadź przynajmniej jeden produkt lub usługę.\n");
+                }
+                else if (lang == "eng_us")
+                {
+                    stringBuilder.Append($"{counter}. Provide at least one service or product.\n");
+                }
+                counter++;
+                isValid = false;
+            }
+                
             if (!isValid)
             {
-                MessageBox.Show("Provide valid numbers", "Error while providing a number");
+                if (lang == "pl_pl")
+                {
+                    MessageBox.Show(stringBuilder.ToString(), "Faktura nieprawidłowa");
+                }
+                else if (lang == "eng_us")
+                {
+                    MessageBox.Show(stringBuilder.ToString(), "Invalid invoice");
+                }
             }
+            return isValid;
         }
 
         private async void AddInvoiceButton_Click(object sender, EventArgs e)
         {
+            string lang = LanguageHelper.Lang;
+            if(!ValidateFlowItems())
+            {
+                if (lang == "pl_pl")
+                {
+                    MessageBox.Show("Wprowadź poprawne wartości", "Błąd przy wprowadzania wartości");
+
+                }
+                else if (lang == "eng_us")
+                {
+                    MessageBox.Show("Provide valid values", "Error while providing values");
+
+                }
+                return;
+            }
+            if (!ValidateInvoiceForm())
+            {
+                return;
+            }
             // for simplicity assume 12% tax
             double Tax = 0.88;
             int uniqueId = GenerateUniqueIdentifier();
@@ -180,7 +294,7 @@ namespace ExamTracker.UI.MainAppControls
             int NetAmount = Convert.ToInt32(Math.Round(GrossAmount * Tax));
 
 
-            string now = (DateTime.Now).Date.ToShortDateString();
+            string now = (DateTime.Now).Date.ToString("dd/MM/yyyy");
             string buyerAddress = "Warszawa, Bolka i Lolka 23/2A";
             string selersAddress = "Kraków, Koziolka Matolka 11/3D Pokoj 3";
             string accNum = "63 1112 9074 2222 0011 0999 8931";
@@ -188,7 +302,6 @@ namespace ExamTracker.UI.MainAppControls
             Invoice invoice = new Invoice(GenerateInvoiceNumber(), now, DateOfSaleTextBox.Text, DateOfPaymentTextBox.Text,
                                     "Transfer", "Me, myself and I Inc.", buyerAddress, "You solobolo limited", selersAddress, accNum,
                                     "zl", remarks, GrossAmount, NetAmount, _sessionService.CurrentAccount.Id, uniqueId);
-
             await _invoiceRepository.InsertInvoice(invoice);
             ClearInformationBoxes();
             await PopulateInvoicesTable();
@@ -245,23 +358,42 @@ namespace ExamTracker.UI.MainAppControls
 
         private void button2_Click(object sender, EventArgs e)
         {
-            SellDateCalendar.Visible = true;
+            bool visibility = SellDateCalendar.Visible;
+
+            if (visibility)
+            {
+                SellDateCalendar.Visible = false;
+            }
+            else
+            {
+                SellDateCalendar.Visible = true;
+            }
+            
         }
 
         private void SellDateCalendar_DateSelected(object sender, DateRangeEventArgs e)
         {
-            DateOfSaleTextBox.Text = e.Start.ToShortDateString();
+            DateOfSaleTextBox.Text = e.Start.ToString("dd/MM/yyyy");
             SellDateCalendar.Visible = false;
         }
 
         private void PaymentCalendarButton_Click(object sender, EventArgs e)
         {
-            PaymentCalendar.Visible = true;
+            bool visibility = PaymentCalendar.Visible;
+            if (visibility)
+            {
+                PaymentCalendar.Visible = false;
+            }
+            else
+            {
+                PaymentCalendar.Visible = true; 
+            }
+            
         }
 
         private void PaymentCalendar_DateChanged(object sender, DateRangeEventArgs e)
         {
-            DateOfPaymentTextBox.Text = e.Start.ToShortDateString();
+            DateOfPaymentTextBox.Text = e.Start.ToString("dd/MM/yyyy");
             PaymentCalendar.Visible = false;
         }
 

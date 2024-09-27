@@ -251,7 +251,7 @@
             saveChangesButton.FlatAppearance.BorderSize = 0;
             saveChangesButton.FlatStyle = FlatStyle.Flat;
             saveChangesButton.Font = new Font("Arial", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 238);
-            saveChangesButton.Location = new Point(501, 815);
+            saveChangesButton.Location = new Point(364, 825);
             saveChangesButton.Name = "saveChangesButton";
             saveChangesButton.Size = new Size(103, 42);
             saveChangesButton.TabIndex = 20;

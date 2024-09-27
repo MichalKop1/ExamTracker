@@ -13,29 +13,40 @@ namespace ExamTracker.CustomControls
 {
     public partial class SoldProductsServicesItems : UserControl
     {
-        public event Action<bool> ItemIsValid = delegate { };
         public SoldProductsServicesItems()
         {
             InitializeComponent();
             PopulateComboBoxList();
         }
-        private void ValidateItem()
+        public bool ValidateItem()
         {
             bool isValid = true;
+            int qt = 0;
+            int price = 0;
+
 
             if (!int.TryParse(QuantityTextBox.Text, out _))
             {
                 isValid = false;
             }
+            else if (int.Parse(QuantityTextBox.Text) <= 0)
+            {
+                isValid |= false;
+            }
+                
             if (!int.TryParse(PricePerUnitTextBox.Text, out _))
             {
                 isValid = false;
             }
-
-            if(!isValid)
+            else if (int.Parse(PricePerUnitTextBox.Text) <= 0)
             {
-                ItemIsValid?.Invoke(isValid);
+                isValid = false;
             }
+            if (string.IsNullOrEmpty(ItemsComboBox.Text))
+            {
+                isValid = false;
+            }
+            return isValid;
         }
 
         public string GetItemType()

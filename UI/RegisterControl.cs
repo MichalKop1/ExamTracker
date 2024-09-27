@@ -32,7 +32,7 @@ namespace ExamTracker.UI
             {
                 nameBox.PlaceholderText = "Imię";
                 surnameBox.PlaceholderText = "Nazwisko";
-                surnameBox.PlaceholderText = "Nazwa użytkownika";
+                loginBox.PlaceholderText = "Nazwa użytkownika";
                 passwordBox1.PlaceholderText = "Hasło";
                 passwordBox2.PlaceholderText = "Potwierdź hasło";
                 registerButton.Text = "Zarejestruj";

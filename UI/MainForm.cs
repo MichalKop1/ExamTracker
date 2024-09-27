@@ -1,9 +1,11 @@
 using DataAcessLayer.Contracts;
+using DomainModel;
 using ExamTracker.UI;
 using System.Xml.Linq;
 using DataAcessLayer;
 using System.Windows.Forms;
 using ExamTracker.Helpers;
+using System.Text.Json;
 
 namespace ExamTracker
 {
@@ -28,7 +30,7 @@ namespace ExamTracker
             _accountRepository.OnError += OnErrorOccured;
         }
 
-        private void UpdateConfigFileLanguage(string filePath, string setLang)
+        private void UpdateConfigFileLanguageOld(string filePath, string setLang)
         {
             XDocument configFile = XDocument.Load(filePath);
             var appSettings = configFile.Descendants("appSettings").FirstOrDefault();
@@ -44,14 +46,35 @@ namespace ExamTracker
             }
             configFile.Save(filePath);
         }
+
+        private void UpdateConfigFileLanguage(string setLang)
+        {
+            string jsonConfigPath = Path.Join(Directory.GetCurrentDirectory(), "appsettings.json");
+
+            if (File.Exists(jsonConfigPath))
+            {
+                string jsonString = File.ReadAllText(jsonConfigPath);
+
+                Root? root = JsonSerializer.Deserialize<Root>(jsonString);
+                if (root?.settings != null)
+                {
+                    root.settings.AppSettings.Lang = setLang;
+                    LanguageChanged?.Invoke(setLang);
+                    string modifiedJson = JsonSerializer.Serialize(root, new JsonSerializerOptions { WriteIndented = true });
+                    File.WriteAllText(jsonConfigPath, modifiedJson);
+                } 
+            }
+        }
+
         private void ChangeLanguage()
         {
+            ConnectionHelper.ReloadSettings();
             // resources.resx can be used for language change
             if (LanguageHelper.Lang == "pl_pl")
             {
                 btnLogin.Text = "Zaloguj";
                 btnRegister.Text = "Zarejestruj";
-                newsletterLabel.Text = "Do³¹cz do naszego newslettera i stañ siê jednym z tysiêcy\n        nauczycieli którzy korzystaj¹ z Exam Tracker";
+                newsletterLabel.Text = "Do³¹cz do naszego newslettera i stañ siê jednym\n z tysiêcy nauczycieli którzy korzystaj¹ z Exam Tracker";
                 getStartedButton.Text = "Zacznij";
             }
             else if (LanguageHelper.Lang == "eng_us")
@@ -125,7 +148,8 @@ namespace ExamTracker
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            logoBox.ImageLocation = "C:\\Users\\Michal\\source\\repos\\ExamTracker_project\\ExamTracker\\Assets\\icon.png";
+            // logoBox.ImageLocation = "C:\\Users\\Michal\\source\\repos\\ExamTracker_project\\ExamTracker\\Assets\\icon.png";
+            logoBox.Image = Properties.Resources.icon;
             setLoginPage();
             // must equal: polski (Polish) or angielski (English)
             if (LanguageHelper.Lang == "pl_pl")
@@ -142,9 +166,13 @@ namespace ExamTracker
         private void LanguagesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             string SetLanguage = _languageDict[LanguagesComboBox.SelectedIndex];
-            UpdateConfigFileLanguage("C:\\Users\\Michal\\source\\repos\\ExamTracker_project\\ExamTracker\\App.config", SetLanguage);
-            
+            Console.WriteLine("Language set to: " +SetLanguage);
+
+            UpdateConfigFileLanguage(SetLanguage);
+            Console.WriteLine("Config updated ");
+
             ChangeLanguage();
+            Console.WriteLine("Language changed");
         }
     }
 }
