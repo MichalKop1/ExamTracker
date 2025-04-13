@@ -300,7 +300,7 @@ namespace ExamTracker.UI.MainAppControls
             string accNum = "63 1112 9074 2222 0011 0999 8931";
             string remarks = RemarksTextBox.Text;
             Invoice invoice = new Invoice(GenerateInvoiceNumber(), now, DateOfSaleTextBox.Text, DateOfPaymentTextBox.Text,
-                                    "Transfer", "Me, myself and I Inc.", buyerAddress, "You solobolo limited", selersAddress, accNum,
+                                    "Transfer", _sessionService.CurrentAccount.BusinessName, buyerAddress, "You solobolo limited", selersAddress, accNum,
                                     "zl", remarks, GrossAmount, NetAmount, _sessionService.CurrentAccount.Id, uniqueId);
             await _invoiceRepository.InsertInvoice(invoice);
             ClearInformationBoxes();

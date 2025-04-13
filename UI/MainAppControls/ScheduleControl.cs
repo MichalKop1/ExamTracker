@@ -90,6 +90,7 @@ namespace ExamTracker.UI.MainAppControls
                 {
                     sb.Append($"{counter}. You have to give a name to your event.\n");
                 }
+
                 counter++;
                 isValid = false;
             }
@@ -123,7 +124,7 @@ namespace ExamTracker.UI.MainAppControls
             return isValid;
         }
 
-        private async void LoadEventsToList()
+        private async Task LoadEventsToList()
         {
             _eventToLoad = await _eventRepository.GetAllEvents(_sessionService.CurrentAccount.Id);
             foreach (var ev in _eventToLoad)
@@ -140,7 +141,7 @@ namespace ExamTracker.UI.MainAppControls
             string longDesc = LongDescTextBox.Text;
             DateTime dt = Calendar.SelectionStart.Date;
             Event _event = new Event(EventType, longDesc, shortDesc, dt, _sessionService.CurrentAccount.Id);
-            ScheduledWorkControlItem item = new ScheduledWorkControlItem(_event);    
+            //ScheduledWorkControlItem item = new ScheduledWorkControlItem(_event);    
             AddEventToPanel(_event);
             _eventRepository.AddEventToDB(_event);
             ClearAllFields();
@@ -159,75 +160,66 @@ namespace ExamTracker.UI.MainAppControls
 
         private void ScheduledWorkControlItem_DateHasPassed(object? sender, EventArgs e)
         {
-            ScheduledWorkControlItem item = sender as ScheduledWorkControlItem;
-            if (item != null)
-            {
-                item.BackColor = Color.Red;
-            }
-        }
+			if (sender is ScheduledWorkControlItem item)
+			{
+				item.BackColor = Color.Red;
+			}
+		}
 
         private void ScheduledWorkControlItem_MouseHasLeft(object? sender, EventArgs e)
         {
-            ScheduledWorkControlItem item = sender as ScheduledWorkControlItem;
-            
-            if (item != null && !item.isSelected && !item.isPastDueDate)
-            {
-                item.BackColor = Color.White;
-            }
-        }
+			if (sender is ScheduledWorkControlItem item && !item.isSelected && !item.isPastDueDate)
+			{
+				item.BackColor = Color.White;
+			}
+		}
 
         private void ScheduledWorkControlItem_MouseHasEntered(object? sender, EventArgs e)
         {
-            ScheduledWorkControlItem item = sender as ScheduledWorkControlItem;
-
-            if(item != null && !item.isSelected && !item.isPastDueDate)
-            {
-                item.BackColor = Color.Silver;
-            }
-        }
+			if (sender is ScheduledWorkControlItem item && !item.isSelected && !item.isPastDueDate)
+			{
+				item.BackColor = Color.Silver;
+			}
+		}
 
         private void ScheduledWorkControlItem_Clicked(object? sender, EventArgs e)
         {
-            ScheduledWorkControlItem item = sender as ScheduledWorkControlItem;
+			if (sender is ScheduledWorkControlItem item)
+			{
+				if (_selectedItem != null && _selectedItem != item)
+				{
+					_selectedItem.isSelected = false;
+					_selectedItem.HideButtons();
 
-            if (item != null)
-            {
-                if (_selectedItem != null && _selectedItem != item)
-                {
-                    _selectedItem.isSelected = false;
-                    _selectedItem.HideButtons();
-                    if(_selectedItem.isPastDueDate)
-                    {
-                        _selectedItem.BackColor = Color.Red;
-                    }
-                    else
-                    {
-                        _selectedItem.BackColor = Color.White;
-                    }
-                }
-                _selectedItem = item;
-                _selectedItem.BackColor = Color.Yellow;
-                _selectedItem.isSelected = true;
-                _selectedItem.ShowButtons(); 
-            }
-        }
+					if (_selectedItem.isPastDueDate)
+					{
+						_selectedItem.BackColor = Color.Red;
+					}
+					else
+					{
+						_selectedItem.BackColor = Color.White;
+					}
+				}
+
+				_selectedItem = item;
+				_selectedItem.BackColor = Color.Yellow;
+				_selectedItem.isSelected = true;
+				_selectedItem.ShowButtons();
+			}
+		}
 
         private void ScheduledWorkControlItem_RemoveRequested(object sender, int e)
         {
-            ScheduledWorkControlItem item = sender as ScheduledWorkControlItem;
-            if (item != null)
-            {
-                //flowLayoutPanel.Controls.Remove(item);
-                _eventRepository.DeleteEvent(e);
-                item.Dispose();
-                
-            }
-        }
+			if (sender is ScheduledWorkControlItem item)
+			{
+				_eventRepository.DeleteEvent(e);
+				item.Dispose();
+			}
+		}
         
         private void ExamRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             EventType = 1;
-            
         }
 
         private void MeetingRadioButton_CheckedChanged(object sender, EventArgs e)
