@@ -25,7 +25,7 @@ namespace ExamTracker
             _accountRepository = accountRepository;
             _sessionService = sessionService;
             _sessionService.Language = LanguageHelper.Lang;
-            _languageDict = new Dictionary<int, string>() { {0, "pl_pl" }, {1, "eng_us" } };
+            _languageDict = new Dictionary<int, string>() { {0, "Polish_Pl" }, {1, "English_Us" } };
             ChangeLanguage();
             _accountRepository.OnError += OnErrorOccured;
         }
@@ -68,16 +68,19 @@ namespace ExamTracker
 
         private void ChangeLanguage()
         {
-            ConnectionHelper.ReloadSettings();
+            //ConnectionHelper.ReloadSettings();
             // resources.resx can be used for language change
-            if (LanguageHelper.Lang == "pl_pl")
-            {
+            // if (LanguageHelper.Lang == "pl_pl")
+            var langdd = LanguageHelper.GetLanguage;
+
+			if (LanguageHelper.GetLanguage == Language.Polish_Pl)
+			{
                 btnLogin.Text = "Zaloguj";
                 btnRegister.Text = "Zarejestruj";
                 newsletterLabel.Text = "Do³¹cz do naszego newslettera i stañ siê jednym\n z tysiêcy nauczycieli którzy korzystaj¹ z Exam Tracker";
                 getStartedButton.Text = "Zacznij";
             }
-            else if (LanguageHelper.Lang == "eng_us")
+            else if (LanguageHelper.GetLanguage == Language.English_Us)
             {
                 btnLogin.Text = "Login";
                 btnRegister.Text = "Register";
@@ -91,7 +94,7 @@ namespace ExamTracker
             MessageBox.Show(errorMessage, "Error occured");
         }
 
-        private async void AnimateUnderline(Panel underlinePanel, Button targetButton)
+        private async Task AnimateUnderline(Panel underlinePanel, Button targetButton)
         {
             // Cancel any ongoing animation
             _animationTokenSource?.Cancel();
@@ -148,15 +151,16 @@ namespace ExamTracker
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            // logoBox.ImageLocation = "C:\\Users\\Michal\\source\\repos\\ExamTracker_project\\ExamTracker\\Assets\\icon.png";
             logoBox.Image = Properties.Resources.icon;
             setLoginPage();
-            // must equal: polski (Polish) or angielski (English)
-            if (LanguageHelper.Lang == "pl_pl")
+
+			// must equal: polski (Polish) or angielski (English)
+			//if (LanguageHelper.Lang == "pl_pl")
+			if (LanguageHelper.GetLanguage == Language.Polish_Pl)
             {
                 LanguagesComboBox.Text = "polski (Polish)";
             }
-            else if (LanguageHelper.Lang == "eng_us")
+            else if (LanguageHelper.GetLanguage == Language.English_Us)
             {
                 LanguagesComboBox.Text = "angielski (English)";
             }
@@ -166,13 +170,10 @@ namespace ExamTracker
         private void LanguagesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             string SetLanguage = _languageDict[LanguagesComboBox.SelectedIndex];
-            Console.WriteLine("Language set to: " +SetLanguage);
 
             UpdateConfigFileLanguage(SetLanguage);
-            Console.WriteLine("Config updated ");
 
             ChangeLanguage();
-            Console.WriteLine("Language changed");
         }
     }
 }

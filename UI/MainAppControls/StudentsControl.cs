@@ -38,7 +38,10 @@ public partial class StudentsControl : UserControl
     private void ChangeLanguage()
     {
         List<TextBox> allBoxes = get8ClassTextBoxes();
-        if (LanguageHelper.Lang == "pl_pl")
+        Language lang = LanguageHelper.GetLanguage;
+
+
+		if (lang == Language.Polish_Pl)
         {
             int allBoxesCount = 14;
             StudentName.Text = "Wyniki egzaminów";
@@ -55,7 +58,7 @@ public partial class StudentsControl : UserControl
             EditStudentSurnameBox.PlaceholderText = "Nazwisko";
             TableDescLabel.Text = "Tabela egzaminów";
         }
-        else if (LanguageHelper.Lang == "eng_us")
+        else if (lang == Language.English_Us)
         {
             int allBoxesCount = 14;
             StudentName.Text = "Exam Results";

@@ -58,7 +58,8 @@ internal static class Program
             services.AddTransient<IEventRepository, SQLiteEventRepository>();
             services.AddTransient<IInvoiceRepository, SQLiteInvoiceRepository>();
             services.AddTransient<IProductServiceRepository, SQLiteProductServiceRepository>();
-            services.AddTransient<IDbConnection>(_ => new SqlConnection(settings.ConnectionStrings.SQLiteConnectionString));
+			services.AddTransient<IClientRepository, SQLiteClientRepository>();
+			services.AddTransient<IDbConnection>(_ => new SqlConnection(settings.ConnectionStrings.SQLiteConnectionString));
 
         }
         services.AddMemoryCache();

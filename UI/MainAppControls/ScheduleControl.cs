@@ -1,189 +1,182 @@
 ﻿using DataAcessLayer.Contracts;
 using ExamTracker.CustomControls;
 using DomainModel.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using ExamTracker.Helpers;
+using System.Text;
 
-namespace ExamTracker.UI.MainAppControls
+namespace ExamTracker.UI.MainAppControls;
+
+public partial class ScheduleControl : UserControl
 {
-    public partial class ScheduleControl : UserControl
+    public event EventHandler OneEventClicked;
+    private readonly IEventRepository _eventRepository;
+    private readonly ISessionService _sessionService;
+    private List<Event> _eventToLoad;
+    int EventType = 0;
+
+    private ScheduledWorkControlItem _selectedItem;
+    public ScheduleControl(IEventRepository eventRepository, ISessionService sessionService)
     {
-        public event EventHandler OneEventClicked;
-        private readonly IEventRepository _eventRepository;
-        private readonly ISessionService _sessionService;
-        private List<Event> _eventToLoad;
-        int EventType = 0;
+        InitializeComponent();
+        ChangeLanguage();
+        _eventRepository = eventRepository;
+        flowLayoutPanel.FlowDirection = FlowDirection.TopDown;
+        flowLayoutPanel.AutoScroll = true;
+        _sessionService = sessionService;
+        _eventToLoad = [];
+    }
 
-        private ScheduledWorkControlItem _selectedItem;
-        public ScheduleControl(IEventRepository eventRepository, ISessionService sessionService)
+    private void ChangeLanguage()
+    {
+        if (LanguageHelper.GetLanguage == Language.Polish_Pl)
         {
-            InitializeComponent();
-            ChangeLanguage();
-            _eventRepository = eventRepository;
-            flowLayoutPanel.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanel.AutoScroll = true;
-            _sessionService = sessionService;
-            _eventToLoad = [];
+            AddEventButton.Text = "Dodaj wydarzenie";
+            ExamRadioButton.Text = "Egzamin";
+            MeetingRadioButton.Text = "Spotkanie";
+            ShortDescTextBox.PlaceholderText = "Nazwa wydarzenia";
+            currScheduleLabel.Text = "Obecny harmonogram";
+        }
+        else if (LanguageHelper.GetLanguage == Language.English_Us)
+        {
+            AddEventButton.Text = "Add event";
+            ExamRadioButton.Text = "Exam";
+            MeetingRadioButton.Text = "Meeting";
+            ShortDescTextBox.PlaceholderText = "Event name";
+            currScheduleLabel.Text = "Your current schedule";
+        }
+    }
+
+    private void ClearAllFields()
+    {
+        ShortDescTextBox.Clear();
+        LongDescTextBox.Clear();
+        ExamRadioButton.Checked = false;
+        MeetingRadioButton.Checked = false;
+    }
+
+    private bool VerifyInformation()
+    {
+        int counter = 1;
+        StringBuilder sb = new StringBuilder();
+        bool isValid = true;
+        Language lang = LanguageHelper.GetLanguage;
+
+        if (lang == Language.Polish_Pl)
+        {
+            sb.Append("Wystąpił problem z twoim formularzem. Spróbuj:\n");
+        }
+        else if (lang == Language.English_Us)
+        {
+            sb.Append("There was an issue with your form. Try:\n");
         }
 
-        private void ChangeLanguage()
+        if (string.IsNullOrEmpty(ShortDescTextBox.Text))
         {
-            if (LanguageHelper.Lang == "pl_pl")
+            if (lang == Language.Polish_Pl)
             {
-                AddEventButton.Text = "Dodaj wydarzenie";
-                ExamRadioButton.Text = "Egzamin";
-                MeetingRadioButton.Text = "Spotkanie";
-                ShortDescTextBox.PlaceholderText = "Nazwa wydarzenia";
-                currScheduleLabel.Text = "Obecny harmonogram";
+                sb.Append($"{counter}. Musisz nazwać swoje wydarzenie.\n");
+
             }
-            else if (LanguageHelper.Lang == "eng_us")
+            else if (lang == Language.English_Us)
             {
-                AddEventButton.Text = "Add event";
-                ExamRadioButton.Text = "Exam";
-                MeetingRadioButton.Text = "Meeting";
-                ShortDescTextBox.PlaceholderText = "Event name";
-                currScheduleLabel.Text = "Your current schedule";
+                sb.Append($"{counter}. You have to give a name to your event.\n");
             }
+
+            counter++;
+            isValid = false;
         }
 
-        private void ClearAllFields()
+        if(!ExamRadioButton.Checked && !MeetingRadioButton.Checked)
         {
-            ShortDescTextBox.Clear();
-            LongDescTextBox.Clear();
-            ExamRadioButton.Checked = false;
-            MeetingRadioButton.Checked = false;
+            if (lang == Language.Polish_Pl)
+            {
+                sb.Append($"{counter}. Zaznacz rodzaj wydarzenia.");
+
+            }
+            else if (lang == Language.English_Us)
+            {
+                sb.Append($"{counter}. Select type of event.");
+            }
+
+            counter++;
+            isValid = false;
         }
 
-        private bool VerifyInformation()
+        if (!isValid)
         {
-            int counter = 1;
-            StringBuilder sb = new StringBuilder();
-            bool isValid = true;
-            string lang = LanguageHelper.Lang;
-
-            if (lang == "pl_pl")
+            if (lang == Language.Polish_Pl)
             {
-                sb.Append("Wystąpił problem z twoim formularzem. Spróbuj:\n");
+                MessageBox.Show(sb.ToString(), "Formularz nie jest poprawny!");
             }
-            else if (lang == "eng_us")
+            else if (lang == Language.English_Us)
             {
-                sb.Append("There was an issue with your form. Try:\n");
-            }
-
-
-            if (string.IsNullOrEmpty(ShortDescTextBox.Text))
-            {
-                if (lang == "pl_pl")
-                {
-                    sb.Append($"{counter}. Musisz nazwać swoje wydarzenie.\n");
-
-                }
-                else if (lang == "eng_us")
-                {
-                    sb.Append($"{counter}. You have to give a name to your event.\n");
-                }
-
-                counter++;
-                isValid = false;
-            }
-            if(!ExamRadioButton.Checked && !MeetingRadioButton.Checked)
-            {
-                if (lang == "pl_pl")
-                {
-                    sb.Append($"{counter}. Zaznacz rodzaj wydarzenia.");
-
-                }
-                else if (lang == "eng_us")
-                {
-                    sb.Append($"{counter}. Select type of event.");
-
-                }
-                counter++;
-                isValid = false;
-            }
-
-            if (!isValid)
-            {
-                if (lang == "pl_pl")
-                {
-                    MessageBox.Show(sb.ToString(), "Formularz nie jest poprawny!");
-                }
-                else if (lang == "eng_us")
-                {
-                    MessageBox.Show(sb.ToString(), "Form not valid!");
-                }
-            }
-            return isValid;
-        }
-
-        private async Task LoadEventsToList()
-        {
-            _eventToLoad = await _eventRepository.GetAllEvents(_sessionService.CurrentAccount.Id);
-            foreach (var ev in _eventToLoad)
-            {
-                AddEventToPanel(ev);
+                MessageBox.Show(sb.ToString(), "Form not valid!");
             }
         }
 
-        private void AddEventButton_Click(object sender, EventArgs e)
-        {
-            if (!VerifyInformation()) return;
+        return isValid;
+    }
 
-            string shortDesc = ShortDescTextBox.Text;
-            string longDesc = LongDescTextBox.Text;
-            DateTime dt = Calendar.SelectionStart.Date;
-            Event _event = new Event(EventType, longDesc, shortDesc, dt, _sessionService.CurrentAccount.Id);
-            //ScheduledWorkControlItem item = new ScheduledWorkControlItem(_event);    
-            AddEventToPanel(_event);
-            _eventRepository.AddEventToDB(_event);
-            ClearAllFields();
+    private async Task LoadEventsToList()
+    {
+        _eventToLoad = await _eventRepository.GetAllEvents(_sessionService.CurrentAccount.Id);
+        foreach (var ev in _eventToLoad)
+        {
+            AddEventToPanel(ev);
         }
+    }
 
-        private void AddEventToPanel(Event _event)
-        {
-            ScheduledWorkControlItem item = new ScheduledWorkControlItem(_event);
-            item.Clicked += ScheduledWorkControlItem_Clicked;
-            item.MouseHasEntered += ScheduledWorkControlItem_MouseHasEntered;
-            item.MouseHasLeft += ScheduledWorkControlItem_MouseHasLeft;
-            item.RemoveRequested += ScheduledWorkControlItem_RemoveRequested;
-            item.DueDatePassed += ScheduledWorkControlItem_DateHasPassed;
-            flowLayoutPanel.Controls.Add(item);   
-        }
+    private void AddEventButton_Click(object sender, EventArgs e)
+    {
+        if (!VerifyInformation()) return;
 
-        private void ScheduledWorkControlItem_DateHasPassed(object? sender, EventArgs e)
-        {
+        string shortDesc = ShortDescTextBox.Text;
+        string longDesc = LongDescTextBox.Text;
+        DateTime dt = Calendar.SelectionStart.Date;
+        Event _event = new Event(EventType, longDesc, shortDesc, dt, _sessionService.CurrentAccount.Id);
+        
+        AddEventToPanel(_event);
+        _eventRepository.AddEventToDB(_event);
+        ClearAllFields();
+    }
+
+    private void AddEventToPanel(Event _event)
+    {
+        ScheduledWorkControlItem item = new ScheduledWorkControlItem(_event);
+        item.Clicked += ScheduledWorkControlItem_Clicked;
+        item.MouseHasEntered += ScheduledWorkControlItem_MouseHasEntered;
+        item.MouseHasLeft += ScheduledWorkControlItem_MouseHasLeft;
+        item.RemoveRequested += ScheduledWorkControlItem_RemoveRequested;
+        item.DueDatePassed += ScheduledWorkControlItem_DateHasPassed;
+        flowLayoutPanel.Controls.Add(item);   
+    }
+
+    private void ScheduledWorkControlItem_DateHasPassed(object? sender, EventArgs e)
+    {
 			if (sender is ScheduledWorkControlItem item)
 			{
 				item.BackColor = Color.Red;
 			}
 		}
 
-        private void ScheduledWorkControlItem_MouseHasLeft(object? sender, EventArgs e)
-        {
+    private void ScheduledWorkControlItem_MouseHasLeft(object? sender, EventArgs e)
+    {
 			if (sender is ScheduledWorkControlItem item && !item.isSelected && !item.isPastDueDate)
 			{
 				item.BackColor = Color.White;
 			}
 		}
 
-        private void ScheduledWorkControlItem_MouseHasEntered(object? sender, EventArgs e)
-        {
+    private void ScheduledWorkControlItem_MouseHasEntered(object? sender, EventArgs e)
+    {
 			if (sender is ScheduledWorkControlItem item && !item.isSelected && !item.isPastDueDate)
 			{
 				item.BackColor = Color.Silver;
 			}
 		}
 
-        private void ScheduledWorkControlItem_Clicked(object? sender, EventArgs e)
-        {
+    private void ScheduledWorkControlItem_Clicked(object? sender, EventArgs e)
+    {
 			if (sender is ScheduledWorkControlItem item)
 			{
 				if (_selectedItem != null && _selectedItem != item)
@@ -208,33 +201,32 @@ namespace ExamTracker.UI.MainAppControls
 			}
 		}
 
-        private void ScheduledWorkControlItem_RemoveRequested(object sender, int e)
-        {
+    private void ScheduledWorkControlItem_RemoveRequested(object sender, int e)
+    {
 			if (sender is ScheduledWorkControlItem item)
 			{
 				_eventRepository.DeleteEvent(e);
 				item.Dispose();
 			}
 		}
-        
-        private void ExamRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            EventType = 1;
-        }
+    
+    private void ExamRadioButton_CheckedChanged(object sender, EventArgs e)
+    {
+        EventType = 1;
+    }
 
-        private void MeetingRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            EventType = 2;
-        }
+    private void MeetingRadioButton_CheckedChanged(object sender, EventArgs e)
+    {
+        EventType = 2;
+    }
 
-        private void toolTip1_Popup(object sender, PopupEventArgs e)
-        {
+    private void toolTip1_Popup(object sender, PopupEventArgs e)
+    {
 
-        }
+    }
 
-        private void ScheduleControl_Load(object sender, EventArgs e)
-        {
-            LoadEventsToList();
-        }
+    private void ScheduleControl_Load(object sender, EventArgs e)
+    {
+        LoadEventsToList();
     }
 }
