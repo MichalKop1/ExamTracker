@@ -61,12 +61,12 @@ public partial class SoldProductsServicesItems : UserControl
 
     private void PopulateComboBoxList()
     {
-        if (LanguageHelper.Lang == "pl_pl")
+        if (LanguageHelper.GetLanguage == Language.Polish_Pl)
         {
             string[] items = { "Sprzedaż (GTU_24)", "Języki (GTU_12)", "Sprzątanie (GTU_8)" };
             ItemsComboBox.Items.AddRange(items);
         }
-        else if (LanguageHelper.Lang == "eng_us")
+        else if (LanguageHelper.GetLanguage == Language.English_Us)
         {
             string[] items = { "Vending (GTU_24)", "Languages (GTU_12)", "Cleaning (GTU_8)" };
             ItemsComboBox.Items.AddRange(items);

@@ -1,11 +1,9 @@
 using DataAcessLayer.Contracts;
-using DomainModel;
 using ExamTracker.UI;
 using System.Xml.Linq;
-using DataAcessLayer;
-using System.Windows.Forms;
 using ExamTracker.Helpers;
 using System.Text.Json;
+using DomainModel.Models;
 
 namespace ExamTracker
 {

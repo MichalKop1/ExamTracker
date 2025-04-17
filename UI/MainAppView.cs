@@ -100,7 +100,7 @@ public partial class MainAppView : Form
 	private void SetBillingControl()
 	{
 		dataPanel.Controls.Clear();
-		BillingControl billingControl = new BillingControl(_invoiceRepository, _productServiceRepository, _sessionService);
+		BillingControl billingControl = new BillingControl(_invoiceRepository, _productServiceRepository, _sessionService, _clientRepository);
 		dataPanel.Controls.Add(billingControl);
 	}
 

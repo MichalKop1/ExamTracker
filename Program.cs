@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
 using System.Data;
 using DataAcessLayer;
+using DomainModel.Models;
 
 namespace ExamTracker;
 
@@ -35,7 +36,7 @@ internal static class Program
             .AddEnvironmentVariables()
             .Build();
 
-        DomainModel.Settings? settings = config.GetRequiredSection("Settings").Get<DomainModel.Settings>();
+        Settings? settings = config.GetRequiredSection("Settings").Get<Settings>();
         ServiceCollection services = new ServiceCollection();
 
         if (settings?.AppSettings.RepositoryType == "sqlServer")

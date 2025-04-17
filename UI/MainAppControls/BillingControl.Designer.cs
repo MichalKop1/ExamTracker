@@ -28,8 +28,8 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-			DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+			DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+			DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
 			InvoicesTable = new DataGridView();
 			InvoiceLabel = new Label();
 			InvoiceListLabel = new Label();
@@ -48,6 +48,9 @@
 			SellDateCalendar = new MonthCalendar();
 			PaymentCalendar = new MonthCalendar();
 			AddClientButton = new Button();
+			ClientsComboBox = new ComboBox();
+			TransferCheckBox = new RadioButton();
+			CashCheckBox = new RadioButton();
 			((System.ComponentModel.ISupportInitialize)InvoicesTable).BeginInit();
 			SuspendLayout();
 			// 
@@ -60,23 +63,23 @@
 			InvoicesTable.BackgroundColor = Color.White;
 			InvoicesTable.BorderStyle = BorderStyle.None;
 			InvoicesTable.CellBorderStyle = DataGridViewCellBorderStyle.None;
-			dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle3.BackColor = Color.Silver;
-			dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
-			dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
-			dataGridViewCellStyle3.SelectionBackColor = SystemColors.HighlightText;
-			dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-			dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-			InvoicesTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+			dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle1.BackColor = Color.Silver;
+			dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
+			dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+			dataGridViewCellStyle1.SelectionBackColor = SystemColors.HighlightText;
+			dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+			dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+			InvoicesTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			InvoicesTable.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle4.BackColor = SystemColors.Window;
-			dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F);
-			dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
-			dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
-			dataGridViewCellStyle4.SelectionForeColor = Color.Black;
-			dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
-			InvoicesTable.DefaultCellStyle = dataGridViewCellStyle4;
+			dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle2.BackColor = SystemColors.Window;
+			dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+			dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+			dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+			dataGridViewCellStyle2.SelectionForeColor = Color.Black;
+			dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+			InvoicesTable.DefaultCellStyle = dataGridViewCellStyle2;
 			InvoicesTable.Location = new Point(16, 112);
 			InvoicesTable.MultiSelect = false;
 			InvoicesTable.Name = "InvoicesTable";
@@ -177,9 +180,9 @@
 			// 
 			ItemsFlowLayoutPanel.AutoScroll = true;
 			ItemsFlowLayoutPanel.FlowDirection = FlowDirection.TopDown;
-			ItemsFlowLayoutPanel.Location = new Point(498, 354);
+			ItemsFlowLayoutPanel.Location = new Point(498, 398);
 			ItemsFlowLayoutPanel.Name = "ItemsFlowLayoutPanel";
-			ItemsFlowLayoutPanel.Size = new Size(450, 440);
+			ItemsFlowLayoutPanel.Size = new Size(450, 396);
 			ItemsFlowLayoutPanel.TabIndex = 10;
 			ItemsFlowLayoutPanel.Click += ItemsFlowLayoutPanel_Click;
 			// 
@@ -207,7 +210,7 @@
 			// DescriptionLabel
 			// 
 			DescriptionLabel.AutoSize = true;
-			DescriptionLabel.Location = new Point(532, 330);
+			DescriptionLabel.Location = new Point(532, 370);
 			DescriptionLabel.Name = "DescriptionLabel";
 			DescriptionLabel.Size = new Size(67, 15);
 			DescriptionLabel.TabIndex = 13;
@@ -216,7 +219,7 @@
 			// QuantityLabel
 			// 
 			QuantityLabel.AutoSize = true;
-			QuantityLabel.Location = new Point(664, 330);
+			QuantityLabel.Location = new Point(664, 370);
 			QuantityLabel.Name = "QuantityLabel";
 			QuantityLabel.Size = new Size(53, 15);
 			QuantityLabel.TabIndex = 14;
@@ -225,7 +228,7 @@
 			// UnitPriceLabel
 			// 
 			UnitPriceLabel.AutoSize = true;
-			UnitPriceLabel.Location = new Point(802, 330);
+			UnitPriceLabel.Location = new Point(802, 370);
 			UnitPriceLabel.Name = "UnitPriceLabel";
 			UnitPriceLabel.Size = new Size(58, 15);
 			UnitPriceLabel.TabIndex = 15;
@@ -242,7 +245,7 @@
 			// 
 			// PaymentCalendar
 			// 
-			PaymentCalendar.Location = new Point(563, 183);
+			PaymentCalendar.Location = new Point(562, 182);
 			PaymentCalendar.MaxSelectionCount = 1;
 			PaymentCalendar.Name = "PaymentCalendar";
 			PaymentCalendar.TabIndex = 17;
@@ -255,15 +258,51 @@
 			AddClientButton.Name = "AddClientButton";
 			AddClientButton.Size = new Size(92, 41);
 			AddClientButton.TabIndex = 18;
-			AddClientButton.Text = "Add client";
+			AddClientButton.Text = "Add client [not implemented ]";
 			AddClientButton.UseVisualStyleBackColor = true;
 			AddClientButton.Click += AddClientButton_Click;
+			// 
+			// ClientsComboBox
+			// 
+			ClientsComboBox.FormattingEnabled = true;
+			ClientsComboBox.Location = new Point(562, 330);
+			ClientsComboBox.Name = "ClientsComboBox";
+			ClientsComboBox.Size = new Size(300, 23);
+			ClientsComboBox.TabIndex = 19;
+			ClientsComboBox.SelectedIndexChanged += ClientsComboBox_SelectedIndexChanged;
+			// 
+			// TransferCheckBox
+			// 
+			TransferCheckBox.AutoSize = true;
+			TransferCheckBox.Location = new Point(868, 308);
+			TransferCheckBox.Name = "TransferCheckBox";
+			TransferCheckBox.Size = new Size(66, 19);
+			TransferCheckBox.TabIndex = 20;
+			TransferCheckBox.TabStop = true;
+			TransferCheckBox.Text = "Transfer";
+			TransferCheckBox.UseVisualStyleBackColor = true;
+			TransferCheckBox.Click += TransferCheckBox_Click;
+			// 
+			// CashCheckBox
+			// 
+			CashCheckBox.AutoSize = true;
+			CashCheckBox.Location = new Point(868, 334);
+			CashCheckBox.Name = "CashCheckBox";
+			CashCheckBox.Size = new Size(51, 19);
+			CashCheckBox.TabIndex = 21;
+			CashCheckBox.TabStop = true;
+			CashCheckBox.Text = "Cash";
+			CashCheckBox.UseVisualStyleBackColor = true;
+			CashCheckBox.Click += CashCheckBox_Click;
 			// 
 			// BillingControl
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
 			AutoScaleMode = AutoScaleMode.Font;
 			BackColor = Color.White;
+			Controls.Add(CashCheckBox);
+			Controls.Add(TransferCheckBox);
+			Controls.Add(ClientsComboBox);
 			Controls.Add(AddClientButton);
 			Controls.Add(PaymentCalendar);
 			Controls.Add(SellDateCalendar);
@@ -293,6 +332,7 @@
 		}
 
 		#endregion
+		private ComboBox ClientsComboBox;
 		private DataGridView InvoicesTable;
         private Label InvoiceLabel;
         private Label InvoiceListLabel;
@@ -311,5 +351,7 @@
         private MonthCalendar SellDateCalendar;
         private MonthCalendar PaymentCalendar;
 		private Button AddClientButton;
+		private RadioButton TransferCheckBox;
+		private RadioButton CashCheckBox;
 	}
 }

@@ -12,14 +12,21 @@ public partial class BillingControl : UserControl
 	private readonly IInvoiceRepository _invoiceRepository;
 	private readonly IProductServiceRepository _productServiceRepository;
 	private readonly ISessionService _sessionService;
+	private readonly IClientRepository _clientRepository;
+	private List<Client> allClients = new List<Client>();
+	private Client chosenClient = new();
 	private List<SoldProductsServicesItems> allitems;
 	private List<Invoice> invoicesList;
-	public BillingControl(IInvoiceRepository invoiceRepository, IProductServiceRepository productServiceRepository, ISessionService sessionService)
+	private string payment = string.Empty;
+
+	public BillingControl(IInvoiceRepository invoiceRepository, IProductServiceRepository productServiceRepository,
+		ISessionService sessionService, IClientRepository clientRepository)
 	{
 		InitializeComponent();
 		_invoiceRepository = invoiceRepository;
 		_productServiceRepository = productServiceRepository;
 		_sessionService = sessionService;
+		_clientRepository = clientRepository;
 		ItemsFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
 		allitems = new List<SoldProductsServicesItems>();
 		invoicesList = new List<Invoice>();
@@ -257,6 +264,17 @@ public partial class BillingControl : UserControl
 		return isValid;
 	}
 
+	private async Task PopulateClientsComboBox()
+	{
+		int currId = _sessionService.CurrentAccount.Id;
+		allClients = await _clientRepository.GetAllClients(currId.ToString());
+
+		foreach (var client in allClients)
+		{
+			ClientsComboBox.Items.Add(client.CompanyName);
+		}
+	}
+
 	private async void AddInvoiceButton_Click(object sender, EventArgs e)
 	{
 		Language lang = LanguageHelper.GetLanguage;
@@ -298,15 +316,17 @@ public partial class BillingControl : UserControl
 
 
 		string now = (DateTime.Now).Date.ToString("dd/MM/yyyy");
-		string buyerAddress = "Warszawa, Bolka i Lolka 23/2A";
-		string selersAddress = "Kraków, Koziolka Matolka 11/3D Pokoj 3";
-		string accNum = "63 1112 9074 2222 0011 0999 8931";
+		string buyerAddress = chosenClient.CompanyAddress;
+		string selersAddress = _sessionService.CurrentAccount.StreetAdress ?? "Null address";
+		string sellersName = _sessionService.CurrentAccount.ContactName ?? "Null name";
+		string accNum = "63 1112 9074 2222 0011 0999 8931"; // add acc number for the user
 		string remarks = RemarksTextBox.Text;
 		string buyer = _sessionService.CurrentAccount.BusinessName ?? "Null";
 
 		Invoice invoice = new Invoice(GenerateInvoiceNumber(), now, DateOfSaleTextBox.Text, DateOfPaymentTextBox.Text,
-							"Transfer", buyer, buyerAddress, "You solobolo limited", selersAddress, accNum,
+							payment, buyer, buyerAddress, sellersName, selersAddress, accNum,
 							"zl", remarks, GrossAmount, NetAmount, _sessionService.CurrentAccount.Id, uniqueId);
+
 		await _invoiceRepository.InsertInvoice(invoice);
 		ClearInformationBoxes();
 		await PopulateInvoicesTable();
@@ -342,6 +362,7 @@ public partial class BillingControl : UserControl
 		CustomizeGridAppearance();
 		await PopulateInvoicesTable();
 		ChangeLanguage();
+		await PopulateClientsComboBox();
 	}
 
 	private void InvoicesTable_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -457,6 +478,20 @@ public partial class BillingControl : UserControl
 
 	private void AddClientButton_Click(object sender, EventArgs e)
 	{
+	}
 
+	private void ClientsComboBox_SelectedIndexChanged(object sender, EventArgs e)
+	{
+		chosenClient = allClients[ClientsComboBox.SelectedIndex];
+	}
+
+	private void TransferCheckBox_Click(object sender, EventArgs e)
+	{
+		payment = "Transfer";
+	}
+
+	private void CashCheckBox_Click(object sender, EventArgs e)
+	{
+		payment = "Cash";
 	}
 }
