@@ -27,6 +27,7 @@ public partial class ClientsControl : UserControl
 		{
 			ClientControlItem clientItem = new ClientControlItem();
 			clientItem.PopulateValues(client.CompanyName, client.CompanyAddress, client.CompanyNip);
+			clientItem.RoundCorners(25);
 			ClientsFlowPanel.Controls.Add(clientItem);
 		}
 	}

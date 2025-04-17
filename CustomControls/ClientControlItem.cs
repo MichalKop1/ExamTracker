@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace ExamTracker.CustomControls;
+﻿namespace ExamTracker.CustomControls;
 
 public partial class ClientControlItem : UserControl
 {
@@ -22,5 +12,37 @@ public partial class ClientControlItem : UserControl
 		CompanyName.Text = name;
 		Address.Text = address;
 		Nip.Text = nip;
+	}
+
+	private void ClientControlItem_MouseMove(object sender, MouseEventArgs e)
+	{
+		this.BackColor = Color.Gray;
+	}
+
+	private void ClientControlItem_MouseLeave(object sender, EventArgs e)
+	{
+		this.BackColor = Color.LightSlateGray;
+	}
+
+	private void CompanyName_Click(object sender, EventArgs e)
+	{
+
+	}
+
+	private void CancelActionButton_Click(object sender, EventArgs e)
+	{
+		EditClientButton.Visible = false;
+		CancelActionButton.Visible = false;
+	}
+
+	private void ClientControlItem_Click(object sender, EventArgs e)
+	{
+		EditClientButton.Visible = true;
+		CancelActionButton.Visible = true;
+	}
+
+	private void EditClientButton_Click(object sender, EventArgs e)
+	{
+		
 	}
 }

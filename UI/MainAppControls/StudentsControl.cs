@@ -382,7 +382,7 @@ public partial class StudentsControl : UserControl
 
                 if (ExamsGrid.CurrentCell.OwningColumn.Name == "EditBtn")
                 {
-                    MessageBox.Show("I bet you shat yourself");
+                    MessageBox.Show("Not implemented yet");
                 }
 
                 else if (ExamsGrid.CurrentCell.OwningColumn.Name == "DeleteBtn")
