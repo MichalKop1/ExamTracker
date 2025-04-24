@@ -316,12 +316,15 @@ public partial class BillingControl : UserControl
 
 
 		string now = (DateTime.Now).Date.ToString("dd/MM/yyyy");
+
 		string buyerAddress = chosenClient.CompanyAddress;
+		string buyer = chosenClient.CompanyName ?? "Null";
+
 		string selersAddress = _sessionService.CurrentAccount.StreetAdress ?? "Null address";
 		string sellersName = _sessionService.CurrentAccount.ContactName ?? "Null name";
 		string accNum = "63 1112 9074 2222 0011 0999 8931"; // add acc number for the user
 		string remarks = RemarksTextBox.Text;
-		string buyer = _sessionService.CurrentAccount.BusinessName ?? "Null";
+		
 
 		Invoice invoice = new Invoice(GenerateInvoiceNumber(), now, DateOfSaleTextBox.Text, DateOfPaymentTextBox.Text,
 							payment, buyer, buyerAddress, sellersName, selersAddress, accNum,

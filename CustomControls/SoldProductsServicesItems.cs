@@ -70,7 +70,6 @@ public partial class SoldProductsServicesItems : UserControl
         {
             string[] items = { "Vending (GTU_24)", "Languages (GTU_12)", "Cleaning (GTU_8)" };
             ItemsComboBox.Items.AddRange(items);
-
         }
     }
 }

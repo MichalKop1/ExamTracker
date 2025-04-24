@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			dummyLabel = new Label();
 			CancelButton = new Button();
 			UpdateClientButton = new Button();
 			CompanysAddressTextBox2 = new TextBox();
@@ -35,6 +36,14 @@
 			CompanysNipTextBox = new TextBox();
 			CompanysNameTextBox = new TextBox();
 			SuspendLayout();
+			//
+			// dummyLabel
+			// 
+			dummyLabel.AutoSize = true;
+			dummyLabel.Location = new Point(157, -1);
+			dummyLabel.Name = "dummyLabel";
+			dummyLabel.Size = new Size(0, 15);
+			dummyLabel.TabIndex = 29;
 			// 
 			// CancelButton
 			// 
@@ -61,6 +70,7 @@
 			UpdateClientButton.TabIndex = 27;
 			UpdateClientButton.Text = "Update";
 			UpdateClientButton.UseVisualStyleBackColor = false;
+			UpdateClientButton.Click += UpdateClientButton_Click;
 			// 
 			// CompanysAddressTextBox2
 			// 
@@ -99,6 +109,7 @@
 			AutoScaleDimensions = new SizeF(7F, 15F);
 			AutoScaleMode = AutoScaleMode.Font;
 			ClientSize = new Size(390, 350);
+			Controls.Add(dummyLabel);
 			Controls.Add(CancelButton);
 			Controls.Add(UpdateClientButton);
 			Controls.Add(CompanysAddressTextBox2);
@@ -107,12 +118,14 @@
 			Controls.Add(CompanysNameTextBox);
 			Name = "EditClientsInfoWindow";
 			Text = "EditClientsInfoWindow";
+			Load += EditClientsInfoWindow_Load;
 			ResumeLayout(false);
 			PerformLayout();
 		}
 
 		#endregion
 
+		private Label dummyLabel;
 		private Button CancelButton;
 		private Button UpdateClientButton;
 		private TextBox CompanysAddressTextBox2;

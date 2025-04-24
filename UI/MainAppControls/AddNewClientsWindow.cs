@@ -7,6 +7,7 @@ public partial class AddClientWindow : Form
 {
 	readonly IClientRepository _clientRepository;
 	readonly ISessionService _sessionService;
+	public Action UpdateClientList;
 	public AddClientWindow(IClientRepository clientRepository, ISessionService sessionService)
 	{
 		InitializeComponent();
@@ -34,6 +35,8 @@ public partial class AddClientWindow : Form
 		
 		_clientRepository.AddClient(client);
 
+		UpdateClientList?.Invoke();
+
 		ClearAllFields();
 	}
 
@@ -45,5 +48,6 @@ public partial class AddClientWindow : Form
 	private void AddClientButton_Click(object sender, EventArgs e)
 	{
 		CreateClient();
+		this.Close();
 	}
 }

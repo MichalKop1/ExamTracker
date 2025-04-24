@@ -66,11 +66,6 @@ namespace ExamTracker
 
         private void ChangeLanguage()
         {
-            //ConnectionHelper.ReloadSettings();
-            // resources.resx can be used for language change
-            // if (LanguageHelper.Lang == "pl_pl")
-            var langdd = LanguageHelper.GetLanguage;
-
 			if (LanguageHelper.GetLanguage == Language.Polish_Pl)
 			{
                 btnLogin.Text = "Zaloguj";

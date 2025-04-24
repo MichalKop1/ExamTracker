@@ -34,8 +34,6 @@
 			Address = new Label();
 			Nip = new Label();
 			label1 = new Label();
-			EditClientButton = new Button();
-			CancelActionButton = new Button();
 			((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
 			SuspendLayout();
 			// 
@@ -102,43 +100,12 @@
 			label1.TabIndex = 5;
 			label1.Text = "NIP:";
 			// 
-			// EditClientButton
-			// 
-			EditClientButton.BackColor = Color.DodgerBlue;
-			EditClientButton.FlatAppearance.BorderSize = 0;
-			EditClientButton.FlatStyle = FlatStyle.Flat;
-			EditClientButton.ForeColor = Color.Black;
-			EditClientButton.Location = new Point(3, 149);
-			EditClientButton.Name = "EditClientButton";
-			EditClientButton.Size = new Size(75, 23);
-			EditClientButton.TabIndex = 6;
-			EditClientButton.Text = "Edit";
-			EditClientButton.UseVisualStyleBackColor = false;
-			EditClientButton.Visible = false;
-			EditClientButton.Click += EditClientButton_Click;
-			// 
-			// CancelActionButton
-			// 
-			CancelActionButton.BackColor = SystemColors.ActiveBorder;
-			CancelActionButton.FlatAppearance.BorderSize = 0;
-			CancelActionButton.FlatStyle = FlatStyle.Flat;
-			CancelActionButton.Location = new Point(134, 149);
-			CancelActionButton.Name = "CancelActionButton";
-			CancelActionButton.Size = new Size(75, 23);
-			CancelActionButton.TabIndex = 7;
-			CancelActionButton.Text = "Cancel";
-			CancelActionButton.UseVisualStyleBackColor = false;
-			CancelActionButton.Visible = false;
-			CancelActionButton.Click += CancelActionButton_Click;
-			// 
 			// ClientControlItem
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
 			AutoScaleMode = AutoScaleMode.Font;
 			BackColor = Color.LightSlateGray;
 			BorderStyle = BorderStyle.Fixed3D;
-			Controls.Add(CancelActionButton);
-			Controls.Add(EditClientButton);
 			Controls.Add(label1);
 			Controls.Add(Nip);
 			Controls.Add(Address);
@@ -164,7 +131,5 @@
 		private Label Address;
 		private Label Nip;
 		private Label label1;
-		private Button EditClientButton;
-		private Button CancelActionButton;
 	}
 }

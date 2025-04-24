@@ -75,6 +75,6 @@ internal static class Program
 
     static void CheckForDataBases()
     {
-        SQLiteDatabaseManager dbManager = new SQLiteDatabaseManager();   
+        SQLiteDatabaseManager dbManager = new SQLiteDatabaseManager(ConnectionHelper.SQLiteConnectionString);   
     }
 }
