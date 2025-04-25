@@ -10,26 +10,25 @@ internal partial class LoginControl : UserControl
     private readonly IServiceProvider _serviceProvider;
     private IAccountRepository _accountRepository;
     private readonly ISessionService _sessionService;
-    MainForm m;
-    public LoginControl(MainForm mf, IServiceProvider serviceProvider, IAccountRepository accountRepository, ISessionService sessionService)
+    public Action OnLogiIn;
+
+    public LoginControl(IServiceProvider serviceProvider, IAccountRepository accountRepository, ISessionService sessionService)
     {
         InitializeComponent();
-        ChangeLanguage(LanguageHelper.Lang);
+        ChangeLanguage();
         _serviceProvider = serviceProvider;
         _accountRepository = accountRepository;
         _sessionService = sessionService;
-        m = mf;
-        m.LanguageChanged += ChangeLanguage;
     }
-    internal void ChangeLanguage(string language)
+    internal void ChangeLanguage()
     {
-        if (language == "pl_pl")
+        if (LanguageHelper.GetLanguage == Language.Polish_Pl)
         {
             passwordBox.PlaceholderText = "Hasło";
             loginButton.Text = "Zaloguj";
             loginButton.Size = new System.Drawing.Size(145, 51);
         }
-        else if (language == "eng_us")
+        else if (LanguageHelper.GetLanguage == Language.English_Us)
         {
             passwordBox.PlaceholderText = "Password";
             loginButton.Text = "Login";
@@ -49,11 +48,7 @@ internal partial class LoginControl : UserControl
             if (pass == account.Password)
             {
                 _sessionService.CurrentAccount = account;
-                MainAppView form = _serviceProvider.GetRequiredService<MainAppView>();
-                form.Show();
-
-                Form? main = FindForm();
-                main?.Hide();
+                OnLogiIn?.Invoke();
             }
         }
         else

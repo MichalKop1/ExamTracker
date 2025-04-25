@@ -4,169 +4,102 @@ using System.Xml.Linq;
 using ExamTracker.Helpers;
 using System.Text.Json;
 using DomainModel.Models;
+using Microsoft.Extensions.DependencyInjection;
+using ExamTracker.Utilities;
 
 namespace ExamTracker
 {
-    public partial class MainForm : Form
-    {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IAccountRepository _accountRepository;
-        private CancellationTokenSource? _animationTokenSource;
-        private readonly ISessionService _sessionService;
-        private Dictionary<int, string> _languageDict;
-        public event Action<string> LanguageChanged = delegate { };
+	public partial class MainForm : Form
+	{
+		private readonly IServiceProvider _serviceProvider;
+		private readonly IAccountRepository _accountRepository;
+		private readonly ISessionService _sessionService;
+		private Dictionary<int, string> _languageDict;
+		private readonly MainFormUtilities _mainFormUtilities;
+		private LoginControl _loginControl;
 
-        public MainForm(IServiceProvider serviceProvider, IAccountRepository accountRepository, ISessionService sessionService)
-        {
-            InitializeComponent();
-            _serviceProvider = serviceProvider;
-            _accountRepository = accountRepository;
-            _sessionService = sessionService;
-            _sessionService.Language = LanguageHelper.Lang;
-            _languageDict = new Dictionary<int, string>() { {0, "Polish_Pl" }, {1, "English_Us" } };
-            ChangeLanguage();
-            _accountRepository.OnError += OnErrorOccured;
-        }
+		public MainForm(IServiceProvider serviceProvider, IAccountRepository accountRepository, ISessionService sessionService)
+		{
+			InitializeComponent();
+			_serviceProvider = serviceProvider;
+			_accountRepository = accountRepository;
+			_sessionService = sessionService;
+			_mainFormUtilities = new MainFormUtilities();
+			_sessionService.Language = LanguageHelper.Lang;
+			_languageDict = new Dictionary<int, string>() { { 0, "Polish_Pl" }, { 1, "English_Us" } };
 
-        private void UpdateConfigFileLanguageOld(string filePath, string setLang)
-        {
-            XDocument configFile = XDocument.Load(filePath);
-            var appSettings = configFile.Descendants("appSettings").FirstOrDefault();
-            if (appSettings != null)
-            {
-                var langElement = appSettings.Elements("add").FirstOrDefault(e => e.Attribute("key")?.Value == "Lang");
-                if (langElement != null)
-                {
-                    langElement.SetAttributeValue("value", setLang);
-                    LanguageHelper.Lang = setLang;
-                    LanguageChanged?.Invoke(setLang);
-                }
-            }
-            configFile.Save(filePath);
-        }
+			_accountRepository.OnError += _mainFormUtilities.OnErrorOccured;
+			
+			_mainFormUtilities.ChangeLanguage(btnLogin, btnRegister, getStartedButton, newsletterLabel);
+		}
 
-        private void UpdateConfigFileLanguage(string setLang)
-        {
-            string jsonConfigPath = Path.Join(Directory.GetCurrentDirectory(), "appsettings.json");
+		private void setLoginPage()
+		{
+			entryPanel.Controls.Clear();
+			LoginControl loginControl = new LoginControl(_serviceProvider, _accountRepository, _sessionService);
+			entryPanel.Controls.Add(loginControl);
+		}
+		private void setRegisterPage()
+		{
+			entryPanel.Controls.Clear();
+			RegisterControl registerControl = new RegisterControl(this, _accountRepository);
+			entryPanel.Controls.Add(registerControl);
+		}
 
-            if (File.Exists(jsonConfigPath))
-            {
-                string jsonString = File.ReadAllText(jsonConfigPath);
+		private async void btnLogin_Click(object sender, EventArgs e)
+		{
+			await _mainFormUtilities.AnimateUnderline(panelUnderline, btnLogin);
+			setLoginPage();
 
-                Root? root = JsonSerializer.Deserialize<Root>(jsonString);
-                if (root?.settings != null)
-                {
-                    root.settings.AppSettings.Lang = setLang;
-                    LanguageChanged?.Invoke(setLang);
-                    string modifiedJson = JsonSerializer.Serialize(root, new JsonSerializerOptions { WriteIndented = true });
-                    File.WriteAllText(jsonConfigPath, modifiedJson);
-                } 
-            }
-        }
+		}
+		private async void btnRegister_Click(object sender, EventArgs e)
+		{
+			await _mainFormUtilities.AnimateUnderline(panelUnderline, btnRegister);
+			setRegisterPage();
+		}
 
-        private void ChangeLanguage()
-        {
+		private void MainForm_Load(object sender, EventArgs e)
+		{
+			logoBox.Image = Properties.Resources.icon;
+			setLoginPage();
+
 			if (LanguageHelper.GetLanguage == Language.Polish_Pl)
 			{
-                btnLogin.Text = "Zaloguj";
-                btnRegister.Text = "Zarejestruj";
-                newsletterLabel.Text = "Do³¹cz do naszego newslettera i stañ siê jednym\n z tysiêcy nauczycieli którzy korzystaj¹ z Exam Tracker";
-                getStartedButton.Text = "Zacznij";
-            }
-            else if (LanguageHelper.GetLanguage == Language.English_Us)
-            {
-                btnLogin.Text = "Login";
-                btnRegister.Text = "Register";
-                newsletterLabel.Text = "Join our newsletter and become one of thousands\r\n              teachers who use Exam Tracker\r\n";
-                getStartedButton.Text = "Get started";
-            }
-        }
+				LanguagesComboBox.Text = "polski (Polish)";
+			}
+			else if (LanguageHelper.GetLanguage == Language.English_Us)
+			{
+				LanguagesComboBox.Text = "angielski (English)";
+			}
 
-        private void OnErrorOccured(string errorMessage)
-        {
-            MessageBox.Show(errorMessage, "Error occured");
-        }
+			_loginControl = entryPanel.Controls.OfType<LoginControl>().First();
+			_loginControl.OnLogiIn += ExecuteLogin;
+		}
 
-        private async Task AnimateUnderline(Panel underlinePanel, Button targetButton)
-        {
-            // Cancel any ongoing animation
-            _animationTokenSource?.Cancel();
-            _animationTokenSource = new CancellationTokenSource();
-            var token = _animationTokenSource.Token;
+		private void ExecuteLogin()
+		{
+			MainAppView form = _serviceProvider.GetRequiredService<MainAppView>();
+			form.Show();
 
-            var targetLocation = new System.Drawing.Point(targetButton.Location.X, underlinePanel.Location.Y);
+			Form? main = FindForm();
+			if (main != null)
+			{
+				main.Hide();
+			}
+		}
 
-            while (underlinePanel.Location.X != targetLocation.X)
-            {
-                if (token.IsCancellationRequested)
-                {
-                    return;
-                }
+		private void LanguagesComboBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			string SetLanguage = _languageDict[LanguagesComboBox.SelectedIndex];
 
-                int step = 20 * Math.Sign(targetLocation.X - underlinePanel.Location.X);
-                int nextX = underlinePanel.Location.X + step;
+			_mainFormUtilities.UpdateConfigFileLanguage(SetLanguage);
 
-                if (Math.Abs(targetLocation.X - nextX) < Math.Abs(step))
-                {
-                    nextX = targetLocation.X;
-                }
+			_mainFormUtilities.ChangeLanguage(btnLogin, btnRegister, getStartedButton, newsletterLabel);
+		}
 
-                underlinePanel.Location = new System.Drawing.Point(nextX, underlinePanel.Location.Y);
-                underlinePanel.BackColor = Color.Green;
-                await Task.Delay(10);
-            }
-        }
-
-        private void setLoginPage()
-        {
-            entryPanel.Controls.Clear();
-            LoginControl loginControl = new LoginControl(this,_serviceProvider, _accountRepository, _sessionService);
-            entryPanel.Controls.Add(loginControl);
-        }
-        private void setRegisterPage()
-        {
-            entryPanel.Controls.Clear();
-            RegisterControl registerControl = new RegisterControl(this, _accountRepository);
-            entryPanel.Controls.Add(registerControl);
-        }
-
-        private void btnLogin_Click(object sender, EventArgs e)
-        {
-            AnimateUnderline(panelUnderline, btnLogin);
-            setLoginPage();
-
-        }
-        private void btnRegister_Click(object sender, EventArgs e)
-        {
-            AnimateUnderline(panelUnderline, btnRegister);
-            setRegisterPage();
-        }
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            logoBox.Image = Properties.Resources.icon;
-            setLoginPage();
-
-			// must equal: polski (Polish) or angielski (English)
-			//if (LanguageHelper.Lang == "pl_pl")
-			if (LanguageHelper.GetLanguage == Language.Polish_Pl)
-            {
-                LanguagesComboBox.Text = "polski (Polish)";
-            }
-            else if (LanguageHelper.GetLanguage == Language.English_Us)
-            {
-                LanguagesComboBox.Text = "angielski (English)";
-            }
-            
-        }
-
-        private void LanguagesComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string SetLanguage = _languageDict[LanguagesComboBox.SelectedIndex];
-
-            UpdateConfigFileLanguage(SetLanguage);
-
-            ChangeLanguage();
-        }
-    }
+		private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			Application.Exit();
+		}
+	}
 }

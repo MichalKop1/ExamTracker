@@ -89,7 +89,7 @@
 			registerButton.FlatStyle = FlatStyle.Flat;
 			registerButton.Location = new Point(62, 410);
 			registerButton.Name = "registerButton";
-			registerButton.Size = new Size(152, 61);
+			registerButton.Size = new Size(187, 61);
 			registerButton.TabIndex = 4;
 			registerButton.Text = "Register";
 			registerButton.UseVisualStyleBackColor = false;

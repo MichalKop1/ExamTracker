@@ -1,4 +1,5 @@
 ﻿using DataAcessLayer.Contracts;
+using ExamTracker.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace ExamTracker.Utilities;
 
-public static class ValidateRegisterForm
+public class RegisterPageUtilities
 {
-	public static EventHandler<string> OnInvalidForm;
+	public EventHandler<string> OnInvalidForm;
 
-	public static bool ValidateRegistrationForm(
+	public bool ValidateRegistrationForm(
 		IAccountRepository accountRepository,
 		string name,
 		string surname,
@@ -90,6 +91,34 @@ public static class ValidateRegisterForm
 
 		sb.Clear();
 		return isValid;
+	}
+
+	public void ChangeLanguage(TextBox nameBox, TextBox surnameBox,
+		TextBox loginBox, TextBox passwordBox1,
+		TextBox passwordBox2, Button registerButton)
+	{
+		if (LanguageHelper.GetLanguage == Language.Polish_Pl)
+		{
+			nameBox.PlaceholderText = "Imię";
+			surnameBox.PlaceholderText = "Nazwisko";
+			loginBox.PlaceholderText = "Nazwa użytkownika";
+			passwordBox1.PlaceholderText = "Hasło";
+			passwordBox2.PlaceholderText = "Potwierdź hasło";
+			registerButton.Text = "Zarejestruj";
+		}
+		else if (LanguageHelper.GetLanguage == Language.English_Us)
+		{
+			nameBox.PlaceholderText = "Name";
+			surnameBox.PlaceholderText = "Surname";
+			surnameBox.PlaceholderText = "User Name";
+			passwordBox1.PlaceholderText = "Password";
+			passwordBox2.PlaceholderText = "Confirm password";
+			registerButton.Text = "Register";
+		}
+	}
+	public void ClerarAllFields(List<TextBox> boxes)
+	{
+		boxes.ForEach(box => box.Clear());
 	}
 
 }

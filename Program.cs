@@ -18,7 +18,6 @@ internal static class Program
     [STAThread]
     static void Main()
     {
-        
         ApplicationConfiguration.Initialize();
 
         ServiceCollection services = ConfigureServices();
@@ -26,7 +25,7 @@ internal static class Program
 
         var startForm = serviceProvider.GetRequiredService<MainForm>();
         CheckForDataBases();
-        Application.Run(startForm);  
+        Application.Run(startForm);
     }
     static ServiceCollection ConfigureServices()
     {
