@@ -19,7 +19,7 @@ public class MainFormUtilities : IDisposable
 		this._animationTokenSource = new();
 	}
 
-	public void UpdateConfigFileLanguage(string setLang)
+	public void UpdateConfigFileLanguage(Language setLang)
 	{
 		string jsonConfigPath = Path.Join(Directory.GetCurrentDirectory(), "appsettings.json");
 
@@ -30,7 +30,7 @@ public class MainFormUtilities : IDisposable
 			Root? root = JsonSerializer.Deserialize<Root>(jsonString);
 			if (root?.settings != null)
 			{
-				root.settings.AppSettings.Lang = setLang;
+				root.settings.AppSettings.Lang = setLang.ToString();
 				string modifiedJson = JsonSerializer.Serialize(root, new JsonSerializerOptions { WriteIndented = true });
 				File.WriteAllText(jsonConfigPath, modifiedJson);
 			}
@@ -55,7 +55,7 @@ public class MainFormUtilities : IDisposable
 		}
 	}
 
-	public void OnErrorOccured(string errorMessage)
+	public void OnErrorOccurred(string errorMessage)
 	{
 		MessageBox.Show(errorMessage, "Error occured");
 	}

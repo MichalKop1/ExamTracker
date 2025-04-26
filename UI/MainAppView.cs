@@ -38,7 +38,6 @@ public partial class MainAppView : Form
 
 	private void ChangeLanguage()
 	{
-		// if (LanguageHelper.Lang == "pl_pl")
 		if (LanguageHelper.GetLanguage == Language.Polish_Pl)
 		{
 			dashboardButton.Text = "Panel";

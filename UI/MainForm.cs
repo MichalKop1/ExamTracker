@@ -6,6 +6,7 @@ using System.Text.Json;
 using DomainModel.Models;
 using Microsoft.Extensions.DependencyInjection;
 using ExamTracker.Utilities;
+using Org.BouncyCastle.Asn1.X509.Qualified;
 
 namespace ExamTracker
 {
@@ -28,7 +29,7 @@ namespace ExamTracker
 			_sessionService.Language = LanguageHelper.Lang;
 			_languageDict = new Dictionary<int, string>() { { 0, "Polish_Pl" }, { 1, "English_Us" } };
 
-			_accountRepository.OnError += _mainFormUtilities.OnErrorOccured;
+			_accountRepository.OnError += _mainFormUtilities.OnErrorOccurred;
 			
 			_mainFormUtilities.ChangeLanguage(btnLogin, btnRegister, getStartedButton, newsletterLabel);
 		}
@@ -91,8 +92,9 @@ namespace ExamTracker
 		private void LanguagesComboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			string SetLanguage = _languageDict[LanguagesComboBox.SelectedIndex];
+			Language lang = (Language)Enum.Parse(typeof(Language), SetLanguage);
 
-			_mainFormUtilities.UpdateConfigFileLanguage(SetLanguage);
+			_mainFormUtilities.UpdateConfigFileLanguage(lang);
 
 			_mainFormUtilities.ChangeLanguage(btnLogin, btnRegister, getStartedButton, newsletterLabel);
 		}
