@@ -79,7 +79,7 @@ public partial class MainAppView : Form
 	private void SetStudentsControl()
 	{
 		dataPanel.Controls.Clear();
-		StudentsControl studentsControl = new StudentsControl(_studentRepository, _maturaExamRepository, _grade8ExamRepository, _sessionService);
+		StudentsControl studentsControl = new StudentsControl(_serviceProvider);
 		dataPanel.Controls.Add(studentsControl);
 	}
 	private void SetProfileControl()

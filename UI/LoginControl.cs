@@ -5,7 +5,7 @@ using ExamTracker.Helpers;
 
 namespace ExamTracker.UI;
 
-internal partial class LoginControl : UserControl
+public partial class LoginControl : UserControl
 {
     private readonly IServiceProvider _serviceProvider;
     private IAccountRepository _accountRepository;

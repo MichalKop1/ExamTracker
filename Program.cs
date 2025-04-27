@@ -7,6 +7,8 @@ using System.Data.SqlClient;
 using System.Data;
 using DataAcessLayer;
 using DomainModel.Models;
+using DomainModel.Contracts;
+using ExamTracker.Utilities;
 
 namespace ExamTracker;
 
@@ -60,13 +62,19 @@ internal static class Program
             services.AddTransient<IProductServiceRepository, SQLiteProductServiceRepository>();
 			services.AddTransient<IClientRepository, SQLiteClientRepository>();
 			services.AddTransient<IDbConnection>(_ => new SqlConnection(settings.ConnectionStrings.SQLiteConnectionString));
-
         }
+
         services.AddMemoryCache();
         services.AddSingleton<ICacheService, CacheService>();
         services.AddSingleton<ISessionService, SessionService>();
+		services.AddSingleton<IServiceFactory, ServiceFactory>();
+		services.AddSingleton<IRepositoryFactory, RepositoryFactory>();
+		services.AddSingleton<MainFormUtilities>();
+		services.AddSingleton<RegisterPageUtilities>();
+		services.AddSingleton<StudentsControlUtility>();
 
-        services.AddTransient<MainForm>();
+
+		services.AddTransient<MainForm>();
         services.AddTransient<MainAppView>();
 
         return services;

@@ -1,12 +1,8 @@
 using DataAcessLayer.Contracts;
 using ExamTracker.UI;
-using System.Xml.Linq;
 using ExamTracker.Helpers;
-using System.Text.Json;
-using DomainModel.Models;
 using Microsoft.Extensions.DependencyInjection;
 using ExamTracker.Utilities;
-using Org.BouncyCastle.Asn1.X509.Qualified;
 
 namespace ExamTracker
 {
@@ -18,6 +14,7 @@ namespace ExamTracker
 		private Dictionary<int, string> _languageDict;
 		private readonly MainFormUtilities _mainFormUtilities;
 		private LoginControl _loginControl;
+		private RegisterControl _registerControl;
 
 		public MainForm(IServiceProvider serviceProvider, IAccountRepository accountRepository, ISessionService sessionService)
 		{
@@ -25,7 +22,13 @@ namespace ExamTracker
 			_serviceProvider = serviceProvider;
 			_accountRepository = accountRepository;
 			_sessionService = sessionService;
-			_mainFormUtilities = new MainFormUtilities();
+
+			_loginControl = new(_serviceProvider, _accountRepository, _sessionService);
+			_registerControl = new(this, _accountRepository);
+			entryPanel.Controls.Add(_loginControl);
+			entryPanel.Controls.Add(_registerControl);
+
+			_mainFormUtilities = new MainFormUtilities(_serviceProvider);
 			_sessionService.Language = LanguageHelper.Lang;
 			_languageDict = new Dictionary<int, string>() { { 0, "Polish_Pl" }, { 1, "English_Us" } };
 
@@ -34,35 +37,21 @@ namespace ExamTracker
 			_mainFormUtilities.ChangeLanguage(btnLogin, btnRegister, getStartedButton, newsletterLabel);
 		}
 
-		private void setLoginPage()
-		{
-			entryPanel.Controls.Clear();
-			LoginControl loginControl = new LoginControl(_serviceProvider, _accountRepository, _sessionService);
-			entryPanel.Controls.Add(loginControl);
-		}
-		private void setRegisterPage()
-		{
-			entryPanel.Controls.Clear();
-			RegisterControl registerControl = new RegisterControl(this, _accountRepository);
-			entryPanel.Controls.Add(registerControl);
-		}
-
 		private async void btnLogin_Click(object sender, EventArgs e)
 		{
 			await _mainFormUtilities.AnimateUnderline(panelUnderline, btnLogin);
-			setLoginPage();
-
+			_mainFormUtilities.SetLoginPage(_loginControl, _registerControl);
 		}
 		private async void btnRegister_Click(object sender, EventArgs e)
 		{
 			await _mainFormUtilities.AnimateUnderline(panelUnderline, btnRegister);
-			setRegisterPage();
+			_mainFormUtilities.SetRegisterPage(_loginControl, _registerControl);
 		}
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
 			logoBox.Image = Properties.Resources.icon;
-			setLoginPage();
+			_mainFormUtilities.SetLoginPage(_loginControl, _registerControl);
 
 			if (LanguageHelper.GetLanguage == Language.Polish_Pl)
 			{
@@ -81,12 +70,7 @@ namespace ExamTracker
 		{
 			MainAppView form = _serviceProvider.GetRequiredService<MainAppView>();
 			form.Show();
-
-			Form? main = FindForm();
-			if (main != null)
-			{
-				main.Hide();
-			}
+			this.Hide();
 		}
 
 		private void LanguagesComboBox_SelectedIndexChanged(object sender, EventArgs e)

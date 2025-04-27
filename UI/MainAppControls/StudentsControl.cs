@@ -1,4 +1,5 @@
 ﻿using DataAcessLayer.Contracts;
+using DomainModel.Contracts;
 using DomainModel.Models;
 using ExamTracker.Helpers;
 using ExamTracker.Utilities;
@@ -8,6 +9,9 @@ namespace ExamTracker.UI.MainAppControls;
 
 public partial class StudentsControl : UserControl
 {
+	private readonly IServiceProvider _serviceProvider;
+	private readonly IServiceFactory _serviceFactory;
+	private readonly IRepositoryFactory _repositoryFactory;
 	private readonly IStudentRepository _studentRepository;
 	private readonly IMaturaExamRepository _maturaExamRepository;
 	private readonly IGrade8ExamRepository _grade8ExamRepository;
@@ -17,23 +21,25 @@ public partial class StudentsControl : UserControl
 	private List<Student> _students;
 	private int _student_id;
 	private Student _selectedStudent;
-	public StudentsControl(IStudentRepository studentRepository, IMaturaExamRepository maturaExamRepository,
-		IGrade8ExamRepository grade8ExamRepository, ISessionService sessionService)
+	public StudentsControl(IServiceProvider serviceProvider)
 	{
 		InitializeComponent();
 		ChangeLanguage();
 		_students = [];
 		_selectedStudent = new Student();
-		_studentsControlUtility = new();
+		_serviceProvider = serviceProvider;
+		_serviceFactory = new ServiceFactory(_serviceProvider);
+		_repositoryFactory = new RepositoryFactory(_serviceProvider);
+		_studentsControlUtility = new(_serviceProvider);
 
 		_editTextBoxes = this.Controls.OfType<TextBox>()
 			.Where(box => box.Name
 			.Contains("Edit")).ToList();
 
-		_studentRepository = studentRepository;
-		_maturaExamRepository = maturaExamRepository;
-		_grade8ExamRepository = grade8ExamRepository;
-		_sessionService = sessionService;
+		_studentRepository = _repositoryFactory.CreateStudentRepository();
+		_maturaExamRepository = _repositoryFactory.CreateMaturaExamRepository();
+		_grade8ExamRepository = _repositoryFactory.CreateGrade8ExamRepository();
+		_sessionService = _serviceFactory.CreateSessionService();
 		_maturaExamRepository.OnError += OnErrorOccured;
 		_grade8ExamRepository.OnError += OnErrorOccured;
 	}
@@ -97,7 +103,7 @@ public partial class StudentsControl : UserControl
 
 	private async void StudentsControl_Load(object sender, EventArgs e)
 	{
-		_students = await _studentsControlUtility.LoadAllStudentToList(_sessionService, _studentRepository, studentsComboBox);
+		_students = await _studentsControlUtility.LoadAllStudentToList(studentsComboBox);
 
 		_students.ForEach(student =>
 		studentsComboBox.Items.Add($"{student.Name} {student.Surname}"));
@@ -156,7 +162,7 @@ public partial class StudentsControl : UserControl
 			DateTime currDate = DateTime.Now;
 			ExamMatura examMatura = new ExamMatura(_selectedStudent.Id, currDate, Convert.ToInt32(ex1.Text), Convert.ToInt32(ex2.Text), Convert.ToInt32(ex3.Text), Convert.ToInt32(ex4.Text), Convert.ToInt32(ex5.Text), Convert.ToInt32(ex6.Text), Convert.ToInt32(ex7.Text), Convert.ToInt32(ex8.Text), Convert.ToInt32(ex9.Text), Convert.ToInt32(ex10.Text), sum);
 			await _maturaExamRepository.AddExamToDB(examMatura);
-			await _studentsControlUtility.RefreshMaturaDataInTheGrid(ExamsGrid, _maturaExamRepository);
+			await _studentsControlUtility.RefreshMaturaDataInTheGrid(ExamsGrid);
 		}
 
 		else if (_selectedStudent.ExamType == "Grade8Exams" 
@@ -166,7 +172,7 @@ public partial class StudentsControl : UserControl
 			DateTime currDate = DateTime.Now;
 			Exam8Grade exam8Grade = new Exam8Grade(_selectedStudent.Id, currDate, Convert.ToInt32(ex1.Text), Convert.ToInt32(ex2.Text), Convert.ToInt32(ex3.Text), Convert.ToInt32(ex4.Text), Convert.ToInt32(ex5.Text), Convert.ToInt32(ex6.Text), Convert.ToInt32(ex7.Text), Convert.ToInt32(ex8.Text), Convert.ToInt32(ex9.Text), Convert.ToInt32(ex10.Text), Convert.ToInt32(ex11.Text), Convert.ToInt32(ex12.Text), Convert.ToInt32(ex13.Text), Convert.ToInt32(ex14.Text), sum);
 			await _grade8ExamRepository.AddExamToDB(exam8Grade);
-			await _studentsControlUtility.RefreshGrade8DataInTheGrid(ExamsGrid, _grade8ExamRepository);
+			await _studentsControlUtility.RefreshGrade8DataInTheGrid(ExamsGrid);
 		}
 
 		var allBoxes = this.Controls.OfType<TextBox>().ToList();
@@ -193,7 +199,7 @@ public partial class StudentsControl : UserControl
 				else if (ExamsGrid.CurrentCell.OwningColumn.Name == "DeleteBtn")
 				{
 					await _maturaExamRepository.DeleteExam(clickedExam.ExamId);
-					await _studentsControlUtility.RefreshMaturaDataInTheGrid(ExamsGrid, _maturaExamRepository);
+					await _studentsControlUtility.RefreshMaturaDataInTheGrid(ExamsGrid);
 				}
 			}
 
@@ -209,7 +215,7 @@ public partial class StudentsControl : UserControl
 				else if (ExamsGrid.CurrentCell.OwningColumn.Name == "DeleteBtn")
 				{
 					await _grade8ExamRepository.DeleteExam(clickedExam.ExamId);
-					await _studentsControlUtility.RefreshGrade8DataInTheGrid(ExamsGrid, _grade8ExamRepository);
+					await _studentsControlUtility.RefreshGrade8DataInTheGrid(ExamsGrid);
 				}
 			}
 		}

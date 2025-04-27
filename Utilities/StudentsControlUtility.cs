@@ -1,5 +1,6 @@
 ﻿using DataAcessLayer.Contracts;
 using DataAcessLayer.Repositories;
+using DomainModel.Contracts;
 using DomainModel.Models;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,18 @@ namespace ExamTracker.Utilities;
 
 public class StudentsControlUtility
 {
-	public Student Student { get; set; }
+	private readonly IServiceProvider _serviceProvider;
+	private readonly IServiceFactory _serviceFactory;
+	private readonly IRepositoryFactory _repositoryFactory;
+
+	public StudentsControlUtility(IServiceProvider serviceProvider)
+	{
+		_serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+		_serviceFactory = new ServiceFactory(_serviceProvider);
+		_repositoryFactory = new RepositoryFactory(_serviceProvider);
+	}
+
+	public Student Student { get; set; } = new();
 
 	public void ClearAllTextBoxes(List<TextBox> boxes)
 	{
@@ -41,15 +53,14 @@ public class StudentsControlUtility
 		});
 	}
 
-	public async Task RefreshMaturaDataInTheGrid(DataGridView table, IMaturaExamRepository repo)
+	public async Task RefreshMaturaDataInTheGrid(DataGridView table)
 	{
-		table.DataSource = await repo.GetAllExams(Student.Id);
+		table.DataSource = await _repositoryFactory.CreateMaturaExamRepository().GetAllExams(Student.Id);
 	}
 
-	public async Task RefreshGrade8DataInTheGrid(DataGridView table, IGrade8ExamRepository repo)
+	public async Task RefreshGrade8DataInTheGrid(DataGridView table)
 	{
-		table.DataSource = await repo.GetAllExams(Student.Id);
-		
+		table.DataSource = await _repositoryFactory.CreateGrade8ExamRepository().GetAllExams(Student.Id);
 	}
 
 	public void CustomizeGridAppearance(DataGridView table, Exam exam)
@@ -111,9 +122,9 @@ public class StudentsControlUtility
 		table.Columns.AddRange(columns);
 	}
 
-	public async Task<List<Student>> LoadAllStudentToList(ISessionService _sessionService, IStudentRepository _studentRepository, ComboBox comboBox)
+	public async Task<List<Student>> LoadAllStudentToList(ComboBox comboBox)
 	{
-		var _students = await _studentRepository.GetAllStudents(_sessionService.CurrentAccount.Id);
+		var _students = await _repositoryFactory.CreateStudentRepository().GetAllStudents(_serviceFactory.CreateSessionService().CurrentAccount.Id);
 
 		return _students;
 	}

@@ -1,4 +1,5 @@
-﻿using DomainModel.Models;
+﻿using DomainModel.Contracts;
+using DomainModel.Models;
 using ExamTracker.Helpers;
 using ExamTracker.UI;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,10 +14,12 @@ namespace ExamTracker.Utilities;
 
 public class MainFormUtilities : IDisposable
 {
+	private readonly IServiceProvider _serviceProvider;
 	private CancellationTokenSource _animationTokenSource;
-	public MainFormUtilities()
+	public MainFormUtilities(IServiceProvider serviceProvider)
 	{
 		this._animationTokenSource = new();
+		_serviceProvider = serviceProvider;
 	}
 
 	public void UpdateConfigFileLanguage(Language setLang)
@@ -91,6 +94,24 @@ public class MainFormUtilities : IDisposable
 
 			await Task.Delay(10).ConfigureAwait(true);
 		}
+	}
+
+	public void SetLoginPage(LoginControl loginControl, RegisterControl registerControl)
+	{
+		loginControl.Visible = true;
+		registerControl.Visible = false;
+	}
+
+	public void SetRegisterPage(LoginControl loginControl, RegisterControl registerControl)
+	{
+		loginControl.Visible = false;
+		registerControl.Visible = true;
+	}
+	public void ExecuteLogin(MainForm mainForm)
+	{
+		MainAppView form = _serviceProvider.GetRequiredService<MainAppView>();
+		form.Show();
+		mainForm.Hide();
 	}
 
 	public void Dispose()
