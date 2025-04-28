@@ -1,39 +1,43 @@
 ﻿using DataAcessLayer.Contracts;
+using DomainModel.Contracts;
 using DomainModel.Models;
 using ExamTracker.Helpers;
-using ExamTracker.UI.MainAppControls;
-using Microsoft.Extensions.DependencyInjection;
+using ExamTracker.Utilities;
 
 namespace ExamTracker.UI;
 
 public partial class MainAppView : Form
 {
-	private readonly IStudentRepository _studentRepository;
-	private readonly IMaturaExamRepository _maturaExamRepository;
-	private readonly IGrade8ExamRepository _grade8ExamRepository;
-	private readonly IAccountRepository _accountRepository;
-	private readonly IEventRepository _eventRepository;
-	private readonly IInvoiceRepository _invoiceRepository;
-	private readonly IProductServiceRepository _productServiceRepository;
-	private readonly ISessionService _sessionService;
-	private readonly IServiceProvider _serviceProvider;
-	private readonly IClientRepository _clientRepository;
+	private readonly IControlFactory _controlFactory;
+	private readonly IServiceFactory _serviceFactory;
+	private readonly IRepositoryFactory _repositoryFactory;
 
-	public MainAppView(IStudentRepository studentRepository, IMaturaExamRepository maturaExamRepository, IGrade8ExamRepository grade8ExamRepository, IAccountRepository accountRepository, ISessionService sesionService, IEventRepository eventRepository,
-		IInvoiceRepository invoiceRepository, IProductServiceRepository productServiceRepository, IServiceProvider serviceProvider, IClientRepository clientRepository)
+	private readonly MainForm _mainForm;
+	private readonly MainAppViewUtilities _mainViewUtilities;
+	private readonly ISessionService _sessionService;
+	private readonly Dictionary<string, Control> _controls;
+	private readonly Panel _dataPanel;
+
+	public event EventHandler? LogoutRequested;
+
+	public MainAppView(MainForm mainForm, IControlFactory controlFactory,
+		IServiceFactory serviceFactory, IRepositoryFactory repositoryFactory)
 	{
 		InitializeComponent();
-		_studentRepository = studentRepository;
-		_maturaExamRepository = maturaExamRepository;
-		_grade8ExamRepository = grade8ExamRepository;
-		_accountRepository = accountRepository;
-		_sessionService = sesionService;
-		_eventRepository = eventRepository;
-		_studentRepository.OnError += AnErrorHasOccured;
-		_invoiceRepository = invoiceRepository;
-		_productServiceRepository = productServiceRepository;
-		_serviceProvider = serviceProvider;
-		_clientRepository = clientRepository;
+
+		_controlFactory = controlFactory;
+		_controls = new Dictionary<string, Control>();
+		_dataPanel = dataPanel;
+		_mainViewUtilities = new MainAppViewUtilities(_controlFactory, _controls, _dataPanel);
+		_serviceFactory = serviceFactory;
+		_repositoryFactory = repositoryFactory;
+		_mainForm = mainForm;
+		_sessionService = _serviceFactory.CreateSessionService();
+
+		var maturaRepo = _repositoryFactory.CreateMaturaExamRepository();
+		var grade8Repo = _repositoryFactory.CreateGrade8ExamRepository();
+		maturaRepo.OnError += _mainViewUtilities.AnErrorHasOccured;
+		grade8Repo.OnError += _mainViewUtilities.AnErrorHasOccured;
 	}
 
 	private void ChangeLanguage()
@@ -61,53 +65,7 @@ public partial class MainAppView : Form
 			ClientsControlButton.Text = "Clients";
 			logoutButton.Text = "Log out";
 			this.Text = "Exam Tracker   -  Currently logged in: " + _sessionService.CurrentAccount.ContactName;
-
 		}
-	}
-
-	private void AnErrorHasOccured(string errMsg)
-	{
-		MessageBox.Show(errMsg, "An error occured");
-	}
-
-	private void SetDashboardControl()
-	{
-		dataPanel.Controls.Clear();
-		AddStudents dashboardControl = new AddStudents(_studentRepository, _sessionService);
-		dataPanel.Controls.Add(dashboardControl);
-	}
-	private void SetStudentsControl()
-	{
-		dataPanel.Controls.Clear();
-		StudentsControl studentsControl = new StudentsControl(_serviceProvider);
-		dataPanel.Controls.Add(studentsControl);
-	}
-	private void SetProfileControl()
-	{
-		dataPanel.Controls.Clear();
-		ProfileControl profileControl = new ProfileControl(_accountRepository, _sessionService);
-		dataPanel.Controls.Add(profileControl);
-	}
-
-	private void SetScheduleControl()
-	{
-		dataPanel.Controls.Clear();
-		ScheduleControl scheduleControl = new ScheduleControl(_eventRepository, _sessionService);
-		dataPanel.Controls.Add(scheduleControl);
-	}
-
-	private void SetBillingControl()
-	{
-		dataPanel.Controls.Clear();
-		BillingControl billingControl = new BillingControl(_invoiceRepository, _productServiceRepository, _sessionService, _clientRepository);
-		dataPanel.Controls.Add(billingControl);
-	}
-
-	private void SetClientsControl()
-	{
-		dataPanel.Controls.Clear();
-		ClientsControl clientsControl = new ClientsControl(_sessionService, _clientRepository);
-		dataPanel.Controls.Add(clientsControl);
 	}
 
 	private void MainAppView_FormClosed(object sender, FormClosedEventArgs e)
@@ -120,48 +78,45 @@ public partial class MainAppView : Form
 		LogoPictureBox.Image = Properties.Resources.icon;
 		Account currentAccount = _sessionService.CurrentAccount;
 		this.Text = "Exam Tracker   -   Currently logged: " + currentAccount.ContactName;
-		SetProfileControl();
+		_mainViewUtilities.SetProfileControl();
 		ChangeLanguage();
 	}
 
 	private void button6_Click(object sender, EventArgs e)
 	{
-		SetProfileControl();
+		_mainViewUtilities.SetProfileControl();
 	}
 
 	private void studentsButton_Click(object sender, EventArgs e)
 	{
-		SetStudentsControl();
+		_mainViewUtilities.SetStudentsControl();
 	}
 
 	private void dashboardButton_Click(object sender, EventArgs e)
 	{
-		SetDashboardControl();
+		_mainViewUtilities.SetDashboardControl();
 	}
 
 	private void scheduleButton_Click(object sender, EventArgs e)
 	{
-		SetScheduleControl();
+		_mainViewUtilities.SetScheduleControl();
 	}
 
 	private void billingButton_Click(object sender, EventArgs e)
 	{
-		SetBillingControl();
+		_mainViewUtilities.SetBillingControl();
 	}
 
 	private void ClientsControlButton_Click(object sender, EventArgs e)
 	{
-		SetClientsControl();
+		_mainViewUtilities.SetClientsControl();
 	}
 
 	private void logoutButton_Click(object sender, EventArgs e)
 	{
 		_sessionService.CurrentAccount = new Account();
-		MainForm mainForm = _serviceProvider.GetService<MainForm>()!;
-		mainForm.Show();
-
-		Form? main = this;
-
-		main?.Hide();
+		LogoutRequested?.Invoke(this, EventArgs.Empty);
+		
+		this.Hide();
 	}
 }

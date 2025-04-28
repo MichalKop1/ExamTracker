@@ -1,25 +1,17 @@
-﻿using DomainModel.Contracts;
-using DomainModel.Models;
+﻿using DomainModel.Models;
 using ExamTracker.Helpers;
 using ExamTracker.UI;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace ExamTracker.Utilities;
 
 public class MainFormUtilities : IDisposable
 {
-	private readonly IServiceProvider _serviceProvider;
 	private CancellationTokenSource _animationTokenSource;
-	public MainFormUtilities(IServiceProvider serviceProvider)
+
+	public MainFormUtilities()
 	{
-		this._animationTokenSource = new();
-		_serviceProvider = serviceProvider;
+		_animationTokenSource = new();
 	}
 
 	public void UpdateConfigFileLanguage(Language setLang)
@@ -60,7 +52,7 @@ public class MainFormUtilities : IDisposable
 
 	public void OnErrorOccurred(string errorMessage)
 	{
-		MessageBox.Show(errorMessage, "Error occured");
+		MessageBox.Show(errorMessage, "Error occurred");
 	}
 
 	public async Task AnimateUnderline(Panel underlinePanel, Button targetButton)
@@ -106,12 +98,6 @@ public class MainFormUtilities : IDisposable
 	{
 		loginControl.Visible = false;
 		registerControl.Visible = true;
-	}
-	public void ExecuteLogin(MainForm mainForm)
-	{
-		MainAppView form = _serviceProvider.GetRequiredService<MainAppView>();
-		form.Show();
-		mainForm.Hide();
 	}
 
 	public void Dispose()

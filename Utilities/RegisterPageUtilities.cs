@@ -116,6 +116,7 @@ public class RegisterPageUtilities
 			registerButton.Text = "Register";
 		}
 	}
+
 	public void ClerarAllFields(List<TextBox> boxes)
 	{
 		boxes.ForEach(box => box.Clear());

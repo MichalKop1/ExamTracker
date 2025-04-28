@@ -4,14 +4,10 @@ using DomainModel.Models;
 using ExamTracker.Helpers;
 using ExamTracker.Utilities;
 
-
 namespace ExamTracker.UI.MainAppControls;
 
 public partial class StudentsControl : UserControl
 {
-	private readonly IServiceProvider _serviceProvider;
-	private readonly IServiceFactory _serviceFactory;
-	private readonly IRepositoryFactory _repositoryFactory;
 	private readonly IStudentRepository _studentRepository;
 	private readonly IMaturaExamRepository _maturaExamRepository;
 	private readonly IGrade8ExamRepository _grade8ExamRepository;
@@ -21,32 +17,28 @@ public partial class StudentsControl : UserControl
 	private List<Student> _students;
 	private int _student_id;
 	private Student _selectedStudent;
-	public StudentsControl(IServiceProvider serviceProvider)
+	public StudentsControl(IStudentRepository studentRepository, IMaturaExamRepository maturaExamRepository,
+		IGrade8ExamRepository grade8ExamRepository, ISessionService sessionService)
 	{
 		InitializeComponent();
 		ChangeLanguage();
 		_students = [];
 		_selectedStudent = new Student();
-		_serviceProvider = serviceProvider;
-		_serviceFactory = new ServiceFactory(_serviceProvider);
-		_repositoryFactory = new RepositoryFactory(_serviceProvider);
-		_studentsControlUtility = new(_serviceProvider);
 
 		_editTextBoxes = this.Controls.OfType<TextBox>()
 			.Where(box => box.Name
 			.Contains("Edit")).ToList();
 
-		_studentRepository = _repositoryFactory.CreateStudentRepository();
-		_maturaExamRepository = _repositoryFactory.CreateMaturaExamRepository();
-		_grade8ExamRepository = _repositoryFactory.CreateGrade8ExamRepository();
-		_sessionService = _serviceFactory.CreateSessionService();
-		_maturaExamRepository.OnError += OnErrorOccured;
-		_grade8ExamRepository.OnError += OnErrorOccured;
-	}
+		_studentRepository = studentRepository;
+		_maturaExamRepository = maturaExamRepository;
+		_grade8ExamRepository = grade8ExamRepository;
+		_sessionService = sessionService;
 
-	private void OnErrorOccured(string errMg)
-	{
-		MessageBox.Show(errMg, "An error occured");
+		_studentsControlUtility = new(_maturaExamRepository, _grade8ExamRepository, _studentRepository,
+			_sessionService);
+
+		_maturaExamRepository.OnError += _studentsControlUtility.OnErrorOccured;
+		_grade8ExamRepository.OnError += _studentsControlUtility.OnErrorOccured;
 	}
 
 	private void ChangeLanguage()

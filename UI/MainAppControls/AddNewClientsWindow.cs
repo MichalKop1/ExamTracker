@@ -1,18 +1,27 @@
 ﻿using DomainModel.Models;
+using DomainModel.Contracts;
+using ExamTracker.Utilities;
 using DataAcessLayer.Contracts;
 
 namespace ExamTracker.UI.MainAppControls;
 
 public partial class AddClientWindow : Form
 {
-	readonly IClientRepository _clientRepository;
-	readonly ISessionService _sessionService;
+	private readonly ISessionService _sessionService;
+	private readonly IClientRepository _clientRepository;
+
+	private AddNewClientsWindowUtilities _utilities;
+	private List<TextBox> textBoxes;
 	public Action UpdateClientList;
-	public AddClientWindow(IClientRepository clientRepository, ISessionService sessionService)
+
+	public AddClientWindow(ISessionService sessionService, IClientRepository clientRepository)
 	{
 		InitializeComponent();
-		_clientRepository = clientRepository;
 		_sessionService = sessionService;
+		_clientRepository = clientRepository;
+
+		_utilities = new(_sessionService, _clientRepository);
+		textBoxes = this.Controls.OfType<TextBox>().ToList();
 	}
 
 	private void ClearAllFields()
@@ -37,7 +46,8 @@ public partial class AddClientWindow : Form
 
 		UpdateClientList?.Invoke();
 
-		ClearAllFields();
+
+		_utilities.ClearAllFields(textBoxes);
 	}
 
 	private void CancelButton_Click(object sender, EventArgs e)
@@ -47,7 +57,11 @@ public partial class AddClientWindow : Form
 
 	private void AddClientButton_Click(object sender, EventArgs e)
 	{
-		CreateClient();
+		_utilities.CreateClient(CompanysNameTextBox.Text, CompanysAddressTextBox1.Text,
+			CompanysAddressTextBox2.Text, CompanysNipTextBox.Text);
+		_utilities.ClearAllFields(textBoxes);
+
+		UpdateClientList?.Invoke();
 		this.Close();
 	}
 }

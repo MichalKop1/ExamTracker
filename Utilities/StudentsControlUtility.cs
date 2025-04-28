@@ -1,27 +1,25 @@
 ﻿using DataAcessLayer.Contracts;
-using DataAcessLayer.Repositories;
 using DomainModel.Contracts;
 using DomainModel.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace ExamTracker.Utilities;
 
 public class StudentsControlUtility
 {
-	private readonly IServiceProvider _serviceProvider;
-	private readonly IServiceFactory _serviceFactory;
-	private readonly IRepositoryFactory _repositoryFactory;
+	private readonly IMaturaExamRepository _maturaExamRepository;
+	private readonly IGrade8ExamRepository _grade8ExamRepository;
+	private readonly IStudentRepository _studentRepository;
+	private readonly ISessionService _sessionService;
 
-	public StudentsControlUtility(IServiceProvider serviceProvider)
+	public StudentsControlUtility(IMaturaExamRepository maturaExamRepository, IGrade8ExamRepository grade8ExamRepository,
+		IStudentRepository studentRepository, ISessionService sessionService)
 	{
-		_serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-		_serviceFactory = new ServiceFactory(_serviceProvider);
-		_repositoryFactory = new RepositoryFactory(_serviceProvider);
+		_maturaExamRepository = maturaExamRepository;
+		_studentRepository = studentRepository;
+		_grade8ExamRepository = grade8ExamRepository;
+		_sessionService = sessionService;
 	}
 
 	public Student Student { get; set; } = new();
@@ -53,14 +51,19 @@ public class StudentsControlUtility
 		});
 	}
 
+	public void OnErrorOccured(string errMg)
+	{
+		MessageBox.Show(errMg, "An error occured");
+	}
+
 	public async Task RefreshMaturaDataInTheGrid(DataGridView table)
 	{
-		table.DataSource = await _repositoryFactory.CreateMaturaExamRepository().GetAllExams(Student.Id);
+		table.DataSource = await _maturaExamRepository.GetAllExams(Student.Id);
 	}
 
 	public async Task RefreshGrade8DataInTheGrid(DataGridView table)
 	{
-		table.DataSource = await _repositoryFactory.CreateGrade8ExamRepository().GetAllExams(Student.Id);
+		table.DataSource = await _grade8ExamRepository.GetAllExams(Student.Id);
 	}
 
 	public void CustomizeGridAppearance(DataGridView table, Exam exam)
@@ -124,7 +127,7 @@ public class StudentsControlUtility
 
 	public async Task<List<Student>> LoadAllStudentToList(ComboBox comboBox)
 	{
-		var _students = await _repositoryFactory.CreateStudentRepository().GetAllStudents(_serviceFactory.CreateSessionService().CurrentAccount.Id);
+		var _students = await _studentRepository.GetAllStudents(_sessionService.CurrentAccount.Id);
 
 		return _students;
 	}

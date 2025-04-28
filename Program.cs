@@ -9,6 +9,7 @@ using DataAcessLayer;
 using DomainModel.Models;
 using DomainModel.Contracts;
 using ExamTracker.Utilities;
+using ExamTracker.Factories;
 
 namespace ExamTracker;
 
@@ -69,6 +70,8 @@ internal static class Program
         services.AddSingleton<ISessionService, SessionService>();
 		services.AddSingleton<IServiceFactory, ServiceFactory>();
 		services.AddSingleton<IRepositoryFactory, RepositoryFactory>();
+		services.AddSingleton<IControlFactory, ControlFactory>();
+        services.AddSingleton<IFormFactory, FormFactory>();
 		services.AddSingleton<MainFormUtilities>();
 		services.AddSingleton<RegisterPageUtilities>();
 		services.AddSingleton<StudentsControlUtility>();

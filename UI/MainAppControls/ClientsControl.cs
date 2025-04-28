@@ -1,7 +1,9 @@
 ﻿using DataAcessLayer.Contracts;
+using DomainModel.Contracts;
 using DomainModel.Models;
 using ExamTracker.CustomControls;
 using ExamTracker.ExtensonMethods;
+using ExamTracker.Utilities;
 
 namespace ExamTracker.UI.MainAppControls;
 
@@ -9,14 +11,15 @@ public partial class ClientsControl : UserControl
 {
 	private readonly ISessionService _sessionService;
 	private readonly IClientRepository _clientRepository;
+
 	private List<ClientControlItem> _allClientsItems = new();
 	private Client _selectedClient = new();
 
 	public ClientsControl(ISessionService sessionService, IClientRepository clientRepository)
 	{
+		InitializeComponent();
 		_sessionService = sessionService;
 		_clientRepository = clientRepository;
-		InitializeComponent();
 	}
 
 	private async Task PopulateClientsFlow()
@@ -43,10 +46,10 @@ public partial class ClientsControl : UserControl
 		ClientsToolStrip.Visible = true;
 	}
 
-	private void AssignClient(object? s, Client client)
+	private void AssignClient(object s, Client client)
 	{
 		_selectedClient = client;
-		ClientControlItem clientControlItem = s as ClientControlItem;
+		ClientControlItem clientControlItem = (ClientControlItem)s;
 
 		ResetClientsInFlow();
 
@@ -65,22 +68,22 @@ public partial class ClientsControl : UserControl
 
 	private void AddClientButton_Click(object sender, EventArgs e)
 	{
-		AddClientWindow addClientWindow = new AddClientWindow(_clientRepository, _sessionService);
+		AddClientWindow addClientWindow = new AddClientWindow(_sessionService, _clientRepository);
 		addClientWindow.UpdateClientList += async () => await PopulateClientsFlow();
 
 		addClientWindow.ShowDialog();
 	}
 
-	private void ClientsControl_Load(object sender, EventArgs e)
+	private async void ClientsControl_Load(object sender, EventArgs e)
 	{
-		PopulateClientsFlow();
+		await PopulateClientsFlow();
 	}
 
-	private void UpdateClient(object? s, Client client)
+	private async void UpdateClient(object? s, Client client)
 	{
-		_clientRepository.UpdateClient(client);
+		await _clientRepository.UpdateClient(client);
 
-		PopulateClientsFlow();
+		await PopulateClientsFlow();
 	}
 
 	private void EditStripButton_Click(object sender, EventArgs e)
@@ -91,11 +94,11 @@ public partial class ClientsControl : UserControl
 		editClientsInfoWindow.ShowDialog();
 	}
 
-	private void DeleteStripButton_Click(object sender, EventArgs e)
+	private async void DeleteStripButton_Click(object sender, EventArgs e)
 	{
-		_clientRepository.DeleteClient(_selectedClient);
+		await _clientRepository.DeleteClient(_selectedClient);
 		ClientsToolStrip.Visible = false;
-		PopulateClientsFlow();
+		await PopulateClientsFlow();
 
 		_selectedClient = new Client();
 	}

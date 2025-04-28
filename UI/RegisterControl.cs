@@ -82,11 +82,6 @@ public partial class RegisterControl : UserControl
 
 	private void RegisterControl_Leave(object sender, EventArgs e)
 	{
-		//_pageUtilities.OnInvalidForm -= HandleInvalidForm;
-	}
-
-	~RegisterControl()
-	{
-		_pageUtilities.OnInvalidForm -= HandleInvalidForm;
+		
 	}
 }
