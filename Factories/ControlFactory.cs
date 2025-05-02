@@ -20,7 +20,8 @@ public class ControlFactory : IControlFactory
 	{
 		return new AddStudents(
 			_serviceProvider.GetRequiredService<IStudentRepository>(),
-			_serviceProvider.GetRequiredService<ISessionService>());
+			_serviceProvider.GetRequiredService<ISessionService>(),
+			_serviceProvider.GetRequiredService<ICacheService>());
 	}
 
 	public StudentsControl CreateStudentsControl()
@@ -29,7 +30,8 @@ public class ControlFactory : IControlFactory
 			_serviceProvider.GetRequiredService<IStudentRepository>(),
 			_serviceProvider.GetRequiredService<IMaturaExamRepository>(),
 			_serviceProvider.GetRequiredService<IGrade8ExamRepository>(),
-			_serviceProvider.GetRequiredService<ISessionService>());
+			_serviceProvider.GetRequiredService<ISessionService>(),
+			_serviceProvider.GetRequiredService<ICacheService>());
 	}
 
 	public ProfileControl CreateProfileControl()
@@ -52,7 +54,8 @@ public class ControlFactory : IControlFactory
 			_serviceProvider.GetRequiredService<IInvoiceRepository>(),
 			_serviceProvider.GetRequiredService<IProductServiceRepository>(),
 			_serviceProvider.GetRequiredService<ISessionService>(),
-			_serviceProvider.GetRequiredService<IClientRepository>());
+			_serviceProvider.GetRequiredService<IClientRepository>(),
+			_serviceProvider.GetRequiredService<ICacheService>());
 	}
 
 	public ClientsControl CreateClientsControl()

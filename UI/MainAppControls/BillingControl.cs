@@ -3,38 +3,44 @@ using ExamTracker.Helpers;
 using DataAcessLayer.Contracts;
 using ExamTracker.CustomControls;
 using DomainModel.Models;
-using System.Text.RegularExpressions;
+using log4net;
+using ExamTracker.Utilities;
+using DataAcessLayer.Repositories;
 
 namespace ExamTracker.UI.MainAppControls;
 
 public partial class BillingControl : UserControl
 {
+	protected readonly ILog log = LogManager.GetLogger(typeof(BillingControl));
+
 	private readonly IInvoiceRepository _invoiceRepository;
 	private readonly IProductServiceRepository _productServiceRepository;
 	private readonly ISessionService _sessionService;
 	private readonly IClientRepository _clientRepository;
-	private List<Client> allClients = new List<Client>();
+	private readonly ICacheService _cacheService;
+
+	private BillingControlUtilities _billingControlUtilities;
 	private Client chosenClient = new();
 	private List<SoldProductsServicesItems> allitems;
-	private List<Invoice> invoicesList;
 	private string payment = string.Empty;
 
 	public BillingControl(IInvoiceRepository invoiceRepository, IProductServiceRepository productServiceRepository,
-		ISessionService sessionService, IClientRepository clientRepository)
+		ISessionService sessionService, IClientRepository clientRepository, ICacheService cacheService)
 	{
 		InitializeComponent();
 		_invoiceRepository = invoiceRepository;
 		_productServiceRepository = productServiceRepository;
 		_sessionService = sessionService;
 		_clientRepository = clientRepository;
+		_cacheService = cacheService;
+
 		ItemsFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
 		allitems = new List<SoldProductsServicesItems>();
-		invoicesList = new List<Invoice>();
+		_billingControlUtilities = new(_invoiceRepository, _sessionService, _clientRepository, _cacheService);
 	}
 
 	private void ChangeLanguage()
 	{
-		// if (LanguageHelper.Lang == "pl_pl")
 		if (LanguageHelper.GetLanguage == Language.Polish_Pl)
 		{
 			InvoiceListLabel.Text = "Lista faktur";
@@ -75,60 +81,6 @@ public partial class BillingControl : UserControl
 		SellDateCalendar.Visible = false;
 	}
 
-	private static string GenerateInvoiceNumber()
-	{
-		int numberId = Math.Abs(Guid.NewGuid().GetHashCode() % 9000) + 1000;
-		string currYear = DateTime.Now.Year.ToString();
-		return $"{numberId}/EXTR/{currYear}";
-	}
-	private static int GenerateUniqueIdentifier()
-	{
-		return Math.Abs(Guid.NewGuid().GetHashCode());
-	}
-	private void CustomizeGridAppearance()
-	{
-		InvoicesTable.AutoGenerateColumns = false;
-
-		DataGridViewColumn[] columns = new DataGridViewColumn[4];
-
-		columns[0] = new DataGridViewTextBoxColumn() { DataPropertyName = "InvoiceNumber", HeaderText = "Invoice Number" };
-		columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-		columns[1] = new DataGridViewImageColumn() { DataPropertyName = "picture", HeaderText = "" };
-		columns[1].Width = 30;
-		columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-
-		columns[2] = new DataGridViewTextBoxColumn() { DataPropertyName = "Is Paid?", HeaderText = "Is Paid?" };
-		columns[2].Width = 40;
-		columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-
-		columns[3] = new DataGridViewTextBoxColumn() { DataPropertyName = "Buyer", HeaderText = "Client" };
-		columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-
-
-		InvoicesTable.RowHeadersVisible = false;
-		InvoicesTable.Columns.Clear();
-		InvoicesTable.Columns.AddRange(columns);
-
-	}
-
-	private void ClearInformationBoxes()
-	{
-		DateOfSaleTextBox.Clear();
-		DateOfPaymentTextBox.Clear();
-		RemarksTextBox.Clear();
-		ItemsFlowLayoutPanel.Controls.Clear();
-		allitems.Clear();
-	}
-
-	private async Task PopulateInvoicesTable()
-	{
-		InvoicesTable.DataSource = null;
-		invoicesList = await _invoiceRepository.GetAllInvoicesOfAnAccount(_sessionService.CurrentAccount.Id);
-		InvoicesTable.DataSource = invoicesList;
-	}
-
 	private void button1_Click(object sender, EventArgs e)
 	{
 		SaveFileDialog saveFileDialog = new SaveFileDialog
@@ -141,6 +93,8 @@ public partial class BillingControl : UserControl
 		{
 			PdfHelper pdfHelper = new PdfHelper();
 			pdfHelper.CreatePdfInvoice(saveFileDialog.FileName, _invoiceRepository.GetInvoice(1), _productServiceRepository.GetAllOrders());
+
+			log.Info($"Invoice downloaded successfuly.");
 		}
 	}
 
@@ -149,137 +103,15 @@ public partial class BillingControl : UserControl
 		SoldProductsServicesItems panel = new SoldProductsServicesItems();
 		allitems.Add(panel);
 		ItemsFlowLayoutPanel.Controls.Add(panel);
-	}
-	private bool ValidateFlowItems()
-	{
-		foreach (SoldProductsServicesItems item in ItemsFlowLayoutPanel.Controls)
-		{
-			if (!item.ValidateItem())
-			{
-				return false;
-			}
-		}
-		return true;
-	}
 
-	private bool ValidateInvoiceForm()
-	{
-		StringBuilder stringBuilder = new StringBuilder();
-		int counter = 1;
-		bool isValid = true;
-
-		string patternEng = "^[0-9]{2}\\/[0-9]{2}\\/[0-9]{4}$";
-		string patternPl = "^[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}$";
-		Language lang = LanguageHelper.GetLanguage;
-
-		if (lang == Language.Polish_Pl)
-		{
-			stringBuilder.Append("Wystąpił problem z twoim formularzem:\n");
-		}
-		else if (lang == Language.English_Us)
-		{
-			stringBuilder.Append("There was  aproblem with your form:\n");
-		}
-
-		if (string.IsNullOrEmpty(DateOfSaleTextBox.Text))
-		{
-			if (lang == Language.Polish_Pl)
-			{
-				stringBuilder.Append($"{counter}. Wprowadź datę sprzedaży.\n");
-			}
-			else if (lang == Language.English_Us)
-			{
-				stringBuilder.Append($"{counter}. Provide a date of sale.\n");
-			}
-			isValid = false;
-			counter++;
-		}
-		else if (!Regex.Match(DateOfSaleTextBox.Text, patternEng).Success &&
-					!Regex.Match(DateOfSaleTextBox.Text, patternPl).Success)
-		{
-			if (lang == Language.Polish_Pl)
-			{
-				stringBuilder.Append($"{counter}. Wprowadź poprawną datę sprzedaży.\n");
-			}
-			else if (lang == Language.English_Us)
-			{
-				stringBuilder.Append($"{counter}. Provide a valid date of sale.\n");
-			}
-			counter++;
-			isValid = false;
-		}
-
-		if (string.IsNullOrEmpty(DateOfPaymentTextBox.Text))
-		{
-			if (lang == Language.Polish_Pl)
-			{
-				stringBuilder.Append($"{counter}. Wprowadź datę płatności.\n");
-			}
-			else if (lang == Language.English_Us)
-			{
-				stringBuilder.Append($"{counter}. Provide a date of payment.\n");
-			}
-			counter++;
-			isValid = false;
-		}
-		else if (!Regex.Match(DateOfPaymentTextBox.Text, patternEng).Success &&
-					!Regex.Match(DateOfPaymentTextBox.Text, patternPl).Success)
-		{
-			if (lang == Language.Polish_Pl)
-			{
-				stringBuilder.Append($"{counter}. Wprowadź poprawną datę płatności.\n");
-			}
-			else if (lang == Language.English_Us)
-			{
-				stringBuilder.Append($"{counter}. Provide a valid date of payment.\n");
-			}
-			counter++;
-			isValid = false;
-		}
-		if (allitems.Count < 1)
-		{
-			if (lang == Language.Polish_Pl)
-			{
-				stringBuilder.Append($"{counter}. Wprowadź przynajmniej jeden produkt lub usługę.\n");
-			}
-			else if (lang == Language.English_Us)
-			{
-				stringBuilder.Append($"{counter}. Provide at least one service or product.\n");
-			}
-			counter++;
-			isValid = false;
-		}
-
-		if (!isValid)
-		{
-			if (lang == Language.Polish_Pl)
-			{
-				MessageBox.Show(stringBuilder.ToString(), "Faktura nieprawidłowa");
-			}
-			else if (lang == Language.English_Us)
-			{
-				MessageBox.Show(stringBuilder.ToString(), "Invalid invoice");
-			}
-		}
-		return isValid;
-	}
-
-	private async Task PopulateClientsComboBox()
-	{
-		int currId = _sessionService.CurrentAccount.Id;
-		allClients = await _clientRepository.GetAllClients(currId.ToString());
-
-		foreach (var client in allClients)
-		{
-			ClientsComboBox.Items.Add(client.CompanyName);
-		}
+		log.Info($"{panel.ProductName} added.");
 	}
 
 	private async void AddInvoiceButton_Click(object sender, EventArgs e)
 	{
 		Language lang = LanguageHelper.GetLanguage;
 
-		if (!ValidateFlowItems())
+		if (!_billingControlUtilities.ValidateFlowItems(ItemsFlowLayoutPanel))
 		{
 			if (lang == Language.Polish_Pl)
 			{
@@ -293,13 +125,15 @@ public partial class BillingControl : UserControl
 			}
 			return;
 		}
-		if (!ValidateInvoiceForm())
+
+		if (!_billingControlUtilities.ValidateInvoiceForm(DateOfSaleTextBox, DateOfPaymentTextBox, allitems))
 		{
 			return;
 		}
+
 		// for simplicity assume 12% tax
 		double Tax = 0.88;
-		int uniqueId = GenerateUniqueIdentifier();
+		int uniqueId = BillingControlUtilities.GenerateUniqueIdentifier();
 		int GrossAmount = 0;
 
 		foreach (var item in allitems)
@@ -324,15 +158,21 @@ public partial class BillingControl : UserControl
 		string sellersName = _sessionService.CurrentAccount.ContactName ?? "Null name";
 		string accNum = "63 1112 9074 2222 0011 0999 8931"; // add acc number for the user
 		string remarks = RemarksTextBox.Text;
-		
 
-		Invoice invoice = new Invoice(GenerateInvoiceNumber(), now, DateOfSaleTextBox.Text, DateOfPaymentTextBox.Text,
+		var invoiceNumber = BillingControlUtilities.GenerateInvoiceNumber();
+		Invoice invoice = new Invoice(invoiceNumber, now, DateOfSaleTextBox.Text, DateOfPaymentTextBox.Text,
 							payment, buyer, buyerAddress, sellersName, selersAddress, accNum,
 							"zl", remarks, GrossAmount, NetAmount, _sessionService.CurrentAccount.Id, uniqueId);
 
 		await _invoiceRepository.InsertInvoice(invoice);
-		ClearInformationBoxes();
-		await PopulateInvoicesTable();
+
+		string key = $"invoice:{_sessionService.CurrentAccount.Id}";
+		_cacheService.SetAddToList<Invoice>(invoice, key, TimeSpan.FromHours(1));
+
+		_billingControlUtilities.ClearInformationBoxes(DateOfSaleTextBox, DateOfPaymentTextBox, RemarksTextBox, ItemsFlowLayoutPanel, allitems);
+		await _billingControlUtilities.PopulateInvoicesTable(InvoicesTable);
+
+		log.Info($"Invoice created: {invoice.Buyer}");
 	}
 
 	private void InvoicesTable_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -362,10 +202,10 @@ public partial class BillingControl : UserControl
 
 	private async void BillingControl_Load(object sender, EventArgs e)
 	{
-		CustomizeGridAppearance();
-		await PopulateInvoicesTable();
+		_billingControlUtilities.CustomizeGridAppearance(InvoicesTable);
+		await _billingControlUtilities.PopulateInvoicesTable(InvoicesTable);
 		ChangeLanguage();
-		await PopulateClientsComboBox();
+		await _billingControlUtilities.PopulateClientsComboBox(ClientsComboBox);
 	}
 
 	private void InvoicesTable_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -485,7 +325,9 @@ public partial class BillingControl : UserControl
 
 	private void ClientsComboBox_SelectedIndexChanged(object sender, EventArgs e)
 	{
-		chosenClient = allClients[ClientsComboBox.SelectedIndex];
+		var comboBox = sender as ComboBox;
+
+		chosenClient = comboBox.SelectedItem as Client ?? throw new ArgumentNullException();
 	}
 
 	private void TransferCheckBox_Click(object sender, EventArgs e)

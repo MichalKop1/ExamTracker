@@ -1,6 +1,7 @@
 ﻿using DataAcessLayer.Contracts;
 using DomainModel.Models;
 using ExamTracker.Helpers;
+using log4net;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -8,7 +9,9 @@ namespace ExamTracker.UI;
 
 public partial class ProfileControl : UserControl
 {
-    private readonly IAccountRepository _accountRepository;
+	protected readonly ILog log = LogManager.GetLogger(typeof(ProfileControl));
+
+	private readonly IAccountRepository _accountRepository;
     private readonly ISessionService _sessionService;
     
     public ProfileControl(IAccountRepository accountRepository, ISessionService sessionService)
@@ -36,7 +39,6 @@ public partial class ProfileControl : UserControl
 
     private void ChangeLangueage()
     {
-		// if (LanguageHelper.Lang == "pl_pl")
 		if (LanguageHelper.GetLanguage == Language.Polish_Pl)
         {
             profileLabel.Text = "Profil";
@@ -128,7 +130,7 @@ public partial class ProfileControl : UserControl
 
     private void saveChangesButton_Click(object sender, EventArgs e)
     {
-        
+        log.Info($"{sender}: User updated.");
         LoadCurrentUser();
     }
 }

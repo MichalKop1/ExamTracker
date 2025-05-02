@@ -12,13 +12,14 @@ public partial class StudentsControl : UserControl
 	private readonly IMaturaExamRepository _maturaExamRepository;
 	private readonly IGrade8ExamRepository _grade8ExamRepository;
 	private readonly ISessionService _sessionService;
+	private readonly ICacheService _cacheService;
 	private StudentsControlUtility _studentsControlUtility;
 	private List<TextBox> _editTextBoxes;
 	private List<Student> _students;
 	private int _student_id;
 	private Student _selectedStudent;
 	public StudentsControl(IStudentRepository studentRepository, IMaturaExamRepository maturaExamRepository,
-		IGrade8ExamRepository grade8ExamRepository, ISessionService sessionService)
+		IGrade8ExamRepository grade8ExamRepository, ISessionService sessionService, ICacheService cacheService)
 	{
 		InitializeComponent();
 		ChangeLanguage();
@@ -33,9 +34,10 @@ public partial class StudentsControl : UserControl
 		_maturaExamRepository = maturaExamRepository;
 		_grade8ExamRepository = grade8ExamRepository;
 		_sessionService = sessionService;
+		_cacheService = cacheService;
 
 		_studentsControlUtility = new(_maturaExamRepository, _grade8ExamRepository, _studentRepository,
-			_sessionService);
+			_sessionService, _cacheService);
 
 		_maturaExamRepository.OnError += _studentsControlUtility.OnErrorOccured;
 		_grade8ExamRepository.OnError += _studentsControlUtility.OnErrorOccured;

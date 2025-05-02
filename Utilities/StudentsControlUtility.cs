@@ -1,6 +1,8 @@
 ﻿using DataAcessLayer.Contracts;
+using DataAcessLayer.Repositories;
 using DomainModel.Contracts;
 using DomainModel.Models;
+using iText.Layout.Element;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -12,14 +14,16 @@ public class StudentsControlUtility
 	private readonly IGrade8ExamRepository _grade8ExamRepository;
 	private readonly IStudentRepository _studentRepository;
 	private readonly ISessionService _sessionService;
+	private readonly ICacheService _cacheService;
 
 	public StudentsControlUtility(IMaturaExamRepository maturaExamRepository, IGrade8ExamRepository grade8ExamRepository,
-		IStudentRepository studentRepository, ISessionService sessionService)
+		IStudentRepository studentRepository, ISessionService sessionService, ICacheService cacheService)
 	{
 		_maturaExamRepository = maturaExamRepository;
 		_studentRepository = studentRepository;
 		_grade8ExamRepository = grade8ExamRepository;
 		_sessionService = sessionService;
+		_cacheService = cacheService;
 	}
 
 	public Student Student { get; set; } = new();
@@ -58,12 +62,53 @@ public class StudentsControlUtility
 
 	public async Task RefreshMaturaDataInTheGrid(DataGridView table)
 	{
-		table.DataSource = await _maturaExamRepository.GetAllExams(Student.Id);
+		string key = Student.Surname
+			?? throw new ArgumentNullException();
+
+		table.DataSource = await FetchMaturaExamsAsync(key);
 	}
 
 	public async Task RefreshGrade8DataInTheGrid(DataGridView table)
 	{
-		table.DataSource = await _grade8ExamRepository.GetAllExams(Student.Id);
+		string key = Student.Surname;
+
+		table.DataSource = await FetchGrade8ExamsAsync(key);
+	}
+
+	public async Task<List<Exam8Grade>> FetchGrade8ExamsAsync(string key)
+	{
+		var collection = _cacheService.Get<HashSet<Exam8Grade>>(key);
+
+		if (collection != null)
+		{
+			return collection.ToList();
+		}
+		else
+		{
+			var listFromDb = await _grade8ExamRepository.GetAllExams(Student.Id);
+			var fallbackCollection = listFromDb.ToHashSet();
+
+			_cacheService.SetList<Exam8Grade>(fallbackCollection, key, TimeSpan.FromHours(1));
+
+			return listFromDb;
+		}
+	}
+
+	public async Task<List<ExamMatura>> FetchMaturaExamsAsync(string key)
+	{
+		var collection = _cacheService.Get<HashSet<ExamMatura>>(key);
+
+		if (collection != null)
+		{
+			return collection.ToList();
+		}
+		else
+		{
+			var listFromDb = await _maturaExamRepository.GetAllExams(Student.Id);
+			var fallbackCollection = listFromDb.ToHashSet();
+
+			return listFromDb;
+		}
 	}
 
 	public void CustomizeGridAppearance(DataGridView table, Exam exam)
@@ -229,3 +274,4 @@ public class StudentsControlUtility
 		return isValid;
 	}
 }
+

@@ -8,14 +8,18 @@ namespace ExamTracker.UI.MainAppControls;
 
 public partial class AddStudents : UserControl
 {
-    IStudentRepository _studentRepository;
-    ISessionService _sessionService;
-    public AddStudents(IStudentRepository studentRepository, ISessionService sessionService)
+    private readonly IStudentRepository _studentRepository;
+    private readonly ISessionService _sessionService;
+    private readonly ICacheService _cacheService;
+
+    public AddStudents(IStudentRepository studentRepository, ISessionService sessionService,
+        ICacheService cacheService)
     {
         InitializeComponent();
         ChangeLanguage();
         _studentRepository = studentRepository;
         _sessionService = sessionService;
+        _cacheService = cacheService;
     }
     private void ChangeLanguage()
     {

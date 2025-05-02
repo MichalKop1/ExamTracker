@@ -3,12 +3,15 @@ using ExamTracker.CustomControls;
 using DomainModel.Models;
 using ExamTracker.Helpers;
 using System.Text;
+using log4net;
 
 namespace ExamTracker.UI.MainAppControls;
 
 public partial class ScheduleControl : UserControl
 {
-    public event EventHandler OneEventClicked;
+	protected readonly ILog log = LogManager.GetLogger(typeof(ScheduleControl));
+
+	public event EventHandler OneEventClicked;
     private readonly IEventRepository _eventRepository;
     private readonly ISessionService _sessionService;
     private List<Event> _eventToLoad;
@@ -95,10 +98,9 @@ public partial class ScheduleControl : UserControl
             }
             else if (lang == Language.English_Us)
             {
-                sb.Append($"{counter}. Select type of event.");
+                sb.Append($"{counter}. Select type of an event.");
             }
 
-            counter++;
             isValid = false;
         }
 
@@ -138,6 +140,8 @@ public partial class ScheduleControl : UserControl
         AddEventToPanel(_event);
         _eventRepository.AddEventToDB(_event);
         ClearAllFields();
+
+        log.Info($"Event: {EventType} added.");
     }
 
     private void AddEventToPanel(Event _event)

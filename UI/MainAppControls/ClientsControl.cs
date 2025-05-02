@@ -4,11 +4,14 @@ using DomainModel.Models;
 using ExamTracker.CustomControls;
 using ExamTracker.ExtensonMethods;
 using ExamTracker.Utilities;
+using log4net;
 
 namespace ExamTracker.UI.MainAppControls;
 
 public partial class ClientsControl : UserControl
 {
+	protected readonly ILog log = LogManager.GetLogger(typeof(ClientsControl));
+
 	private readonly ISessionService _sessionService;
 	private readonly IClientRepository _clientRepository;
 
@@ -84,6 +87,8 @@ public partial class ClientsControl : UserControl
 		await _clientRepository.UpdateClient(client);
 
 		await PopulateClientsFlow();
+
+		log.Info($"Client updated to: {client.CompanyName}");
 	}
 
 	private void EditStripButton_Click(object sender, EventArgs e)
@@ -99,6 +104,8 @@ public partial class ClientsControl : UserControl
 		await _clientRepository.DeleteClient(_selectedClient);
 		ClientsToolStrip.Visible = false;
 		await PopulateClientsFlow();
+
+		log.Info($"{_selectedClient.CompanyName} was deleted.");
 
 		_selectedClient = new Client();
 	}

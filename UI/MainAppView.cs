@@ -11,6 +11,7 @@ public partial class MainAppView : Form
 	private readonly IControlFactory _controlFactory;
 	private readonly IServiceFactory _serviceFactory;
 	private readonly IRepositoryFactory _repositoryFactory;
+	private readonly ICacheService _cacheService;
 
 	private readonly MainForm _mainForm;
 	private readonly MainAppViewUtilities _mainViewUtilities;
@@ -33,6 +34,7 @@ public partial class MainAppView : Form
 		_repositoryFactory = repositoryFactory;
 		_mainForm = mainForm;
 		_sessionService = _serviceFactory.CreateSessionService();
+		_cacheService = _serviceFactory.CreateCacheService();
 
 		var maturaRepo = _repositoryFactory.CreateMaturaExamRepository();
 		var grade8Repo = _repositoryFactory.CreateGrade8ExamRepository();

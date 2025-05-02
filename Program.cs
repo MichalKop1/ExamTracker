@@ -10,6 +10,11 @@ using DomainModel.Models;
 using DomainModel.Contracts;
 using ExamTracker.Utilities;
 using ExamTracker.Factories;
+using log4net.Config;
+using System.Diagnostics;
+
+[assembly: XmlConfigurator(ConfigFile = "log4net.config", Watch = true)]
+
 
 namespace ExamTracker;
 
@@ -21,7 +26,10 @@ internal static class Program
     [STAThread]
     static void Main()
     {
-        ApplicationConfiguration.Initialize();
+		log4net.Util.LogLog.InternalDebugging = true;
+		Trace.Listeners.Add(new ConsoleTraceListener());
+
+		ApplicationConfiguration.Initialize();
 
         ServiceCollection services = ConfigureServices();
         ServiceProvider serviceProvider = services.BuildServiceProvider();
@@ -74,6 +82,8 @@ internal static class Program
         services.AddSingleton<IFormFactory, FormFactory>();
 		services.AddSingleton<MainFormUtilities>();
 		services.AddSingleton<RegisterPageUtilities>();
+
+        services.AddSingleton<MainAppViewUtilities>();
 		services.AddSingleton<StudentsControlUtility>();
 
 
