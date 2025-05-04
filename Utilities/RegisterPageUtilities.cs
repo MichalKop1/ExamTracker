@@ -97,24 +97,15 @@ public class RegisterPageUtilities
 		TextBox loginBox, TextBox passwordBox1,
 		TextBox passwordBox2, Button registerButton)
 	{
-		if (LanguageHelper.GetLanguage == Language.Polish_Pl)
-		{
-			nameBox.PlaceholderText = "Imię";
-			surnameBox.PlaceholderText = "Nazwisko";
-			loginBox.PlaceholderText = "Nazwa użytkownika";
-			passwordBox1.PlaceholderText = "Hasło";
-			passwordBox2.PlaceholderText = "Potwierdź hasło";
-			registerButton.Text = "Zarejestruj";
-		}
-		else if (LanguageHelper.GetLanguage == Language.English_Us)
-		{
-			nameBox.PlaceholderText = "Name";
-			surnameBox.PlaceholderText = "Surname";
-			surnameBox.PlaceholderText = "User Name";
-			passwordBox1.PlaceholderText = "Password";
-			passwordBox2.PlaceholderText = "Confirm password";
-			registerButton.Text = "Register";
-		}
+		var locale = LanguageHelper.Localization.RegisterControlPage;
+
+		nameBox.PlaceholderText = locale.Textboxes.NamePlaceholder;
+		surnameBox.PlaceholderText = locale.Textboxes.SurnamePlaceholder;
+		loginBox.PlaceholderText = locale.Textboxes.LoginPlaceholder;
+		passwordBox1.PlaceholderText = locale.Textboxes.Password1Placeholder;
+		passwordBox2.PlaceholderText = locale.Textboxes.Password2Placeholder;
+		registerButton.Text = locale.Buttons.RegisterButton;
+
 	}
 
 	public void ClerarAllFields(List<TextBox> boxes)

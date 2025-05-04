@@ -47,7 +47,7 @@ public partial class MainForm : Form
 		entryPanel.Controls.Add(_loginControl);
 		entryPanel.Controls.Add(_registerControl);
 
-		_sessionService.Language = LanguageHelper.Lang;
+		//_sessionService.Language = LanguageHelper.Lang;
 		_languageDict = new Dictionary<int, string>() { { 0, "Polish_Pl" }, { 1, "English_Us" } };
 
 		_accountRepository.OnError += _mainFormUtilities.OnErrorOccurred;
@@ -106,6 +106,8 @@ public partial class MainForm : Form
 		Language lang = (Language)Enum.Parse(typeof(Language), SetLanguage);
 
 		_mainFormUtilities.UpdateConfigFileLanguage(lang);
+		LanguageHelper.LoadLocalization();
+
 		_mainFormUtilities.ChangeLanguage(btnLogin, btnRegister, getStartedButton, newsletterLabel);
 	}
 

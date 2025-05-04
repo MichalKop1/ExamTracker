@@ -15,7 +15,7 @@ public partial class LoginControl : UserControl
     {
         InitializeComponent();
 		_loginPageUtilities = new LoginPageUtilities();
-		_loginPageUtilities.ChangeLanguage(passwordBox, loginButton);
+		_loginPageUtilities.ChangeLanguage(loginBox, passwordBox, loginButton);
         _accountRepository = accountRepository;
         _sessionService = sessionService;
     }

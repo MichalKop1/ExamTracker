@@ -2,18 +2,21 @@
 using DomainModel.Contracts;
 using DomainModel.Models;
 using ExamTracker.Helpers;
+using ExamTracker.UI.MainAppControls;
 using ExamTracker.Utilities;
+using log4net;
 
 namespace ExamTracker.UI;
 
 public partial class MainAppView : Form
 {
+	protected readonly ILog log = LogManager.GetLogger(typeof(MainAppView));
+
 	private readonly IControlFactory _controlFactory;
 	private readonly IServiceFactory _serviceFactory;
 	private readonly IRepositoryFactory _repositoryFactory;
 	private readonly ICacheService _cacheService;
 
-	private readonly MainForm _mainForm;
 	private readonly MainAppViewUtilities _mainViewUtilities;
 	private readonly ISessionService _sessionService;
 	private readonly Dictionary<string, Control> _controls;
@@ -21,7 +24,7 @@ public partial class MainAppView : Form
 
 	public event EventHandler? LogoutRequested;
 
-	public MainAppView(MainForm mainForm, IControlFactory controlFactory,
+	public MainAppView(IControlFactory controlFactory,
 		IServiceFactory serviceFactory, IRepositoryFactory repositoryFactory)
 	{
 		InitializeComponent();
@@ -32,7 +35,6 @@ public partial class MainAppView : Form
 		_mainViewUtilities = new MainAppViewUtilities(_controlFactory, _controls, _dataPanel);
 		_serviceFactory = serviceFactory;
 		_repositoryFactory = repositoryFactory;
-		_mainForm = mainForm;
 		_sessionService = _serviceFactory.CreateSessionService();
 		_cacheService = _serviceFactory.CreateCacheService();
 
@@ -44,42 +46,29 @@ public partial class MainAppView : Form
 
 	private void ChangeLanguage()
 	{
-		if (LanguageHelper.GetLanguage == Language.Polish_Pl)
-		{
-			dashboardButton.Text = "Panel";
-			studentsButton.Text = "Uczniowie";
-			scheduleButton.Text = "Plan";
-			billingButton.Text = "Opłaty";
-			businessButton.Text = "Biznes";
-			profileButton.Text = "Profil";
-			ClientsControlButton.Text = "Klienci";
-			logoutButton.Text = "Wyloguj";
-			this.Text = "Exam Tracker   -  Obecnie zalogowany/a: " + _sessionService.CurrentAccount.ContactName;
-		}
-		else if (LanguageHelper.GetLanguage == Language.English_Us)
-		{
-			dashboardButton.Text = "Dashboard";
-			studentsButton.Text = "Students";
-			scheduleButton.Text = "Schedule";
-			billingButton.Text = "Billing";
-			businessButton.Text = "Business";
-			profileButton.Text = "Profile";
-			ClientsControlButton.Text = "Clients";
-			logoutButton.Text = "Log out";
-			this.Text = "Exam Tracker   -  Currently logged in: " + _sessionService.CurrentAccount.ContactName;
-		}
+		var locale = LanguageHelper.Localization.MainAppViewPage;
+
+		dashboardButton.Text = locale.Buttons.DashboardButton;
+		studentsButton.Text = locale.Buttons.StudentsButton;
+		scheduleButton.Text = locale.Buttons.ScheduleButton;
+		billingButton.Text = locale.Buttons.BillingButton;
+		businessButton.Text = locale.Buttons.BusinessButton;
+		profileButton.Text = locale.Buttons.ProfileButton;
+		ClientsControlButton.Text = locale.Buttons.ClientsControlButton;
+		logoutButton.Text = locale.Buttons.LogoutButton;
+		this.Text = string.Format(locale.Labels.FormTitle, _sessionService.CurrentAccount.ContactName);
 	}
 
 	private void MainAppView_FormClosed(object sender, FormClosedEventArgs e)
 	{
+		log.Info("App closed");
 		Application.Exit();
 	}
 
 	private void MainAppView_Load(object sender, EventArgs e)
 	{
 		LogoPictureBox.Image = Properties.Resources.icon;
-		Account currentAccount = _sessionService.CurrentAccount;
-		this.Text = "Exam Tracker   -   Currently logged: " + currentAccount.ContactName;
+
 		_mainViewUtilities.SetProfileControl();
 		ChangeLanguage();
 	}
@@ -118,6 +107,10 @@ public partial class MainAppView : Form
 	{
 		_sessionService.CurrentAccount = new Account();
 		LogoutRequested?.Invoke(this, EventArgs.Empty);
+
+		// clear cache
+		_cacheService.Clear();
+		log.Info($"Chache cleared. Logged out.");
 		
 		this.Hide();
 	}

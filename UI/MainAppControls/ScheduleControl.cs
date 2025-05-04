@@ -31,25 +31,16 @@ public partial class ScheduleControl : UserControl
 
     private void ChangeLanguage()
     {
-        if (LanguageHelper.GetLanguage == Language.Polish_Pl)
-        {
-            AddEventButton.Text = "Dodaj wydarzenie";
-            ExamRadioButton.Text = "Egzamin";
-            MeetingRadioButton.Text = "Spotkanie";
-            ShortDescTextBox.PlaceholderText = "Nazwa wydarzenia";
-            currScheduleLabel.Text = "Obecny harmonogram";
-        }
-        else if (LanguageHelper.GetLanguage == Language.English_Us)
-        {
-            AddEventButton.Text = "Add event";
-            ExamRadioButton.Text = "Exam";
-            MeetingRadioButton.Text = "Meeting";
-            ShortDescTextBox.PlaceholderText = "Event name";
-            currScheduleLabel.Text = "Your current schedule";
-        }
-    }
+		var locale = LanguageHelper.Localization.ScheduleControlPage;
 
-    private void ClearAllFields()
+		AddEventButton.Text = locale.Buttons.AddEventButton;
+		ExamRadioButton.Text = locale.RadioButtons.ExamRadioButton;
+		MeetingRadioButton.Text = locale.RadioButtons.MeetingRadioButton;
+		ShortDescTextBox.PlaceholderText = locale.Textboxes.ShortDescriptionTextBox;
+		currScheduleLabel.Text = locale.Labels.CurrentScheduleLabel;
+	}
+
+	private void ClearAllFields()
     {
         ShortDescTextBox.Clear();
         LongDescTextBox.Clear();

@@ -1,5 +1,6 @@
 ﻿using DataAcessLayer.Contracts;
 using DomainModel.Models;
+using ExamTracker.Helpers;
 
 namespace ExamTracker.Utilities;
 
@@ -12,6 +13,18 @@ public class AddNewClientsWindowUtilities
 	{
 		_sessionService = sessionService;
 		_clientRepository = clientRepository;
+	}
+
+	public void ChangeLanguage(TextBox companyName, TextBox nip, TextBox address1, TextBox address2, Button addButton, Button cancelButton)
+	{
+		var locale = LanguageHelper.Localization.AddNewClientsWindow;
+
+		companyName.PlaceholderText = locale.Labels.CompanyNameLabel;
+		nip.PlaceholderText = locale.Labels.NipLabel;
+		address1.PlaceholderText = locale.Labels.Address1Label;
+		address2.PlaceholderText = locale.Labels.Address2Label;
+		addButton.Text = locale.Buttons.AddButton;
+		cancelButton.Text = locale.Buttons.CancelButton;
 	}
 
 	public void ClearAllFields(List<TextBox> boxes)

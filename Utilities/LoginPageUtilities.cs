@@ -1,22 +1,17 @@
 ﻿using ExamTracker.Helpers;
 
+
 namespace ExamTracker.Utilities;
 
 public class LoginPageUtilities
 {
-	public void ChangeLanguage(TextBox passwordBox, Button loginButton)
+	public void ChangeLanguage(TextBox loginBox, TextBox passwordBox, Button loginButton)
 	{
-		if (LanguageHelper.GetLanguage == Language.Polish_Pl)
-		{
-			passwordBox.PlaceholderText = "Hasło";
-			loginButton.Text = "Zaloguj";
-			loginButton.Size = new System.Drawing.Size(145, 51);
-		}
-		else if (LanguageHelper.GetLanguage == Language.English_Us)
-		{
-			passwordBox.PlaceholderText = "Password";
-			loginButton.Text = "Login";
-			loginButton.Size = new System.Drawing.Size(121, 51);
-		}
+		var locale = LanguageHelper.Localization;
+
+		loginBox.PlaceholderText = locale.LoginControlPage.Textboxes.LoginPlaceholder;
+		passwordBox.PlaceholderText = locale.LoginControlPage.Textboxes.PasswordPlaceholder;
+		loginButton.Text = locale.LoginControlPage.Buttons.LoginButton;
+		loginButton.Size = new System.Drawing.Size(145, 51);
 	}
 }

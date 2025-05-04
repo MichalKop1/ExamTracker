@@ -41,7 +41,7 @@ public partial class AddClientWindow : Form
 			string.Concat(CompanysAddressTextBox1.Text, CompanysAddressTextBox2.Text),
 			CompanysNipTextBox.Text,
 			uniqueId);
-		
+
 		_clientRepository.AddClient(client);
 
 		UpdateClientList?.Invoke();
@@ -63,5 +63,10 @@ public partial class AddClientWindow : Form
 
 		UpdateClientList?.Invoke();
 		this.Close();
+	}
+
+	private void AddClientWindow_Load(object sender, EventArgs e)
+	{
+		_utilities.ChangeLanguage(CompanysNameTextBox, CompanysNipTextBox, CompanysAddressTextBox1, CompanysAddressTextBox2, AddClientButton, CancelButton);
 	}
 }

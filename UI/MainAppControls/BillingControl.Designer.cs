@@ -28,8 +28,8 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-			DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+			DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+			DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
 			InvoicesTable = new DataGridView();
 			InvoiceLabel = new Label();
 			InvoiceListLabel = new Label();
@@ -47,7 +47,6 @@
 			UnitPriceLabel = new Label();
 			SellDateCalendar = new MonthCalendar();
 			PaymentCalendar = new MonthCalendar();
-			AddClientButton = new Button();
 			ClientsComboBox = new ComboBox();
 			TransferCheckBox = new RadioButton();
 			CashCheckBox = new RadioButton();
@@ -64,23 +63,23 @@
 			InvoicesTable.BackgroundColor = Color.White;
 			InvoicesTable.BorderStyle = BorderStyle.None;
 			InvoicesTable.CellBorderStyle = DataGridViewCellBorderStyle.None;
-			dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle3.BackColor = Color.Silver;
-			dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
-			dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
-			dataGridViewCellStyle3.SelectionBackColor = SystemColors.HighlightText;
-			dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-			dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-			InvoicesTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+			dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle1.BackColor = Color.Silver;
+			dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
+			dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+			dataGridViewCellStyle1.SelectionBackColor = SystemColors.HighlightText;
+			dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+			dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+			InvoicesTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			InvoicesTable.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle4.BackColor = SystemColors.Window;
-			dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F);
-			dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
-			dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
-			dataGridViewCellStyle4.SelectionForeColor = Color.Black;
-			dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
-			InvoicesTable.DefaultCellStyle = dataGridViewCellStyle4;
+			dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle2.BackColor = SystemColors.Window;
+			dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+			dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+			dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+			dataGridViewCellStyle2.SelectionForeColor = Color.Black;
+			dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+			InvoicesTable.DefaultCellStyle = dataGridViewCellStyle2;
 			InvoicesTable.Location = new Point(16, 112);
 			InvoicesTable.MultiSelect = false;
 			InvoicesTable.Name = "InvoicesTable";
@@ -253,16 +252,6 @@
 			PaymentCalendar.Visible = false;
 			PaymentCalendar.DateChanged += PaymentCalendar_DateChanged;
 			// 
-			// AddClientButton
-			// 
-			AddClientButton.Location = new Point(613, 810);
-			AddClientButton.Name = "AddClientButton";
-			AddClientButton.Size = new Size(92, 41);
-			AddClientButton.TabIndex = 18;
-			AddClientButton.Text = "Add client [not implemented ]";
-			AddClientButton.UseVisualStyleBackColor = true;
-			AddClientButton.Click += AddClientButton_Click;
-			// 
 			// ClientsComboBox
 			// 
 			ClientsComboBox.FormattingEnabled = true;
@@ -314,7 +303,6 @@
 			Controls.Add(CashCheckBox);
 			Controls.Add(TransferCheckBox);
 			Controls.Add(ClientsComboBox);
-			Controls.Add(AddClientButton);
 			Controls.Add(PaymentCalendar);
 			Controls.Add(SellDateCalendar);
 			Controls.Add(UnitPriceLabel);
@@ -361,7 +349,6 @@
         private Label UnitPriceLabel;
         private MonthCalendar SellDateCalendar;
         private MonthCalendar PaymentCalendar;
-		private Button AddClientButton;
 		private RadioButton TransferCheckBox;
 		private RadioButton CashCheckBox;
 		private Label label1;

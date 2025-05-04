@@ -34,20 +34,12 @@ public class MainFormUtilities : IDisposable
 
 	public void ChangeLanguage(Button btnLogin, Button btnRegister, Button getStartedButton, Label newsletterLabel)
 	{
-		if (LanguageHelper.GetLanguage == Language.Polish_Pl)
-		{
-			btnLogin.Text = "Zaloguj";
-			btnRegister.Text = "Zarejestruj";
-			newsletterLabel.Text = "Dołącz do naszego newslettera i stań się jednym\n z tysięcy nauczycieli którzy korzystają z Exam Tracker";
-			getStartedButton.Text = "Zacznij";
-		}
-		else if (LanguageHelper.GetLanguage == Language.English_Us)
-		{
-			btnLogin.Text = "Login";
-			btnRegister.Text = "Register";
-			newsletterLabel.Text = "Join our newsletter and become one of thousands\r\n              teachers who use Exam Tracker\r\n";
-			getStartedButton.Text = "Get started";
-		}
+		var locale = LanguageHelper.Localization.MainFormPage;
+
+		btnLogin.Text = locale.Buttons.LoginButton;
+		btnRegister.Text = locale.Buttons.RegisterButton;
+		newsletterLabel.Text = locale.Labels.NewsletterLabel;
+		getStartedButton.Text = locale.Buttons.GetStartedButton;
 	}
 
 	public void OnErrorOccurred(string errorMessage)

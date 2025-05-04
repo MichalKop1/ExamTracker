@@ -23,7 +23,6 @@ public class FormFactory : IFormFactory
 	public MainAppView CreateMainAppView()
 	{
 		return new MainAppView(
-			_serviceProvider.GetRequiredService<MainForm>(),
 			_serviceProvider.GetRequiredService<IControlFactory>(),
 			_serviceProvider.GetRequiredService<IServiceFactory>(),
 			_serviceProvider.GetRequiredService<IRepositoryFactory>());

@@ -1,5 +1,4 @@
-﻿using System.Text;
-using ExamTracker.Helpers;
+﻿using ExamTracker.Helpers;
 using DataAcessLayer.Contracts;
 using ExamTracker.CustomControls;
 using DomainModel.Models;
@@ -41,38 +40,21 @@ public partial class BillingControl : UserControl
 
 	private void ChangeLanguage()
 	{
-		if (LanguageHelper.GetLanguage == Language.Polish_Pl)
-		{
-			InvoiceListLabel.Text = "Lista faktur";
-			InvoiceLabel.Text = "Zatwierdzone faktury";
-			CreateInvoiceLabel.Text = "Stwórz fakturę";
-			DateOfSaleTextBox.PlaceholderText = "Data sprzedaży (MM-DD-YYYY)";
-			DateOfPaymentTextBox.PlaceholderText = "Data płatności (MM-DD-YYYY)";
-			DescriptionLabel.Text = "Opis";
-			UnitPriceLabel.Text = "Cena jednostkowa";
-			QuantityLabel.Text = "Ilość";
-			AddItemButton.Text = "Dodaj pozycję";
-			AddInvoiceButton.Text = "Dodaj fakturę";
-			InvoicesTable.Columns[0].HeaderText = "Numer faktury";
-			InvoicesTable.Columns[2].HeaderText = "Czy zapłacona?";
-			InvoicesTable.Columns[3].HeaderText = "Klient";
-		}
-		else if (LanguageHelper.GetLanguage == Language.English_Us)
-		{
-			InvoiceListLabel.Text = "Invoice list";
-			InvoiceLabel.Text = "Approved invoices";
-			CreateInvoiceLabel.Text = "Create invoice";
-			DateOfSaleTextBox.PlaceholderText = "Sell date (MM-DD-YYYY)";
-			DateOfPaymentTextBox.PlaceholderText = "Payment date (MM-DD-YYYY)";
-			DescriptionLabel.Text = "Description";
-			UnitPriceLabel.Text = "Unit price";
-			QuantityLabel.Text = "Quantity";
-			AddItemButton.Text = "Add item";
-			AddInvoiceButton.Text = "Add invoice";
-			InvoicesTable.Columns[0].HeaderText = "Invoice Number";
-			InvoicesTable.Columns[2].HeaderText = "Is paid?";
-			InvoicesTable.Columns[3].HeaderText = "Client";
-		}
+		var locale = LanguageHelper.Localization.BillingControlPage;
+
+		InvoiceListLabel.Text = locale.Labels.InvoiceListLabel;
+		InvoiceLabel.Text = locale.Labels.InvoiceLabel;
+		CreateInvoiceLabel.Text = locale.Labels.CreateInvoiceLabel;
+		DateOfSaleTextBox.PlaceholderText = locale.Textboxes.DateOfSalePlaceholder;
+		DateOfPaymentTextBox.PlaceholderText = locale.Textboxes.DateOfPaymentPlaceholder;
+		DescriptionLabel.Text = locale.Labels.DescriptionLabel;
+		UnitPriceLabel.Text = locale.Labels.UnitPriceLabel;
+		QuantityLabel.Text = locale.Labels.QuantityLabel;
+		AddItemButton.Text = locale.Buttons.AddItemButton;
+		AddInvoiceButton.Text = locale.Buttons.AddInvoiceButton;
+		InvoicesTable.Columns[0].HeaderText = locale.ColumnHeader.InvoiceNumberHeader;
+		InvoicesTable.Columns[2].HeaderText = locale.ColumnHeader.IsPaidHeader;
+		InvoicesTable.Columns[3].HeaderText = locale.ColumnHeader.ClientHeader;
 	}
 
 	private void Click_LostFocus(object? sender, EventArgs e)
@@ -104,7 +86,7 @@ public partial class BillingControl : UserControl
 		allitems.Add(panel);
 		ItemsFlowLayoutPanel.Controls.Add(panel);
 
-		log.Info($"{panel.ProductName} added.");
+		log.Info("New service added.");
 	}
 
 	private async void AddInvoiceButton_Click(object sender, EventArgs e)
@@ -143,8 +125,15 @@ public partial class BillingControl : UserControl
 			int totalPriceOfItem = Convert.ToInt32(numbOfItems * unitPrice);
 			GrossAmount += totalPriceOfItem;
 
-			ProductService ps = new ProductService(item.GetItemType(), numbOfItems, unitPrice, totalPriceOfItem, uniqueId);
+			ProductService ps = new ProductService(
+				description: item.GetItemType(),
+				numberOfItems : numbOfItems,
+				unitPrice : unitPrice,
+				totalGrossPrice : totalPriceOfItem,
+				uniqueId : uniqueId);
+
 			await _productServiceRepository.InsertProductService(ps);
+			log.Info($"Product: {ps.Description} added.");
 		}
 		int NetAmount = Convert.ToInt32(Math.Round(GrossAmount * Tax));
 
@@ -165,6 +154,7 @@ public partial class BillingControl : UserControl
 							"zl", remarks, GrossAmount, NetAmount, _sessionService.CurrentAccount.Id, uniqueId);
 
 		await _invoiceRepository.InsertInvoice(invoice);
+		log.Info($"Invoice: {invoice.Buyer} added.");
 
 		string key = $"invoice:{_sessionService.CurrentAccount.Id}";
 		_cacheService.SetAddToList<Invoice>(invoice, key, TimeSpan.FromHours(1));
@@ -206,6 +196,7 @@ public partial class BillingControl : UserControl
 		await _billingControlUtilities.PopulateInvoicesTable(InvoicesTable);
 		ChangeLanguage();
 		await _billingControlUtilities.PopulateClientsComboBox(ClientsComboBox);
+		log.Info("Table with invoices populated.");
 	}
 
 	private void InvoicesTable_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -244,6 +235,8 @@ public partial class BillingControl : UserControl
 	{
 		DateOfSaleTextBox.Text = e.Start.ToString("dd/MM/yyyy");
 		SellDateCalendar.Visible = false;
+
+		log.Info($"Date of sell set to: {DateOfSaleTextBox.Text}");
 	}
 
 	private void PaymentCalendarButton_Click(object sender, EventArgs e)
@@ -264,6 +257,9 @@ public partial class BillingControl : UserControl
 	{
 		DateOfPaymentTextBox.Text = e.Start.ToString("dd/MM/yyyy");
 		PaymentCalendar.Visible = false;
+
+		log.Info($"Date of payment set to: {DateOfPaymentTextBox.Text}");
+
 	}
 
 	private void InvoicesTable_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
@@ -319,24 +315,24 @@ public partial class BillingControl : UserControl
 		InvoicesTable.ClearSelection();
 	}
 
-	private void AddClientButton_Click(object sender, EventArgs e)
-	{
-	}
-
 	private void ClientsComboBox_SelectedIndexChanged(object sender, EventArgs e)
 	{
 		var comboBox = sender as ComboBox;
 
 		chosenClient = comboBox.SelectedItem as Client ?? throw new ArgumentNullException();
+
+		log.Info($"Client: {chosenClient} was selected.");
 	}
 
 	private void TransferCheckBox_Click(object sender, EventArgs e)
 	{
 		payment = "Transfer";
+		log.Info($"Chosen payment type as: {payment}");
 	}
 
 	private void CashCheckBox_Click(object sender, EventArgs e)
 	{
 		payment = "Cash";
+		log.Info($"Chosen payment type as: {payment}");
 	}
 }

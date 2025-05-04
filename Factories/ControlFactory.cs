@@ -62,6 +62,7 @@ public class ControlFactory : IControlFactory
 	{
 		return new ClientsControl(
 			_serviceProvider.GetRequiredService<ISessionService>(),
-			_serviceProvider.GetRequiredService<IClientRepository>());
+			_serviceProvider.GetRequiredService<IClientRepository>(),
+			_serviceProvider.GetRequiredService<ICacheService>());
 	}
 }

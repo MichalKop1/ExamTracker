@@ -10,8 +10,8 @@ namespace ExamTracker.Utilities;
 public class MainAppViewUtilities
 {
 	private readonly IControlFactory _controlFactory;
-	private Dictionary<string, Control> _controls;
-	private Panel _dataPanel;
+	private readonly Dictionary<string, Control> _controls;
+	private readonly Panel _dataPanel;
 
 	public MainAppViewUtilities(IControlFactory controlFactory, Dictionary<string, Control> controls, Panel dataPanel)
 	{

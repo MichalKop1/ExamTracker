@@ -23,37 +23,22 @@ public partial class AddStudents : UserControl
     }
     private void ChangeLanguage()
     {
-		// if (LanguageHelper.Lang == "pl_pl")
-		if (LanguageHelper.GetLanguage == Language.Polish_Pl)
-        {
-            addStudentLabel.Text = "Dodaj ucznia";
-            studentNameLabel.Text = "Imię i nazwisko ucznia";
-            studentEmailLabel.Text = "Email ucznia";
-            studentEmailTextBox.PlaceholderText = "(opcjonalne)";
-            studentAgeLabel.Text = "Wiek ucznia";
-            studentAgeTextBox.PlaceholderText = "(opcjonalne)";
-            cancelButton.Text = "Anuluj";
-            submitButton.Text = "Zatwierdź";
-            submitButton.Size = new System.Drawing.Size(155,54);
-            Grade8RadioButton.Text = "8 klasisty";
-            MaturaRadioButton.Text = "Matura";
-        }
-        else if (LanguageHelper.GetLanguage == Language.English_Us)
-        {
-            addStudentLabel.Text = "Add student";
-            studentNameLabel.Text = "Student's Fullname";
-            studentEmailLabel.Text = "Student Email";
-            studentEmailTextBox.PlaceholderText = "(optional)";
-            studentAgeLabel.Text = "Student Age";
-            studentAgeTextBox.PlaceholderText = "(optional)";
-            cancelButton.Text = "Cancel";
-            submitButton.Text = "Submit";
-            submitButton.Size = new System.Drawing.Size(155, 54);
-            Grade8RadioButton.Text = "Final elementary exam";
-            MaturaRadioButton.Text = "Final highschool exam";
-        }
-    }
-    private void ClearFields()
+        var locale = LanguageHelper.Localization.AddStudentsPage;
+
+		addStudentLabel.Text = locale.Labels.AddStudentLabel;
+		studentNameLabel.Text = locale.Labels.StudentNameLabel;
+		studentEmailLabel.Text = locale.Labels.StudentEmailLabel;
+		studentEmailTextBox.PlaceholderText = locale.Textboxes.StudentEmailPlaceholder;
+		studentAgeLabel.Text = locale.Labels.StudentAgeLabel;
+		studentAgeTextBox.PlaceholderText = locale.Textboxes.StudentAgePlaceholder;
+		cancelButton.Text = locale.Buttons.CancelButton;
+		submitButton.Text = locale.Buttons.SubmitButton;
+		submitButton.Size = new System.Drawing.Size(155, 54);
+		Grade8RadioButton.Text = locale.RadioButtons.Grade8RadioButton;
+		MaturaRadioButton.Text = locale.RadioButtons.MaturaRadioButton;
+	}
+
+	private void ClearFields()
     {
         studentNameTextBox.Clear();
         studentEmailTextBox.Clear();

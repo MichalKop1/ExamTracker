@@ -1,4 +1,5 @@
 ﻿using DataAcessLayer.Contracts;
+using DataAcessLayer.Repositories;
 using DomainModel.Contracts;
 using DomainModel.Models;
 using ExamTracker.CustomControls;
@@ -14,86 +15,46 @@ public partial class ClientsControl : UserControl
 
 	private readonly ISessionService _sessionService;
 	private readonly IClientRepository _clientRepository;
+	private readonly ICacheService _cacheService;
 
-	private List<ClientControlItem> _allClientsItems = new();
-	private Client _selectedClient = new();
+	private ClientsControlUtility _clientsUtility;
 
-	public ClientsControl(ISessionService sessionService, IClientRepository clientRepository)
+	public ClientsControl(ISessionService sessionService, IClientRepository clientRepository,
+		ICacheService cacheService)
 	{
 		InitializeComponent();
 		_sessionService = sessionService;
 		_clientRepository = clientRepository;
-	}
-
-	private async Task PopulateClientsFlow()
-	{
-		ClientsFlowPanel.Controls.Clear();
-
-		var userId = _sessionService.CurrentAccount.Id.ToString();
-		var clients = await _clientRepository.GetAllClients(userId);
-
-		foreach (Client client in clients)
-		{
-			ClientControlItem clientItem = new ClientControlItem(client);
-			clientItem.ToggleToolStrip += ToggleToolBarVisibility;
-			clientItem.CurrentClientInfo += AssignClient;
-			clientItem.RoundCorners(25);
-
-			ClientsFlowPanel.Controls.Add(clientItem);
-			_allClientsItems.Add(clientItem);
-		}
-	}
-
-	private void ToggleToolBarVisibility()
-	{
-		ClientsToolStrip.Visible = true;
-	}
-
-	private void AssignClient(object s, Client client)
-	{
-		_selectedClient = client;
-		ClientControlItem clientControlItem = (ClientControlItem)s;
-
-		ResetClientsInFlow();
-
-		clientControlItem.Clicked = true;
-		clientControlItem.BackColor = Color.Yellow;
-	}
-
-	private void ResetClientsInFlow()
-	{
-		_allClientsItems.ForEach(item =>
-		{
-			item.BackColor = Color.LightSlateGray;
-			item.Clicked = false;
-		});
+		_cacheService = cacheService;
+		_clientsUtility = new(_sessionService, _clientRepository, _cacheService, ClientsToolStrip);
 	}
 
 	private void AddClientButton_Click(object sender, EventArgs e)
 	{
 		AddClientWindow addClientWindow = new AddClientWindow(_sessionService, _clientRepository);
-		addClientWindow.UpdateClientList += async () => await PopulateClientsFlow();
+		addClientWindow.UpdateClientList += async () => await _clientsUtility.PopulateClientsFlow(ClientsFlowPanel);
 
 		addClientWindow.ShowDialog();
 	}
 
 	private async void ClientsControl_Load(object sender, EventArgs e)
 	{
-		await PopulateClientsFlow();
+		await _clientsUtility.PopulateClientsFlow(ClientsFlowPanel);
+		_clientsUtility.ChangeLanguage(ClientsLabel, AddClientButton, EditStripButton, CancelStripButton, DeleteStripButton);
 	}
 
 	private async void UpdateClient(object? s, Client client)
 	{
 		await _clientRepository.UpdateClient(client);
 
-		await PopulateClientsFlow();
+		await _clientsUtility.PopulateClientsFlow(ClientsFlowPanel);
 
 		log.Info($"Client updated to: {client.CompanyName}");
 	}
 
 	private void EditStripButton_Click(object sender, EventArgs e)
 	{
-		EditClientsInfoWindow editClientsInfoWindow = new(_selectedClient);
+		EditClientsInfoWindow editClientsInfoWindow = new(_clientsUtility.SelectedClient);
 		editClientsInfoWindow.ClientUpdated += UpdateClient;
 
 		editClientsInfoWindow.ShowDialog();
@@ -101,18 +62,23 @@ public partial class ClientsControl : UserControl
 
 	private async void DeleteStripButton_Click(object sender, EventArgs e)
 	{
-		await _clientRepository.DeleteClient(_selectedClient);
+		await _clientRepository.DeleteClient(_clientsUtility.SelectedClient);
+
+		string key = $"clientControlitem:{_sessionService.CurrentAccount.Id}";
+		_cacheService.SetRemoveFromList(_clientsUtility.SelectedClient, key, TimeSpan.FromHours(1));
+
+
 		ClientsToolStrip.Visible = false;
-		await PopulateClientsFlow();
+		await _clientsUtility.PopulateClientsFlow(ClientsFlowPanel);
 
-		log.Info($"{_selectedClient.CompanyName} was deleted.");
+		log.Info($"{_clientsUtility.SelectedClient.CompanyName} was deleted.");
 
-		_selectedClient = new Client();
+		_clientsUtility.SelectedClient = new Client();
 	}
 
 	private void CancelStripButton_Click(object sender, EventArgs e)
 	{
-		ResetClientsInFlow();
+		_clientsUtility.ResetClientsInFlow();
 
 		ClientsToolStrip.Visible = false;
 	}

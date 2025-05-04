@@ -109,6 +109,7 @@
 			Controls.Add(CompanysNameTextBox);
 			Name = "AddClientWindow";
 			Text = "Add Client";
+			Load += AddClientWindow_Load;
 			ResumeLayout(false);
 			PerformLayout();
 		}

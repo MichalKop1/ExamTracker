@@ -17,10 +17,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Common\Localization_English_Us.json" />
+    <None Remove="Common\Localization_Polish_Pl.json" />
     <None Remove="log4net.config" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Common\Localization_English_Us.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Common\Localization_Polish_Pl.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -45,42 +45,32 @@ public partial class StudentsControl : UserControl
 
 	private void ChangeLanguage()
 	{
-		List<TextBox> allBoxes = Get8ClassTextBoxes();
-		Language lang = LanguageHelper.GetLanguage;
+		var locale = LanguageHelper.Localization.StudentsControlPage;
 
-		if (lang == Language.Polish_Pl)
-		{
-			int allBoxesCount = 14;
-			StudentName.Text = "Wyniki egzaminów";
-			StudentLabel.Text = "Uczeń";
-			for (int i = 0; i < allBoxesCount; i++)
-			{
-				allBoxes[i].PlaceholderText = $"Zadanie {i + 1}";
-			}
-			SubmitButton.Text = "Zatwierdź";
-			EditButton.Text = "Edytuj";
-			ConfirmButton.Text = "Potwierdź";
-			EditStudentAgeBox.PlaceholderText = "Wiek";
-			EditStudentNameBox.PlaceholderText = "Imię";
-			EditStudentSurnameBox.PlaceholderText = "Nazwisko";
-			TableDescLabel.Text = "Tabela egzaminów";
-		}
-		else if (lang == Language.English_Us)
-		{
-			int allBoxesCount = 14;
-			StudentName.Text = "Exam Results";
-			StudentLabel.Text = "Student";
-			for (int i = 0; i < allBoxesCount; i++)
-			{
-				allBoxes[i].PlaceholderText = $"Exercise {i + 1}";
-			}
-			SubmitButton.Text = "Submit";
-			EditButton.Text = "Edit";
-			ConfirmButton.Text = "Confirm";
-			EditStudentAgeBox.PlaceholderText = "Age";
-			EditStudentNameBox.PlaceholderText = "Name";
-			EditStudentSurnameBox.PlaceholderText = "Surname";
-		}
+		StudentName.Text = locale.Labels.StudentNameLabel;
+		StudentLabel.Text = locale.Labels.StudentLabel;
+		ex1.PlaceholderText = locale.Textboxes.Task1Placeholder;
+		ex2.PlaceholderText = locale.Textboxes.Task2Placeholder;
+		ex3.PlaceholderText = locale.Textboxes.Task3Placeholder;
+		ex4.PlaceholderText = locale.Textboxes.Task4Placeholder;
+		ex5.PlaceholderText = locale.Textboxes.Task5Placeholder;
+		ex6.PlaceholderText = locale.Textboxes.Task6Placeholder;
+		ex7.PlaceholderText = locale.Textboxes.Task7Placeholder;
+		ex8.PlaceholderText = locale.Textboxes.Task8Placeholder;
+		ex9.PlaceholderText = locale.Textboxes.Task9Placeholder;
+		ex10.PlaceholderText = locale.Textboxes.Task10Placeholder;
+		ex11.PlaceholderText = locale.Textboxes.Task11Placeholder;
+		ex12.PlaceholderText = locale.Textboxes.Task12Placeholder;
+		ex13.PlaceholderText = locale.Textboxes.Task13Placeholder;
+		ex14.PlaceholderText = locale.Textboxes.Task14Placeholder;
+
+		SubmitButton.Text = locale.Buttons.SubmitButton;
+		EditButton.Text = locale.Buttons.EditButton;
+		ConfirmButton.Text = locale.Buttons.ConfirmButton;
+		EditStudentAgeBox.PlaceholderText = locale.Textboxes.EditStudentAgePlaceholder;
+		EditStudentNameBox.PlaceholderText = locale.Textboxes.EditStudentAgePlaceholder;
+		EditStudentSurnameBox.PlaceholderText = locale.Textboxes.EditStudentSurnamePlaceholder;
+		TableDescLabel.Text = locale.Labels.TableDescLabel;
 	}
 
 	private List<TextBox> GetMaturaTextBoxes()
