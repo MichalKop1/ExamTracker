@@ -207,5 +207,31 @@
       "ClientsControlButton": "Klienci",
       "LogoutButton": "Wyloguj"
     }
+  },
+  "ErrorMessages": {
+    "FormErrorHeader": "Wystąpił problem z twoim formularzem. Spróbuj:\n",
+    "InvoiceErrorHeader": "Faktura nieprawidłowa\n",
+    "StudentNameIsEmptyError": "Imię i nazwisko ucznia musi być podane.",
+    "StudentNameContainsNumbersError": "W imieniu ucznia nie mogą pojawić się liczby.",
+    "StudentNameIsNotFullError": "Podaj imię i nazwisko ucznia.",
+    "EmailIsEmptyError" :  "Email musi być podany",
+    "InvalidEmailError": "Wprowadź poprawny email.",
+    "AgeIsEmptyError" :  "Wiek musi być podany.",
+    "InvalidAgeNotNumber": "Wiek musi być liczbą.",
+    "InvalidAge": "Wprowadź porpawny wiek ucznia.",
+    "StudentExamTypeNotChecked": "Zaznacz odpowiedni egzamin.",
+    "DateOfSaleMissingError": "Wprowadź datę sprzedaży.",
+    "DateOfSaleInvalidError": "Wprowadź poprawną datę sprzedaży.",
+    "DateOfPayementMissingError": "Wprowadź datę płatności.",
+    "DateOfPaymentInvalid": "Wprowadź poprawną datę płatności.",
+    "NoProductsAddedError": "Wprowadź przynajmniej jeden produkt lub usługę.",
+    "NoEventNameError": "Musisz nazwać swoje wydarzenie.",
+    "EventTypeNotSelected": "Zaznacz rodzaj wydarzenia.",
+    "ExamPointsBoxesEmpty": "Wypełnij puste pola.",
+    "ExamBoxesInvalidInput": "Pola mogą zawierać tylko liczby.",
+
+    "CompanyNameEmpty": "Podaj nazwę firmy.",
+    "TaxNumberEmpty":  "Podaj NIP firmy.",
+    "CompanyAddressEmpty": "Podaj adres firmy"
   }
 }

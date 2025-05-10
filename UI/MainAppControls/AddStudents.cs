@@ -1,6 +1,10 @@
 ﻿using DataAcessLayer.Contracts;
+using DomainModel.Contracts;
+using DomainModel.Helpers;
 using DomainModel.Models;
 using ExamTracker.Helpers;
+using ExamTracker.Utilities;
+using log4net;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -11,15 +15,22 @@ public partial class AddStudents : UserControl
     private readonly IStudentRepository _studentRepository;
     private readonly ISessionService _sessionService;
     private readonly ICacheService _cacheService;
+    private readonly IMessageService _messageService;
 
-    public AddStudents(IStudentRepository studentRepository, ISessionService sessionService,
-        ICacheService cacheService)
+    private AddStudentsUtilities _studentsUtilities;
+	private readonly ILog log = LogManager.GetLogger(typeof(AddStudents));
+
+
+	public AddStudents(IStudentRepository studentRepository, ISessionService sessionService,
+        ICacheService cacheService, IMessageService messageService)
     {
         InitializeComponent();
         ChangeLanguage();
         _studentRepository = studentRepository;
         _sessionService = sessionService;
         _cacheService = cacheService;
+        _messageService = messageService;
+        _studentsUtilities = new(messageService);
     }
     private void ChangeLanguage()
     {
@@ -36,6 +47,7 @@ public partial class AddStudents : UserControl
 		submitButton.Size = new System.Drawing.Size(155, 54);
 		Grade8RadioButton.Text = locale.RadioButtons.Grade8RadioButton;
 		MaturaRadioButton.Text = locale.RadioButtons.MaturaRadioButton;
+        
 	}
 
 	private void ClearFields()
@@ -168,7 +180,11 @@ public partial class AddStudents : UserControl
 
     private void submitButton_Click(object sender, EventArgs e)
     {
-        if (!ValidateForm()) return;
+        if (!_studentsUtilities.ValidateForm(studentNameTextBox.Text, studentEmailTextBox.Text,
+            studentAgeTextBox.Text, MaturaRadioButton.Checked, Grade8RadioButton.Checked))
+        {
+            return;
+        }
 
         string examType = "";
         if (Grade8RadioButton.Checked)

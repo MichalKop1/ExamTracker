@@ -109,6 +109,8 @@ public partial class MainForm : Form
 		LanguageHelper.LoadLocalization();
 
 		_mainFormUtilities.ChangeLanguage(btnLogin, btnRegister, getStartedButton, newsletterLabel);
+		_loginControl.ChangeLanguage();
+		_registerControl.ChangeLanguage();
 	}
 
 	private void MainForm_FormClosed(object sender, FormClosedEventArgs e)

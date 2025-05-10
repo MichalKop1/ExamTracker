@@ -16,23 +16,31 @@ public partial class ClientsControl : UserControl
 	private readonly ISessionService _sessionService;
 	private readonly IClientRepository _clientRepository;
 	private readonly ICacheService _cacheService;
+	private readonly IMessageService _messageService;
 
 	private ClientsControlUtility _clientsUtility;
 
 	public ClientsControl(ISessionService sessionService, IClientRepository clientRepository,
-		ICacheService cacheService)
+		ICacheService cacheService, IMessageService messageService)
 	{
 		InitializeComponent();
 		_sessionService = sessionService;
 		_clientRepository = clientRepository;
 		_cacheService = cacheService;
+		_messageService = messageService;
+
 		_clientsUtility = new(_sessionService, _clientRepository, _cacheService, ClientsToolStrip);
+		
 	}
 
 	private void AddClientButton_Click(object sender, EventArgs e)
 	{
-		AddClientWindow addClientWindow = new AddClientWindow(_sessionService, _clientRepository);
+		AddClientWindow addClientWindow = new AddClientWindow(_sessionService, _clientRepository, _messageService);
 		addClientWindow.UpdateClientList += async () => await _clientsUtility.PopulateClientsFlow(ClientsFlowPanel);
+		
+		_clientsUtility.ResetClientsInFlow();
+		ClientsToolStrip.Visible = false;
+		_clientsUtility.SelectedClient = new Client();
 
 		addClientWindow.ShowDialog();
 	}
@@ -49,7 +57,7 @@ public partial class ClientsControl : UserControl
 
 		await _clientsUtility.PopulateClientsFlow(ClientsFlowPanel);
 
-		log.Info($"Client updated to: {client.CompanyName}");
+		log.InfoFormat("Client updated to: {0}", client.CompanyName);
 	}
 
 	private void EditStripButton_Click(object sender, EventArgs e)
@@ -79,6 +87,7 @@ public partial class ClientsControl : UserControl
 	private void CancelStripButton_Click(object sender, EventArgs e)
 	{
 		_clientsUtility.ResetClientsInFlow();
+		_clientsUtility.SelectedClient = new Client();
 
 		ClientsToolStrip.Visible = false;
 	}

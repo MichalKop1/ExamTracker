@@ -1,8 +1,12 @@
 ﻿using DataAcessLayer.Contracts;
 using DataAcessLayer.Repositories;
+using DomainModel.Contracts;
+using DomainModel.Helpers;
 using DomainModel.Models;
+using ExamTracker.Common;
 using ExamTracker.CustomControls;
 using ExamTracker.Helpers;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +22,21 @@ public class BillingControlUtilities
 	private readonly ISessionService _sessionService;
 	private readonly IClientRepository _clientRepository;
 	private readonly ICacheService _cacheService;
+	private readonly IMessageService _messageService;
+	private ErrorMessages _errorMessages;
+	private readonly ILog log = LogManager.GetLogger(typeof(BillingControlUtilities));
+
 
 	public BillingControlUtilities(IInvoiceRepository invoiceRepository, ISessionService sessionService,
-		IClientRepository clientRepository, ICacheService cacheService)
+		IClientRepository clientRepository, ICacheService cacheService,
+		IMessageService messageService)
 	{
 		_invoiceRepository = invoiceRepository;
 		_sessionService = sessionService;
 		_clientRepository = clientRepository;
 		_cacheService = cacheService;
+		_errorMessages = LanguageHelper.Localization.ErrorMessages;
+		_messageService = messageService;
 	}
 
 	public static string GenerateInvoiceNumber()
@@ -130,7 +141,7 @@ public class BillingControlUtilities
 		return true;
 	}
 
-	public bool ValidateInvoiceForm(TextBox dateOfSale, TextBox dateOfPayment, List<SoldProductsServicesItems> items)
+	public bool ValidateInvoiceForm111(TextBox dateOfSale, TextBox dateOfPayment, List<SoldProductsServicesItems> items)
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		int counter = 1;
@@ -231,5 +242,34 @@ public class BillingControlUtilities
 			}
 		}
 		return isValid;
+	}
+
+	public bool ValidateInvoiceForm(string dateOfSale, string dateOfPayment, List<SoldProductsServicesItems> items)
+	{
+		FluentErrors _errors = new FluentErrors();
+		StringBuilder errors = new StringBuilder(_errorMessages.InvoiceErrorHeader);
+
+		_errors.Parameter(dateOfSale)
+			.IsNullOrEmptyString(_errorMessages.DateOfSaleMissingError)
+			.SatisfyRegex(RegexConstants.VALID_DATE, _errorMessages.DateOfSaleInvalidError);
+
+		_errors.Parameter(dateOfPayment)
+			.IsNullOrEmptyString(_errorMessages.DateOfPayementMissingError)
+			.SatisfyRegex(RegexConstants.VALID_DATE, _errorMessages.DateOfPaymentInvalid);
+
+		_errors
+			.SatysfiesCondition(() => items.Count != 0, _errorMessages.NoProductsAddedError);
+
+		if (!_errors.IsValid)
+		{
+			_errors.GetErrors().ForEach(message => errors.AppendLine(message));
+			log.InfoFormat("Validation failed:\n{0}",errors.ToString());
+
+			_messageService.ShowError(errors.ToString());
+			return false;
+		}
+
+		log.InfoFormat("Validation of the invoice successful! ");
+		return true;
 	}
 }

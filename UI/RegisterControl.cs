@@ -28,26 +28,17 @@ public partial class RegisterControl : UserControl
 		MessageBox.Show(errorMessage, "Form validation failed");
 	}
 
-	private void ChangeLanguage(string language)
+	public void ChangeLanguage()
 	{
-		if (language == "pl_pl")
-		{
-			nameBox.PlaceholderText = "Imię";
-			surnameBox.PlaceholderText = "Nazwisko";
-			loginBox.PlaceholderText = "Nazwa użytkownika";
-			passwordBox1.PlaceholderText = "Hasło";
-			passwordBox2.PlaceholderText = "Potwierdź hasło";
-			registerButton.Text = "Zarejestruj";
-		}
-		else if (language == "eng_us")
-		{
-			nameBox.PlaceholderText = "Name";
-			surnameBox.PlaceholderText = "Surname";
-			surnameBox.PlaceholderText = "User Name";
-			passwordBox1.PlaceholderText = "Password";
-			passwordBox2.PlaceholderText = "Confirm password";
-			registerButton.Text = "Register";
-		}
+		var locale = LanguageHelper.Localization.RegisterControlPage;
+
+		nameBox.PlaceholderText = locale.Textboxes.NamePlaceholder;
+		surnameBox.PlaceholderText = locale.Textboxes.SurnamePlaceholder;
+		loginBox.PlaceholderText = locale.Textboxes.LoginPlaceholder;
+		passwordBox1.PlaceholderText = locale.Textboxes.Password1Placeholder;
+		passwordBox2.PlaceholderText = locale.Textboxes.Password2Placeholder;
+		registerButton.Text = locale.Buttons.RegisterButton;
+
 	}
 
 	private void registerButton_Click(object sender, EventArgs e)

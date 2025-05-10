@@ -9,18 +9,21 @@ public partial class AddClientWindow : Form
 {
 	private readonly ISessionService _sessionService;
 	private readonly IClientRepository _clientRepository;
+	private readonly IMessageService _messageService;
 
 	private AddNewClientsWindowUtilities _utilities;
 	private List<TextBox> textBoxes;
 	public Action UpdateClientList;
 
-	public AddClientWindow(ISessionService sessionService, IClientRepository clientRepository)
+	public AddClientWindow(ISessionService sessionService, IClientRepository clientRepository,
+		IMessageService messageService)
 	{
 		InitializeComponent();
 		_sessionService = sessionService;
 		_clientRepository = clientRepository;
+		_messageService = messageService;
 
-		_utilities = new(_sessionService, _clientRepository);
+		_utilities = new(_sessionService, _clientRepository, _messageService);
 		textBoxes = this.Controls.OfType<TextBox>().ToList();
 	}
 
@@ -57,6 +60,8 @@ public partial class AddClientWindow : Form
 
 	private void AddClientButton_Click(object sender, EventArgs e)
 	{
+		if (!_utilities.ValidateForm(CompanysNameTextBox.Text, CompanysNipTextBox.Text, CompanysAddressTextBox1.Text, CompanysAddressTextBox2.Text)) return;
+
 		_utilities.CreateClient(CompanysNameTextBox.Text, CompanysAddressTextBox1.Text,
 			CompanysAddressTextBox2.Text, CompanysNipTextBox.Text);
 		_utilities.ClearAllFields(textBoxes);

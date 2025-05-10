@@ -80,6 +80,7 @@ internal static class Program
 		services.AddSingleton<IRepositoryFactory, RepositoryFactory>();
 		services.AddSingleton<IControlFactory, ControlFactory>();
         services.AddSingleton<IFormFactory, FormFactory>();
+        services.AddSingleton<IMessageService, MessageService>();
 		services.AddSingleton<MainFormUtilities>();
 		services.AddSingleton<RegisterPageUtilities>();
 

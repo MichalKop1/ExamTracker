@@ -5,6 +5,7 @@ using DomainModel.Models;
 using log4net;
 using ExamTracker.Utilities;
 using DataAcessLayer.Repositories;
+using DomainModel.Contracts;
 
 namespace ExamTracker.UI.MainAppControls;
 
@@ -17,6 +18,7 @@ public partial class BillingControl : UserControl
 	private readonly ISessionService _sessionService;
 	private readonly IClientRepository _clientRepository;
 	private readonly ICacheService _cacheService;
+	private readonly IMessageService _messageService;
 
 	private BillingControlUtilities _billingControlUtilities;
 	private Client chosenClient = new();
@@ -24,7 +26,8 @@ public partial class BillingControl : UserControl
 	private string payment = string.Empty;
 
 	public BillingControl(IInvoiceRepository invoiceRepository, IProductServiceRepository productServiceRepository,
-		ISessionService sessionService, IClientRepository clientRepository, ICacheService cacheService)
+		ISessionService sessionService, IClientRepository clientRepository, ICacheService cacheService,
+		IMessageService messageService)
 	{
 		InitializeComponent();
 		_invoiceRepository = invoiceRepository;
@@ -32,10 +35,11 @@ public partial class BillingControl : UserControl
 		_sessionService = sessionService;
 		_clientRepository = clientRepository;
 		_cacheService = cacheService;
+		_messageService = messageService;
 
 		ItemsFlowLayoutPanel.FlowDirection = FlowDirection.LeftToRight;
 		allitems = new List<SoldProductsServicesItems>();
-		_billingControlUtilities = new(_invoiceRepository, _sessionService, _clientRepository, _cacheService);
+		_billingControlUtilities = new(_invoiceRepository, _sessionService, _clientRepository, _cacheService, _messageService);
 	}
 
 	private void ChangeLanguage()
@@ -108,7 +112,7 @@ public partial class BillingControl : UserControl
 			return;
 		}
 
-		if (!_billingControlUtilities.ValidateInvoiceForm(DateOfSaleTextBox, DateOfPaymentTextBox, allitems))
+		if (!_billingControlUtilities.ValidateInvoiceForm(DateOfSaleTextBox.Text, DateOfPaymentTextBox.Text, allitems))
 		{
 			return;
 		}
