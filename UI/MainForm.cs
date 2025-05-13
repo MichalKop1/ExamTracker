@@ -16,7 +16,7 @@ public partial class MainForm : Form
 
 	private readonly IServiceFactory _serviceFactory;
 	private readonly IRepositoryFactory _repositoryFactory;
-
+	private readonly IMessageService _messageService;
 	private readonly ISessionService _sessionService;
 	private readonly ICacheService _cacheService;
 	private readonly IAccountRepository _accountRepository;
@@ -30,7 +30,7 @@ public partial class MainForm : Form
 
 	public MainForm(IServiceFactory serviceFactory, IRepositoryFactory repositoryFactory, 
 		IControlFactory controlFactory,IFormFactory formFactory,
-		MainFormUtilities mainFormUtilities, ICacheService cacheService)
+		MainFormUtilities mainFormUtilities, ICacheService cacheService, IMessageService messageService)
 	{
 		InitializeComponent();
 		_serviceFactory = serviceFactory;
@@ -38,12 +38,13 @@ public partial class MainForm : Form
 		_cacheService = cacheService;
 		_formFactory = formFactory;
 		_mainFormUtilities = mainFormUtilities;
+		_messageService = messageService;
 
 		_sessionService = _serviceFactory.CreateSessionService();
 		_accountRepository = _repositoryFactory.CreateAccountRepository();
 
 		_loginControl = new(_accountRepository, _sessionService);
-		_registerControl = new(this, _accountRepository);
+		_registerControl = new(this, _accountRepository, _messageService);
 		entryPanel.Controls.Add(_loginControl);
 		entryPanel.Controls.Add(_registerControl);
 

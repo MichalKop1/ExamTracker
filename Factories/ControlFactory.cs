@@ -46,7 +46,8 @@ public class ControlFactory : IControlFactory
 	{
 		return new ScheduleControl(
 			_serviceProvider.GetRequiredService<IEventRepository>(),
-			_serviceProvider.GetRequiredService<ISessionService>());
+			_serviceProvider.GetRequiredService<ISessionService>(),
+			_serviceProvider.GetRequiredService<IMessageService>());
 	}
 
 	public BillingControl CreateBillingControl()

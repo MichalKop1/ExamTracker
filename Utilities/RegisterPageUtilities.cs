@@ -1,5 +1,9 @@
 ﻿using DataAcessLayer.Contracts;
+using DomainModel.Contracts;
+using DomainModel.Helpers;
+using ExamTracker.Common;
 using ExamTracker.Helpers;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,86 +15,63 @@ namespace ExamTracker.Utilities;
 
 public class RegisterPageUtilities
 {
+	private readonly ILog log = LogManager.GetLogger(typeof(RegisterPageUtilities));
 	public EventHandler<string> OnInvalidForm;
 
-	public bool ValidateRegistrationForm(
-		IAccountRepository accountRepository,
+	private readonly IAccountRepository _accountRepository;
+	private readonly IMessageService _messageService;
+
+    public RegisterPageUtilities(IAccountRepository accountRepository, IMessageService messageService)
+    {
+        _accountRepository = accountRepository;
+		_messageService = messageService;
+    }
+
+    public bool ValidateRegistrationForm(
 		string name,
 		string surname,
 		string login,
 		string email,
 		string password1,
 		string password2)
-	{ 
-		bool isValid = true;
-		int counter = 1;
+	{
+		var localization = LanguageHelper.Localization.ErrorMessages;
+		FluentErrors errors = new FluentErrors(localization.FormErrorHeader);
 
-		StringBuilder sb = new StringBuilder("There was a problem with your form. To resolve the issue: \n\n");
-		if (string.IsNullOrEmpty(name))
-		{
-			sb.Append($"{counter}. Provide your name\n");
-			counter++;
-			isValid = false;
-		}
-		if (string.IsNullOrEmpty(surname))
-		{
-			sb.Append($"{counter}. Provide your surname\n");
-			counter++;
-			isValid = false;
-		}
-		if (string.IsNullOrEmpty(login))
-		{
-			sb.Append($"{counter}. Provide user name\n");
-			counter++;
-			isValid = false;
-		}
-		else if (accountRepository.CheckForLoginDuplicates(login) > 0)
-		{
-			sb.Append($"{counter}. Login already exists. Use a different one.\n");
-			counter++;
-			isValid = false;
-		}
+		errors.Parameter(name)
+			.IsNullOrEmptyString(localization.UserNameEmpty);//add errors
 
-		var pattern = @"^[a-zA-Z0-9]+\.?[a-zA-Z0-9]*@[a-z]+\.[a-z]{2,3}$";
-		if (string.IsNullOrWhiteSpace(email))
+		errors.Parameter(surname)
+			.IsNullOrEmptyString(localization.UserNameEmpty);
+
+		errors.Parameter(email)
+			.IsNullOrEmptyString(localization.EmailIsEmptyError)
+			.SatisfyRegex(RegexConstants.EMAIL, localization.InvalidEmailError);
+
+		errors.Parameter(login)
+			.IsNullOrEmptyString(localization.UserNameEmpty)
+			.SatysfiesCondition(() => _accountRepository.CheckForLoginDuplicates(login) > 0, localization.InvalidEmailError);
+
+		errors.Parameter(password1)
+			.IsNullOrEmptyString(localization.AgeIsEmptyError);
+
+		errors.Parameter(password2)
+			.IsNullOrEmptyString(localization.FormErrorHeader);
+
+		errors.SatysfiesCondition(() => password1 == password2, localization.AgeIsEmptyError);
+
+		if (errors.HasErrors)
 		{
-			sb.Append($"{counter}. Provide an email\n");
-			counter++;
-			isValid = false;
-		}
-		else if (!(Regex.Match(email, pattern).Success)) // implement regex later for email
-		{
-			sb.Append($"{counter}. Provide a valid email.\n");
-			counter++;
-			isValid = false;
-		}
-		if (string.IsNullOrEmpty(password1))
-		{
-			sb.Append($"{counter}. Provide password\n");
-			counter++;
-			isValid = false;
-		}
-		if (string.IsNullOrEmpty(password2))
-		{
-			sb.Append($"{counter}. Provide password verification\n");
-			counter++;
-			isValid = false;
-		}
-		if (password1 != password2)
-		{
-			sb.Append($"{counter}. Provide matching passwords\n");
-			counter++;
-			isValid = false;
+			string currErrors = errors.ToString();
+
+			_messageService.ShowError(currErrors);
+			log.ErrorFormat("Form invalid:\n{0}", currErrors);
+
+			return false;
 		}
 
-		if (!isValid)
-		{
-			OnInvalidForm?.Invoke(null, sb.ToString());
-			//MessageBox.Show(sb.ToString(), "Form validation failed");
-		}
-
-		sb.Clear();
-		return isValid;
+		log.ErrorFormat("Created user {0} {1}", name, surname);
+		return true;
 	}
 
 	public void ChangeLanguage(TextBox nameBox, TextBox surnameBox,

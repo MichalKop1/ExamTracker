@@ -11,7 +11,7 @@ namespace ExamTracker.Utilities;
 
 public class AddNewClientsWindowUtilities
 {
-	protected readonly ILog log = LogManager.GetLogger(typeof(AddNewClientsWindowUtilities));
+	private readonly ILog log = LogManager.GetLogger(typeof(AddNewClientsWindowUtilities));
 
 	private readonly ISessionService _sessionService;
 	private readonly IClientRepository _clientRepository;
@@ -58,8 +58,7 @@ public class AddNewClientsWindowUtilities
 	public bool ValidateForm(string companyName, string nip, string address1, string address2)
 	{
 		var localization = LanguageHelper.Localization.ErrorMessages;
-		StringBuilder errors = new StringBuilder(localization.FormErrorHeader);
-		FluentErrors _errors = new FluentErrors();
+		FluentErrors _errors = new FluentErrors(localization.FormErrorHeader);
 
 		_errors.Parameter(companyName)
 			.IsNullOrEmptyString(localization.CompanyNameEmpty);
@@ -70,11 +69,12 @@ public class AddNewClientsWindowUtilities
 		_errors.Parameter(address1)
 			.IsNullOrEmptyString(localization.CompanyAddressEmpty);
 
-		if (!_errors.IsValid)
+		if (_errors.HasErrors)
 		{
-			_errors.GetErrors().ForEach(error => errors.AppendLine(error));
-			_messageService.ShowError(errors.ToString());
-			log.InfoFormat("Form invalid:\n{0}", errors);
+			string currErrors = _errors.ToString();
+
+			_messageService.ShowError(currErrors);
+			log.ErrorFormat("Form invalid:\n{0}", currErrors);
 
 			return false;
 		}

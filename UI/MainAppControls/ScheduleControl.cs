@@ -4,6 +4,8 @@ using DomainModel.Models;
 using ExamTracker.Helpers;
 using System.Text;
 using log4net;
+using DomainModel.Contracts;
+using ExamTracker.Utilities;
 
 namespace ExamTracker.UI.MainAppControls;
 
@@ -14,11 +16,15 @@ public partial class ScheduleControl : UserControl
 	public event EventHandler OneEventClicked;
     private readonly IEventRepository _eventRepository;
     private readonly ISessionService _sessionService;
+    private readonly IMessageService _messageService;
+
     private List<Event> _eventToLoad;
+    private ScheduleControlUtilities _utilities;
     int EventType = 0;
 
     private ScheduledWorkControlItem _selectedItem;
-    public ScheduleControl(IEventRepository eventRepository, ISessionService sessionService)
+    public ScheduleControl(IEventRepository eventRepository, ISessionService sessionService,
+        IMessageService messageService)
     {
         InitializeComponent();
         ChangeLanguage();
@@ -27,6 +33,8 @@ public partial class ScheduleControl : UserControl
         flowLayoutPanel.AutoScroll = true;
         _sessionService = sessionService;
         _eventToLoad = [];
+        _messageService = messageService;
+        _utilities = new(_messageService);
     }
 
     private void ChangeLanguage()
@@ -48,68 +56,6 @@ public partial class ScheduleControl : UserControl
         MeetingRadioButton.Checked = false;
     }
 
-    private bool VerifyInformation()
-    {
-        int counter = 1;
-        StringBuilder sb = new StringBuilder();
-        bool isValid = true;
-        Language lang = LanguageHelper.GetLanguage;
-
-        if (lang == Language.Polish_Pl)
-        {
-            sb.Append("Wystąpił problem z twoim formularzem. Spróbuj:\n");
-        }
-        else if (lang == Language.English_Us)
-        {
-            sb.Append("There was an issue with your form. Try:\n");
-        }
-
-        if (string.IsNullOrEmpty(ShortDescTextBox.Text))
-        {
-            if (lang == Language.Polish_Pl)
-            {
-                sb.Append($"{counter}. Musisz nazwać swoje wydarzenie.\n");
-
-            }
-            else if (lang == Language.English_Us)
-            {
-                sb.Append($"{counter}. You have to give a name to your event.\n");
-            }
-
-            counter++;
-            isValid = false;
-        }
-
-        if(!ExamRadioButton.Checked && !MeetingRadioButton.Checked)
-        {
-            if (lang == Language.Polish_Pl)
-            {
-                sb.Append($"{counter}. Zaznacz rodzaj wydarzenia.");
-
-            }
-            else if (lang == Language.English_Us)
-            {
-                sb.Append($"{counter}. Select type of an event.");
-            }
-
-            isValid = false;
-        }
-
-        if (!isValid)
-        {
-            if (lang == Language.Polish_Pl)
-            {
-                MessageBox.Show(sb.ToString(), "Formularz nie jest poprawny!");
-            }
-            else if (lang == Language.English_Us)
-            {
-                MessageBox.Show(sb.ToString(), "Form not valid!");
-            }
-        }
-
-        return isValid;
-    }
-
     private async Task LoadEventsToList()
     {
         _eventToLoad = await _eventRepository.GetAllEvents(_sessionService.CurrentAccount.Id);
@@ -121,7 +67,8 @@ public partial class ScheduleControl : UserControl
 
     private void AddEventButton_Click(object sender, EventArgs e)
     {
-        if (!VerifyInformation()) return;
+        if (!_utilities.ValidateForm(ShortDescTextBox.Text, ExamRadioButton.Checked,
+            MeetingRadioButton.Checked, Calendar)) return;
 
         string shortDesc = ShortDescTextBox.Text;
         string longDesc = LongDescTextBox.Text;

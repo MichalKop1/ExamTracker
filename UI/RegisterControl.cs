@@ -1,4 +1,5 @@
 ﻿using DataAcessLayer.Contracts;
+using DomainModel.Contracts;
 using DomainModel.Models;
 using ExamTracker.Helpers;
 using ExamTracker.Utilities;
@@ -10,14 +11,17 @@ namespace ExamTracker.UI;
 public partial class RegisterControl : UserControl
 {
 	private readonly IAccountRepository _accountRepository;
+	private readonly IMessageService _messageService;
 	private readonly RegisterPageUtilities _pageUtilities;
 
-	public RegisterControl(MainForm mf, IAccountRepository accountRepository)
+	public RegisterControl(MainForm mf, IAccountRepository accountRepository,
+		IMessageService messageService)
 	{
 		InitializeComponent();
 		_accountRepository = accountRepository;
+		_messageService = messageService;
 
-		_pageUtilities = new RegisterPageUtilities();
+		_pageUtilities = new RegisterPageUtilities(_accountRepository, _messageService);
 		_pageUtilities.OnInvalidForm += HandleInvalidForm;
 
 		_pageUtilities.ChangeLanguage(nameBox, surnameBox, loginBox, passwordBox1, passwordBox2, registerButton);
@@ -44,7 +48,6 @@ public partial class RegisterControl : UserControl
 	private void registerButton_Click(object sender, EventArgs e)
 	{
 		if (!_pageUtilities.ValidateRegistrationForm(
-			_accountRepository,
 			nameBox.Text,
 			surnameBox.Text,
 			loginBox.Text,
@@ -67,7 +70,8 @@ public partial class RegisterControl : UserControl
 			var boxes = this.Controls.OfType<TextBox>().ToList();
 			_pageUtilities.ClerarAllFields(boxes);
 
-			MessageBox.Show("You have created an account!", "Registered successfully!");
+			_messageService.ShowError("You have created an account!");
+			//MessageBox.Show("You have created an account!", "Registered successfully!");
 		}
 	}
 

@@ -31,14 +31,13 @@ public class AddStudentsUtilities
 
 	public bool ValidateForm(string name, string email, string age, bool isMaturaChecked, bool isGrade8Checked)
 	{
-		FluentErrors _errors = new();
 		var _localization = LanguageHelper.Localization.ErrorMessages;
+		FluentErrors _errors = new(_localization.FormErrorHeader);
 
 		int thisAge = -1;
 		int minimumAge = 10;
 		int maximumAge = 30;
 
-		StringBuilder errorMessage = new StringBuilder(_localization.FormErrorHeader);
 		_errors.Parameter(name)
 		.IsNullOrEmptyString(_localization.StudentNameIsEmptyError)
 			.SatisfyRegex(RegexConstants.FULL_NAME, _localization.StudentNameIsNotFullError);
@@ -53,12 +52,13 @@ public class AddStudentsUtilities
 		_errors
 			.SatysfiesCondition(() => isMaturaChecked != isGrade8Checked, _localization.StudentExamTypeNotChecked);
 
-		if (!_errors.IsValid)
+		if (_errors.HasErrors)
 		{
-			_errors.GetErrors().ForEach(message => errorMessage.AppendLine(message));
-			log.InfoFormat("Validation failed:\n{0}", errorMessage.ToString());
+			string currError = _errors.ToString()!;
 
-			_messageService.ShowError(errorMessage.ToString());
+			log.InfoFormat("Validation failed:\n{0}", currError);
+			_messageService.ShowError(currError);
+
 			return false;
 		}
 

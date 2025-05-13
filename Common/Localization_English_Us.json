@@ -231,6 +231,11 @@
     "ExamBoxesInvalidInput": "Fields can only contain numbers.",
     "CompanyNameEmpty": "Provide the company name.",
     "TaxNumberEmpty": "Provide the company tax ID (NIP).",
-    "CompanyAddressEmpty": "Provide the company address."
+    "CompanyAddressEmpty": "Provide the company address.",
+    "UserNameEmpty": "Provide your name and surname.",
+    "ZipCodeEmpty": "Provide your zip code.",
+    "ZipCodeInvalid": "Provide a valid zip code.",
+    "PhoneNumberEmpty": "Provide your number.",
+    "PhoneNumberInvalid": "Provide a valid number."
   }
 }

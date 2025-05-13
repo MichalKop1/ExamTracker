@@ -246,8 +246,7 @@ public class BillingControlUtilities
 
 	public bool ValidateInvoiceForm(string dateOfSale, string dateOfPayment, List<SoldProductsServicesItems> items)
 	{
-		FluentErrors _errors = new FluentErrors();
-		StringBuilder errors = new StringBuilder(_errorMessages.InvoiceErrorHeader);
+		FluentErrors _errors = new FluentErrors(_errorMessages.InvoiceErrorHeader);
 
 		_errors.Parameter(dateOfSale)
 			.IsNullOrEmptyString(_errorMessages.DateOfSaleMissingError)
@@ -260,12 +259,13 @@ public class BillingControlUtilities
 		_errors
 			.SatysfiesCondition(() => items.Count != 0, _errorMessages.NoProductsAddedError);
 
-		if (!_errors.IsValid)
+		if (_errors.HasErrors)
 		{
-			_errors.GetErrors().ForEach(message => errors.AppendLine(message));
-			log.InfoFormat("Validation failed:\n{0}",errors.ToString());
+			string currError = _errors.ToString();
 
-			_messageService.ShowError(errors.ToString());
+			log.InfoFormat("Validation failed:\n{0}",currError);
+			_messageService.ShowError(currError);
+
 			return false;
 		}
 

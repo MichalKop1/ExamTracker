@@ -229,9 +229,14 @@
     "EventTypeNotSelected": "Zaznacz rodzaj wydarzenia.",
     "ExamPointsBoxesEmpty": "Wypełnij puste pola.",
     "ExamBoxesInvalidInput": "Pola mogą zawierać tylko liczby.",
-
     "CompanyNameEmpty": "Podaj nazwę firmy.",
     "TaxNumberEmpty":  "Podaj NIP firmy.",
-    "CompanyAddressEmpty": "Podaj adres firmy"
+    "CompanyAddressEmpty": "Podaj adres firmy",
+
+    "UserNameEmpty": "Podaj swoje imię i nazwisko.",
+    "ZipCodeEmpty": "Podaj kod pocztowy.",
+    "ZipCodeInvalid": "Podaj poprawny kod pocztowy.",
+    "PhoneNumberEmpty": "Podaj numer telefonu.",
+    "PhoneNumberInvalid": "Podaj poprawny numer telefonu."
   }
 }
