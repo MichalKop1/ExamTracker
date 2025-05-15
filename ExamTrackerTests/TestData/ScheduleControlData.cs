@@ -27,10 +27,5 @@ namespace ExamTrackerTests.TestData
 		{
 			yield return new object[] { null, false, true, new MonthCalendar() };
 		}
-
-		public static IEnumerable<object> Todelete_fnc()
-		{
-			yield return new object[] { null, false, true, new MonthCalendar() };
-		}
 	}
 }
