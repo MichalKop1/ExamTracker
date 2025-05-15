@@ -1,0 +1,16 @@
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\bin\Release\net8.0\DomainModel.deps.json
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\bin\Release\net8.0\DomainModel.dll
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\bin\Release\net8.0\DomainModel.pdb
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\obj\Release\net8.0\DomainModel.csproj.AssemblyReference.cache
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\obj\Release\net8.0\DomainModel.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\obj\Release\net8.0\DomainModel.AssemblyInfoInputs.cache
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\obj\Release\net8.0\DomainModel.AssemblyInfo.cs
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\obj\Release\net8.0\DomainModel.csproj.CoreCompileInputs.cache
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\obj\Release\net8.0\DomainModel.dll
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\obj\Release\net8.0\refint\DomainModel.dll
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\obj\Release\net8.0\DomainModel.pdb
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\obj\Release\net8.0\ref\DomainModel.dll
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\bin\Release\net8.0\Assets\invoice_logo.png
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\bin\Release\net8.0\Assets\invoice_logo2.png
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\bin\Release\net8.0\DomainModel.runtimeconfig.json
+C:\Users\Michal\source\repos\ExamTracker_project\DomainModel\obj\Release\net8.0\DomainModel.genruntimeconfig.cache

@@ -1,0 +1,242 @@
+{
+  "AddStudentsPage": {
+    "Labels": {
+      "AddStudentLabel": "Dodaj ucznia",
+      "StudentNameLabel": "Imię i nazwisko ucznia",
+      "StudentEmailLabel": "Email ucznia",
+      "StudentAgeLabel": "Wiek ucznia"
+    },
+    "Textboxes": {
+      "StudentEmailPlaceholder": "(opcjonalne)",
+      "StudentAgePlaceholder": "(opcjonalne)"
+    },
+    "Buttons": {
+      "CancelButton": "Anuluj",
+      "SubmitButton": "Zatwierdź"
+    },
+    "RadioButtons": {
+      "Grade8RadioButton": "8 klasisty",
+      "MaturaRadioButton": "Matura"
+    }
+  },
+  "BillingControlPage": {
+    "Labels": {
+      "InvoiceListLabel": "Lista faktur",
+      "InvoiceLabel": "Zatwierdzone faktury",
+      "CreateInvoiceLabel": "Stwórz fakturę",
+      "DescriptionLabel": "Opis",
+      "UnitPriceLabel": "Cena jednostkowa",
+      "QuantityLabel": "Ilość"
+    },
+    "Textboxes": {
+      "DateOfSalePlaceholder": "Data sprzedaży (MM-DD-YYYY)",
+      "DateOfPaymentPlaceholder": "Data płatności (MM-DD-YYYY)"
+    },
+    "Buttons": {
+      "AddItemButton": "Dodaj pozycję",
+      "AddInvoiceButton": "Dodaj fakturę"
+    },
+    "ColumnHeader": {
+      "InvoiceNumberHeader": "Numer faktury",
+      "IsPaidHeader": "Czy zapłacona",
+      "ClientHeader": "Klient"
+    }
+  },
+  "ClientsControlPage": {
+    "Labels": {
+      "ClientsLabel": "Klienci"
+    },
+    "Buttons": {
+      "AddClientButton": "Dodaj klienta",
+      "EditStripButton": "Edytuj",
+      "DeleteStripButton": "Usuń",
+      "CancelStripButton": "Anuluj"
+    },
+    "ColumnHeader": {
+      "InvoiceNumberHeader": "Numer faktury",
+      "IsPaidHeader": "Czy zapłacona",
+      "ClientHeader": "Klient"
+    }
+  },
+  "AddNewClientsWindow": {
+    "Labels": {
+      "CompanyNameLabel": "Nazwa firmy",
+      "NipLabel": "NIP",
+      "Address1Label": "Adres 1",
+      "Address2Label": "Adres 2"
+    },
+    "Buttons": {
+      "AddButton": "Dodaj",
+      "CancelButton": "Anuluj"
+    }
+  },
+  "EditClientsWindow": {
+    "Labels": {
+      "CompanyNameLabel": "Nazwa firmy",
+      "NipLabel": "NIP",
+      "Address1Label": "Adres 1",
+      "Address2Label": "Adres 2"
+    },
+    "Buttons": {
+      "UpdateButton": "Zaktualizuj",
+      "CancelButton": "Anuluj"
+    }
+  },
+  "ProfileControlPage": {
+    "Labels": {
+      "ProfileLabel": "Profil",
+      "ManageInfoLabel": "Zarzadzaj informacjami o profilu",
+      "BusinessInfoLabel": "Informacje biznesowe",
+      "BusinessNameLabel": "Nazwa firmy",
+      "StreetAddressLabel": "Nazwa ulicy",
+      "CityLabel": "Miasto",
+      "StateLabel": "Województwo",
+      "ZipCodeLabel": "Kod pocztowy",
+      "ContactInfoLabel": "Informacje kontaktowe",
+      "ContactNameLabel": "Imię i nazwisko",
+      "PhoneLabel": "Telefon"
+    },
+    "Textboxes": {
+      "BusinessNamePlaceholder": "Nazwa twojego biznesu",
+      "CityPlaceholder": "Warszawa",
+      "StatePlaceholder": "Wielkopolska",
+      "ZipCodePlaceholder": "00-019",
+      "ContactNamePlaceholder": "Jan Kowalski",
+      "EmailPlaceholder": "jan@gmail.com",
+      "PhonePlaceholder": "430-255-670"
+    },
+    "Buttons": {
+      "SaveChangesButton": "Zapisz"
+    }
+  },
+  "ScheduleControlPage": {
+    "Labels": {
+      "CurrentScheduleLabel": "Obecny harmonogram"
+    },
+    "Textboxes": {
+      "ShortDescriptionTextBox": "Nazwa wydarzenia"
+    },
+    "Buttons": {
+      "AddEventButton": "Dodaj wydarzenie"
+    },
+    "RadioButtons" :{
+      "ExamRadioButton": "Egzamin",
+      "MeetingRadioButton": "Spotkanie"
+    }
+  },
+  "StudentsControlPage": {
+    "Labels": {
+      "StudentNameLabel": "Wyniki egzaminów",
+      "StudentLabel": "Uczeń",
+      "TableDescLabel": "Tabela egzaminów"
+    },
+    "Textboxes": {
+      "EditStudentAgePlaceholder": "Wiek",
+      "EditStudentNamePlaceholder": "Imię",
+      "EditStudentSurnamePlaceholder": "Nazwisko",
+      "Task1Placeholder": "Zadanie 1",
+      "Task2Placeholder": "Zadanie 2",
+      "Task3Placeholder": "Zadanie 3",
+      "Task4Placeholder": "Zadanie 4",
+      "Task5Placeholder": "Zadanie 5",
+      "Task6Placeholder": "Zadanie 6",
+      "Task7Placeholder": "Zadanie 7",
+      "Task8Placeholder": "Zadanie 8",
+      "Task9Placeholder": "Zadanie 9",
+      "Task10Placeholder": "Zadanie 10",
+      "Task11Placeholder": "Zadanie 11",
+      "Task12Placeholder": "Zadanie 12",
+      "Task13Placeholder": "Zadanie 13",
+      "Task14Placeholder": "Zadanie 14"
+    },
+    "Buttons": {
+      "SubmitButton": "Zatwierdź",
+      "EditButton": "Edytuj",
+      "ConfirmButton": "Potwierdź"
+    }
+  },
+  "LoginControlPage": {
+    "Textboxes": {
+      "LoginPlaceholder": "Login",
+      "PasswordPlaceholder": "Hasło"
+    },
+    "Buttons": {
+      "LoginButton": "Zaloguj"
+    }
+  },
+  "RegisterControlPage": {
+    "Textboxes": {
+      "NamePlaceholder": "Login",
+      "SurnamePlaceholder": "Hasło",
+      "LoginPlaceholder": "Nazwa użytkownika",
+      "Password1Placeholder": "Hasło",
+      "Password2Placeholder": "Powtórz hasło"
+    },
+    "Buttons": {
+      "RegisterButton": "Zarejestruj"
+    }
+  },
+  "MainFormPage": {
+    "Labels": {
+      "NewsletterLabel": "Dołącz do naszego newslettera i stań się jednym\n z tysięcy nauczycieli którzy korzystają z Exam Tracker"
+    },
+    "Textboxes": {
+      "NamePlaceholder": "Login",
+      "SurnamePlaceholder": "Hasło",
+      "LoginPlaceholder": "Nazwa użytkownika",
+      "Password1Placeholder": "Hasło",
+      "Password2Placeholder": "Powtórz hasło"
+    },
+    "Buttons": {
+      "LoginButton": "Logowanie",
+      "RegisterButton": "Zarejestruj",
+      "GetStartedButton": "Zacznij"
+    }
+  },
+  "MainAppViewPage": {
+    "Labels": {
+      "FormTitle": "Exam Tracker   -  Obecnie zalogowany/a: {0}"
+    },
+    "Buttons": {
+      "DashboardButton": "Panel",
+      "StudentsButton": "Uczniowie",
+      "ScheduleButton": "Plan",
+      "BillingButton": "Opłaty",
+      "BusinessButton": "Biznes",
+      "ProfileButton": "Profil",
+      "ClientsControlButton": "Klienci",
+      "LogoutButton": "Wyloguj"
+    }
+  },
+  "ErrorMessages": {
+    "FormErrorHeader": "Wystąpił problem z twoim formularzem. Spróbuj:\n",
+    "InvoiceErrorHeader": "Faktura nieprawidłowa\n",
+    "StudentNameIsEmptyError": "Imię i nazwisko ucznia musi być podane.",
+    "StudentNameContainsNumbersError": "W imieniu ucznia nie mogą pojawić się liczby.",
+    "StudentNameIsNotFullError": "Podaj imię i nazwisko ucznia.",
+    "EmailIsEmptyError" :  "Email musi być podany",
+    "InvalidEmailError": "Wprowadź poprawny email.",
+    "AgeIsEmptyError" :  "Wiek musi być podany.",
+    "InvalidAgeNotNumber": "Wiek musi być liczbą.",
+    "InvalidAge": "Wprowadź porpawny wiek ucznia.",
+    "StudentExamTypeNotChecked": "Zaznacz odpowiedni egzamin.",
+    "DateOfSaleMissingError": "Wprowadź datę sprzedaży.",
+    "DateOfSaleInvalidError": "Wprowadź poprawną datę sprzedaży.",
+    "DateOfPayementMissingError": "Wprowadź datę płatności.",
+    "DateOfPaymentInvalid": "Wprowadź poprawną datę płatności.",
+    "NoProductsAddedError": "Wprowadź przynajmniej jeden produkt lub usługę.",
+    "NoEventNameError": "Musisz nazwać swoje wydarzenie.",
+    "EventTypeNotSelected": "Zaznacz rodzaj wydarzenia.",
+    "ExamPointsBoxesEmpty": "Wypełnij puste pola.",
+    "ExamBoxesInvalidInput": "Pola mogą zawierać tylko liczby.",
+    "CompanyNameEmpty": "Podaj nazwę firmy.",
+    "TaxNumberEmpty":  "Podaj NIP firmy.",
+    "CompanyAddressEmpty": "Podaj adres firmy",
+
+    "UserNameEmpty": "Podaj swoje imię i nazwisko.",
+    "ZipCodeEmpty": "Podaj kod pocztowy.",
+    "ZipCodeInvalid": "Podaj poprawny kod pocztowy.",
+    "PhoneNumberEmpty": "Podaj numer telefonu.",
+    "PhoneNumberInvalid": "Podaj poprawny numer telefonu."
+  }
+}

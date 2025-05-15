@@ -1,0 +1,241 @@
+{
+  "AddStudentsPage": {
+    "Labels": {
+      "AddStudentLabel": "Add student",
+      "StudentNameLabel": "Student name and surname",
+      "StudentEmailLabel": "Student email",
+      "StudentAgeLabel": "Student age"
+    },
+    "Textboxes": {
+      "StudentEmailPlaceholder": "(optional)",
+      "StudentAgePlaceholder": "(optional)"
+    },
+    "Buttons": {
+      "CancelButton": "Cancel",
+      "SubmitButton": "Submit"
+    },
+    "RadioButtons": {
+      "Grade8RadioButton": "Grade 8 exam",
+      "MaturaRadioButton": "Matura exam"
+    }
+  },
+  "BillingControlPage": {
+    "Labels": {
+      "InvoiceListLabel": "Invoice list",
+      "InvoiceLabel": "Approved invoices",
+      "CreateInvoiceLabel": "Create invoice",
+      "DescriptionLabel": "Description",
+      "UnitPriceLabel": "Unit price",
+      "QuantityLabel": "Quantity"
+    },
+    "Textboxes": {
+      "DateOfSalePlaceholder": "Date of sale (MM-DD-YYYY)",
+      "DateOfPaymentPlaceholder": "Payment date (MM-DD-YYYY)"
+    },
+    "Buttons": {
+      "AddItemButton": "Add item",
+      "AddInvoiceButton": "Add invoice"
+    },
+    "ColumnHeader": {
+      "InvoiceNumberHeader": "Invoice number",
+      "IsPaidHeader": "Is paid",
+      "ClientHeader": "Client"
+    }
+  },
+  "ClientsControlPage": {
+    "Labels": {
+      "ClientsLabel": "Clients"
+    },
+    "Buttons": {
+      "AddClientButton": "Add client",
+      "EditStripButton": "Edit",
+      "DeleteStripButton": "Delete",
+      "CancelStripButton": "Cancel"
+    },
+    "ColumnHeader": {
+      "InvoiceNumberHeader": "Invoice number",
+      "IsPaidHeader": "Is paid",
+      "ClientHeader": "Client"
+    }
+  },
+  "AddNewClientsWindow": {
+    "Labels": {
+      "CompanyNameLabel": "Company name",
+      "NipLabel": "Tax ID",
+      "Address1Label": "Address 1",
+      "Address2Label": "Address 2"
+    },
+    "Buttons": {
+      "AddButton": "Add",
+      "CancelButton": "Cancel"
+    }
+  },
+  "EditClientsWindow": {
+    "Labels": {
+      "CompanyNameLabel": "Company name",
+      "NipLabel": "Tax ID",
+      "Address1Label": "Address 1",
+      "Address2Label": "Address 2"
+    },
+    "Buttons": {
+      "UpdateButton": "Update",
+      "CancelButton": "Cancel"
+    }
+  },
+  "ProfileControlPage": {
+    "Labels": {
+      "ProfileLabel": "Profile",
+      "ManageInfoLabel": "Manage profile information",
+      "BusinessInfoLabel": "Business information",
+      "BusinessNameLabel": "Company name",
+      "StreetAddressLabel": "Street name",
+      "CityLabel": "City",
+      "StateLabel": "State",
+      "ZipCodeLabel": "Zip code",
+      "ContactInfoLabel": "Contact information",
+      "ContactNameLabel": "Name and surname",
+      "PhoneLabel": "Phone"
+    },
+    "Textboxes": {
+      "BusinessNamePlaceholder": "Your business name",
+      "CityPlaceholder": "Warsaw",
+      "StatePlaceholder": "Greater Poland",
+      "ZipCodePlaceholder": "00-019",
+      "ContactNamePlaceholder": "John Smith",
+      "EmailPlaceholder": "john@example.com",
+      "PhonePlaceholder": "123-456-7890"
+    },
+    "Buttons": {
+      "SaveChangesButton": "Save"
+    }
+  },
+  "ScheduleControlPage": {
+    "Labels": {
+      "CurrentScheduleLabel": "Current schedule"
+    },
+    "Textboxes": {
+      "ShortDescriptionTextBox": "Event name"
+    },
+    "Buttons": {
+      "AddEventButton": "Add event"
+    },
+    "RadioButtons": {
+      "ExamRadioButton": "Exam",
+      "MeetingRadioButton": "Meeting"
+    }
+  },
+  "StudentsControlPage": {
+    "Labels": {
+      "StudentNameLabel": "Exam results",
+      "StudentLabel": "Student",
+      "TableDescLabel": "Exam table"
+    },
+    "Textboxes": {
+      "EditStudentAgePlaceholder": "Age",
+      "EditStudentNamePlaceholder": "First name",
+      "EditStudentSurnamePlaceholder": "Last name",
+      "Task1Placeholder": "Task 1",
+      "Task2Placeholder": "Task 2",
+      "Task3Placeholder": "Task 3",
+      "Task4Placeholder": "Task 4",
+      "Task5Placeholder": "Task 5",
+      "Task6Placeholder": "Task 6",
+      "Task7Placeholder": "Task 7",
+      "Task8Placeholder": "Task 8",
+      "Task9Placeholder": "Task 9",
+      "Task10Placeholder": "Task 10",
+      "Task11Placeholder": "Task 11",
+      "Task12Placeholder": "Task 12",
+      "Task13Placeholder": "Task 13",
+      "Task14Placeholder": "Task 14"
+    },
+    "Buttons": {
+      "SubmitButton": "Submit",
+      "EditButton": "Edit",
+      "ConfirmButton": "Confirm"
+    }
+  },
+  "LoginControlPage": {
+    "Textboxes": {
+      "LoginPlaceholder": "Username",
+      "PasswordPlaceholder": "Password"
+    },
+    "Buttons": {
+      "LoginButton": "Log in"
+    }
+  },
+  "RegisterControlPage": {
+    "Textboxes": {
+      "NamePlaceholder": "First name",
+      "SurnamePlaceholder": "Last name",
+      "LoginPlaceholder": "Username",
+      "Password1Placeholder": "Password",
+      "Password2Placeholder": "Confirm password"
+    },
+    "Buttons": {
+      "RegisterButton": "Register"
+    }
+  },
+  "MainFormPage": {
+    "Labels": {
+      "NewsletterLabel": "Join our newsletter and become one\n of thousands of teachers using Exam Tracker"
+    },
+    "Textboxes": {
+      "NamePlaceholder": "First name",
+      "SurnamePlaceholder": "Last name",
+      "LoginPlaceholder": "Username",
+      "Password1Placeholder": "Password",
+      "Password2Placeholder": "Confirm password"
+    },
+    "Buttons": {
+      "LoginButton": "Login",
+      "RegisterButton": "Register",
+      "GetStartedButton": "Get started"
+    }
+  },
+  "MainAppViewPage": {
+    "Labels": {
+      "FormTitle": "Exam Tracker - Currently logged in: {0}"
+    },
+    "Buttons": {
+      "DashboardButton": "Dashboard",
+      "StudentsButton": "Students",
+      "ScheduleButton": "Schedule",
+      "BillingButton": "Billing",
+      "BusinessButton": "Business",
+      "ProfileButton": "Profile",
+      "ClientsControlButton": "Clients",
+      "LogoutButton": "Log out"
+    }
+  },
+  "ErrorMessages": {
+    "FormErrorHeader": "There was a problem with your form. Try:\n",
+    "InvoiceErrorHeader": "The invoice is invalid\n",
+    "StudentNameIsEmptyError": "The student's full name must be provided.",
+    "StudentNameContainsNumbersError": "The student's name cannot contain numbers.",
+    "StudentNameIsNotFullError": "Please provide the student's full name.",
+    "EmailIsEmptyError": "Email must be provided.",
+    "InvalidEmailError": "Enter a valid email address.",
+    "AgeIsEmptyError": "Age must be provided.",
+    "InvalidAgeNotNumber": "Age must be a number.",
+    "InvalidAge": "Enter a valid student age.",
+    "StudentExamTypeNotChecked": "Select the appropriate exam.",
+    "DateOfSaleMissingError": "Enter the date of sale.",
+    "DateOfSaleInvalidError": "Enter a valid date of sale.",
+    "DateOfPayementMissingError": "Enter the date of payment.",
+    "DateOfPaymentInvalid": "Enter a valid date of payment.",
+    "NoProductsAddedError": "Enter at least one product or service.",
+    "NoEventNameError": "You must name your event.",
+    "EventTypeNotSelected": "Select the type of event.",
+    "ExamPointsBoxesEmpty": "Fill in the empty fields.",
+    "ExamBoxesInvalidInput": "Fields can only contain numbers.",
+    "CompanyNameEmpty": "Provide the company name.",
+    "TaxNumberEmpty": "Provide the company tax ID (NIP).",
+    "CompanyAddressEmpty": "Provide the company address.",
+    "UserNameEmpty": "Provide your name and surname.",
+    "ZipCodeEmpty": "Provide your zip code.",
+    "ZipCodeInvalid": "Provide a valid zip code.",
+    "PhoneNumberEmpty": "Provide your number.",
+    "PhoneNumberInvalid": "Provide a valid number."
+  }
+}
